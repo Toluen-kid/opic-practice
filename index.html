@@ -96,6 +96,34 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 .step-tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--pri);margin-bottom:7px}
 .step-ttl{font-size:1.42rem;font-weight:800;margin-bottom:6px}
 .step-sub{color:var(--muted);font-size:.86rem;margin-bottom:18px;line-height:1.5}
+/* survey question blocks */
+.sv-q{margin-bottom:22px}
+.sv-q-lbl{font-size:.92rem;font-weight:700;margin-bottom:3px}
+.sv-q-sub{font-size:.75rem;color:var(--muted);margin-bottom:10px}
+.sv-radio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:6px}
+@media(max-width:400px){.sv-radio-grid{grid-template-columns:1fr 1fr}}
+.sv-r-card{background:var(--sur);border:2px solid var(--bdr);border-radius:12px;padding:11px 10px;cursor:pointer;text-align:center;transition:all .18s;touch-action:manipulation}
+.sv-r-card:hover,.sv-r-card:active{border-color:var(--pri);transform:translateY(-2px)}
+.sv-r-card.sel{border-color:var(--pri);background:var(--glow)}
+.sv-r-ico{font-size:1.3rem;margin-bottom:4px}
+.sv-r-nm{font-size:.78rem;font-weight:700;margin-bottom:1px}
+.sv-r-vi{font-size:.65rem;color:var(--muted)}
+/* multi-select activity section */
+.sv-section{margin-bottom:20px}
+.sv-sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.sv-sec-ttl{font-size:.88rem;font-weight:700}
+.sv-sec-cnt{font-size:.7rem;font-weight:700;color:var(--grn);background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.25);border-radius:20px;padding:2px 8px}
+.sv-check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px}
+@media(max-width:380px){.sv-check-grid{grid-template-columns:repeat(2,1fr)}}
+.sv-c-card{background:var(--sur);border:2px solid var(--bdr);border-radius:11px;padding:9px 8px;cursor:pointer;transition:all .18s;position:relative;touch-action:manipulation;text-align:center}
+.sv-c-card:hover,.sv-c-card:active{border-color:var(--pri)}
+.sv-c-card.sel{border-color:var(--pri);background:var(--glow)}
+.sv-c-ck{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.55rem;opacity:0;transition:opacity .15s}
+.sv-c-card.sel .sv-c-ck{opacity:1}
+.sv-c-ico{font-size:1.25rem;margin-bottom:3px}
+.sv-c-nm{font-size:.72rem;font-weight:700;line-height:1.3}
+/* confirm step */
+.cf-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 
 /* level cards */
 .lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:9px;margin-bottom:18px}
@@ -332,54 +360,127 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
         <div class="sdot" id="sd2">2</div>
         <div class="sln" id="sl2"></div>
         <div class="sdot" id="sd3">3</div>
+        <div class="sln" id="sl3"></div>
+        <div class="sdot" id="sd4">4</div>
       </div>
 
-      <!-- step 1 -->
+      <!-- STEP 1: Self-Assessment -->
       <div id="sv1">
-        <div class="step-tag">Buoc 1 / 3 — Self-Assessment</div>
-        <div class="step-ttl">Trinh do hien tai cua ban?</div>
+        <div class="step-tag">Step 1 / 4 — Self-Assessment</div>
+        <div class="step-ttl">What is your English level?</div>
         <div class="step-sub">Chon muc do phu hop · App se tuy chinh cau hoi theo trinh do</div>
         <div class="lv-grid" id="lv-grid"></div>
-        <div class="hint-msg" id="hint1">&#128071; Hay chon mot trinh do de tiep tuc</div>
+        <div class="hint-msg" id="hint1">&#128071; Please select your level to continue</div>
         <div class="row">
-          <button class="btn btn-pri" id="btn-next1">Tiep theo &#8250;</button>
+          <button class="btn btn-pri" id="btn-next1">Next &#8250;</button>
         </div>
       </div>
 
-      <!-- step 2 -->
+      <!-- STEP 2: About You (Job + Dwelling) -->
       <div id="sv2" style="display:none">
-        <div class="step-tag">Buoc 2 / 3 — Background Survey</div>
-        <div class="step-ttl">Chon chu de quen thuoc</div>
-        <div class="step-sub">Chon it nhat 3 chu de · Da chon: <strong id="tc-num">0</strong></div>
-        <div class="tp-grid" id="tp-grid"></div>
-        <div class="hint-msg" id="hint2">&#128071; Hay chon it nhat 3 chu de</div>
+        <div class="step-tag">Step 2 / 4 — Background Survey</div>
+        <div class="step-ttl">Tell me about yourself</div>
+        <div class="step-sub">Cac thong tin nay giup chon dung cau hoi phu hop voi ban</div>
+
+        <div class="sv-q">
+          <div class="sv-q-lbl">Q1 · What is your current occupation?</div>
+          <div class="sv-q-sub">Nghe nghiep / tinh trang hien tai cua ban</div>
+          <div class="sv-radio-grid" id="job-grid"></div>
+        </div>
+
+        <div class="sv-q">
+          <div class="sv-q-lbl">Q2 · What type of home do you currently live in?</div>
+          <div class="sv-q-sub">Noi ban dang sinh song hien tai</div>
+          <div class="sv-radio-grid" id="dwelling-grid"></div>
+        </div>
+
+        <div class="hint-msg" id="hint2">&#128071; Please answer both questions to continue</div>
         <div class="row">
-          <button class="btn btn-out" id="btn-back1">&#8249; Quay lai</button>
-          <button class="btn btn-pri" id="btn-next2">Tiep theo &#8250;</button>
+          <button class="btn btn-out" id="btn-back1">&#8249; Back</button>
+          <button class="btn btn-pri" id="btn-next2">Next &#8250;</button>
         </div>
       </div>
 
-      <!-- step 3 -->
+      <!-- STEP 3: Activities & Interests -->
       <div id="sv3" style="display:none">
-        <div class="step-tag">Buoc 3 / 3 — Xac nhan</div>
-        <div class="step-ttl">San sang bat dau?</div>
-        <div class="step-sub">18 cau hoi · khoang 30 phut · dung format OPIC</div>
+        <div class="step-tag">Step 3 / 4 — Activities &amp; Interests</div>
+        <div class="step-ttl">What do you enjoy?</div>
+        <div class="step-sub">Chon tat ca nhung gi phu hop voi ban · cang nhieu cang tot</div>
+
+        <div class="sv-section">
+          <div class="sv-sec-hd">
+            <span class="sv-sec-ttl">&#127914; Free Time Activities</span>
+            <span class="sv-sec-cnt" id="cnt-leisure">0 da chon</span>
+          </div>
+          <div class="sv-check-grid" id="leisure-grid"></div>
+        </div>
+
+        <div class="sv-section">
+          <div class="sv-sec-hd">
+            <span class="sv-sec-ttl">&#127912; Hobbies &amp; Interests</span>
+            <span class="sv-sec-cnt" id="cnt-hobby">0 da chon</span>
+          </div>
+          <div class="sv-check-grid" id="hobby-grid"></div>
+        </div>
+
+        <div class="sv-section">
+          <div class="sv-sec-hd">
+            <span class="sv-sec-ttl">&#9917; Sports &amp; Exercise</span>
+            <span class="sv-sec-cnt" id="cnt-sports">0 da chon</span>
+          </div>
+          <div class="sv-check-grid" id="sports-grid"></div>
+        </div>
+
+        <div class="sv-section">
+          <div class="sv-sec-hd">
+            <span class="sv-sec-ttl">&#9992; Travel Experience</span>
+            <span class="sv-sec-cnt" id="cnt-travel">0 da chon</span>
+          </div>
+          <div class="sv-check-grid" id="travel-grid"></div>
+        </div>
+
+        <div class="hint-msg" id="hint3">&#128071; Please select at least one activity or interest</div>
+        <div class="row">
+          <button class="btn btn-out" id="btn-back2">&#8249; Back</button>
+          <button class="btn btn-pri" id="btn-next3">Next &#8250;</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Confirm -->
+      <div id="sv4" style="display:none">
+        <div class="step-tag">Step 4 / 4 — Confirm</div>
+        <div class="step-ttl">Ready to begin?</div>
+        <div class="step-sub">18 questions · approx. 30 minutes · OPIC format</div>
         <div class="cf-card">
-          <div style="display:flex;gap:18px;flex-wrap:wrap">
-            <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Trinh do</div><div id="cf-lv" style="font-size:1.3rem;font-weight:800;color:var(--pri)"></div></div>
-            <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">Chu de</div><div id="cf-tp" style="display:flex;flex-wrap:wrap;gap:5px"></div></div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Level</div>
+              <div id="cf-lv" style="font-size:1.3rem;font-weight:800;color:var(--pri)"></div>
+            </div>
+            <div>
+              <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Occupation</div>
+              <div id="cf-job" style="font-weight:700;font-size:.9rem"></div>
+            </div>
+            <div>
+              <div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Home</div>
+              <div id="cf-dwell" style="font-weight:700;font-size:.9rem"></div>
+            </div>
+          </div>
+          <div style="margin-top:13px">
+            <div style="font-size:.72rem;color:var(--muted);margin-bottom:5px">Topics selected from your background</div>
+            <div id="cf-tp" class="cf-row"></div>
           </div>
         </div>
         <div class="tip-box">
-          <div class="tip-ttl">&#128161; Huong dan</div>
-          <div class="tip-row"><span>&#9203;</span><span><strong>Chuan bi:</strong> 30s doc cau hoi va nghi y</span></div>
-          <div class="tip-row"><span>&#127897;</span><span><strong>Noi:</strong> 60-90s · co gang noi du thoi gian</span></div>
-          <div class="tip-row"><span>&#128161;</span><span>Nhan <strong>Goi y</strong> neu can y tuong</span></div>
-          <div class="tip-row"><span>&#128221;</span><span>Nhan <strong>Cau mau</strong> de hoc cach dien dat</span></div>
+          <div class="tip-ttl">&#128161; How the test works</div>
+          <div class="tip-row"><span>&#128266;</span><span>Each question is <strong>read aloud twice</strong> — text is hidden on the 1st listen</span></div>
+          <div class="tip-row"><span>&#9203;</span><span><strong>Prep:</strong> read &amp; think (20-40s depending on level)</span></div>
+          <div class="tip-row"><span>&#127897;</span><span><strong>Speak:</strong> 60s normal · <strong>90s</strong> for roleplay situations</span></div>
+          <div class="tip-row"><span>&#127917;</span><span>3 roleplay / unexpected situation questions included</span></div>
         </div>
         <div class="row">
-          <button class="btn btn-out" id="btn-back2">&#8249; Quay lai</button>
-          <button class="btn btn-pri btn-lg" id="btn-go-mic">&#127897; Bat dau thi!</button>
+          <button class="btn btn-out" id="btn-back3">&#8249; Back</button>
+          <button class="btn btn-pri btn-lg" id="btn-go-mic">&#127897; Start Test!</button>
         </div>
       </div>
     </div>
@@ -547,6 +648,73 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  DATA — defined as arrays/objects upfront
 // ══════════════════════════════════════════
+// ══════════════════════════════════════════
+//  BACKGROUND SURVEY DATA
+// ══════════════════════════════════════════
+var JOBS = [
+  {id:"worker",  ico:"&#128188;", nm:"Company / Office Worker", vi:"Nhan vien cong ty"},
+  {id:"student", ico:"&#128218;", nm:"Student",                 vi:"Hoc sinh / Sinh vien"},
+  {id:"teacher", ico:"&#127979;", nm:"Teacher / Educator",      vi:"Giao vien / Giang vien"},
+  {id:"selfemp", ico:"&#127978;", nm:"Self-employed / Business", vi:"Tu kinh doanh"},
+  {id:"other",   ico:"&#128101;", nm:"Other / No job",           vi:"Khac / Chua di lam"}
+];
+
+var DWELLINGS = [
+  {id:"alone",     ico:"&#127968;", nm:"Apartment / House (alone)",   vi:"Song mot minh"},
+  {id:"family",    ico:"&#128106;", nm:"With family",                  vi:"Song cung gia dinh"},
+  {id:"roommates", ico:"&#129309;", nm:"With friends / roommates",     vi:"Song cung ban be"},
+  {id:"dorm",      ico:"&#127979;", nm:"School dormitory",             vi:"Ky tuc xa"},
+  {id:"military",  ico:"&#127981;", nm:"Military housing",             vi:"Doanh trai"}
+];
+
+var LEISURE_ITEMS = [
+  {id:"movie",      ico:"&#127916;", nm:"Watching Movies",       vi:"Xem phim (rap)"},
+  {id:"concert",    ico:"&#127908;", nm:"Concerts / Live Music", vi:"Hoa nhac / bieu dien"},
+  {id:"theatre",    ico:"&#127917;", nm:"Theatre / Plays",       vi:"Xem kich / dien xuat"},
+  {id:"park",       ico:"&#127807;", nm:"Going to the Park",     vi:"Di cong vien"},
+  {id:"camping",    ico:"&#9978;",   nm:"Camping",               vi:"Cam trai"},
+  {id:"beach",      ico:"&#127958;", nm:"Beach / Outdoor",       vi:"Bien / Ngoai troi"},
+  {id:"watchsport", ico:"&#127936;", nm:"Watching Sports",       vi:"Xem thi dau the thao"},
+  {id:"gaming",     ico:"&#127918;", nm:"Video Games",           vi:"Choi game"}
+];
+
+var HOBBY_ITEMS = [
+  {id:"reading",     ico:"&#128218;", nm:"Reading Books",       vi:"Doc sach"},
+  {id:"music",       ico:"&#127925;", nm:"Listening to Music",  vi:"Nghe nhac"},
+  {id:"instruments", ico:"&#127928;", nm:"Playing Instruments", vi:"Choi nhac cu"},
+  {id:"cooking",     ico:"&#127859;", nm:"Cooking",             vi:"Nau an"},
+  {id:"painting",    ico:"&#127912;", nm:"Painting / Drawing",  vi:"Ve / Thiet ke"},
+  {id:"dancing",     ico:"&#128111;", nm:"Dancing",             vi:"Nhay"},
+  {id:"writing",     ico:"&#9997;",   nm:"Writing / Blogging",  vi:"Viet van / Blog"},
+  {id:"gardening",   ico:"&#127807;", nm:"Gardening",           vi:"Lam vuon"},
+  {id:"pets",        ico:"&#128062;", nm:"Raising Pets",        vi:"Nuoi thu cung"},
+  {id:"shopping",    ico:"&#128717;", nm:"Shopping",            vi:"Mua sam"}
+];
+
+var SPORT_ITEMS = [
+  {id:"soccer",    ico:"&#9917;",   nm:"Soccer",          vi:"Bong da"},
+  {id:"basketball",ico:"&#127936;", nm:"Basketball",      vi:"Bong ro"},
+  {id:"badminton", ico:"&#127992;", nm:"Badminton",       vi:"Cau long"},
+  {id:"tennis",    ico:"&#127934;", nm:"Tennis",          vi:"Tennis"},
+  {id:"swimming",  ico:"&#127946;", nm:"Swimming",        vi:"Boi loi"},
+  {id:"jogging",   ico:"&#127939;", nm:"Jogging / Running",vi:"Chay bo"},
+  {id:"yoga",      ico:"&#129340;", nm:"Yoga",            vi:"Yoga"},
+  {id:"hiking",    ico:"&#127956;", nm:"Hiking / Trekking",vi:"Leo nui"},
+  {id:"cycling",   ico:"&#128690;", nm:"Cycling",         vi:"Dap xe"},
+  {id:"gym",       ico:"&#127947;", nm:"Gym / Working Out",vi:"Tap gym"},
+  {id:"golf",      ico:"&#9971;",   nm:"Golf",            vi:"Golf"},
+  {id:"volleyball",ico:"&#127952;", nm:"Volleyball",      vi:"Bong chuyen"},
+  {id:"nosport",   ico:"&#128683;", nm:"No sports",       vi:"Khong tap"}
+];
+
+var TRAVEL_ITEMS = [
+  {id:"domestic",    ico:"&#128506;", nm:"Domestic trips",        vi:"Du lich trong nuoc"},
+  {id:"overseas",    ico:"&#9992;",   nm:"International trips",   vi:"Du lich nuoc ngoai"},
+  {id:"biz_dom",     ico:"&#128188;", nm:"Domestic business trips",vi:"Cong tac trong nuoc"},
+  {id:"biz_int",     ico:"&#127758;", nm:"Intl business trips",   vi:"Cong tac nuoc ngoai"},
+  {id:"notravel",    ico:"&#127968;", nm:"No travel (stay home)", vi:"Khong di du lich"}
+];
+
 var LEVELS = [
   {id:"NM",g:"novice",lb:"Novice Mid",ds:"Vai tu, cum tu don gian",prep:40,spk:60},
   {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, thi hien tai",prep:35,spk:60},
@@ -1059,7 +1227,9 @@ EXTRAS.push(
 // ══════════════════════════════════════════
 var ST = {
   level: null,
-  topics: [],
+  // background survey answers
+  survey: { job: null, dwelling: null, leisure: [], hobbies: [], sports: [], travel: [] },
+  topics: [],   // derived from survey
   questions: [],
   qi: 0,
   phase: "prep",
@@ -1085,7 +1255,12 @@ try { ST.hist = JSON.parse(localStorage.getItem("opic_hist") || "[]"); } catch(e
 // ══════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", function() {
   buildLvGrid();
-  buildTpGrid();
+  buildRadioGrid("job-grid",      JOBS,          "job");
+  buildRadioGrid("dwelling-grid", DWELLINGS,     "dwelling");
+  buildCheckGrid("leisure-grid",  LEISURE_ITEMS, ST.survey.leisure, "cnt-leisure");
+  buildCheckGrid("hobby-grid",    HOBBY_ITEMS,   ST.survey.hobbies,  "cnt-hobby");
+  buildCheckGrid("sports-grid",   SPORT_ITEMS,   ST.survey.sports,   "cnt-sports");
+  buildCheckGrid("travel-grid",   TRAVEL_ITEMS,  ST.survey.travel,   "cnt-travel");
   bindButtons();
 });
 
@@ -1121,35 +1296,95 @@ function buildLvGrid() {
   });
 }
 
-function buildTpGrid() {
-  var grid = document.getElementById("tp-grid");
+// ── Radio grid builder (single-select) ────────────────────────────────────
+function buildRadioGrid(containerId, items, stateKey) {
+  var grid = document.getElementById(containerId);
   var html = "";
-  for (var i = 0; i < TOPICS.length; i++) {
-    var tp = TOPICS[i];
-    html += '<div class="tp-card" data-tp="' + tp.id + '">' +
-      '<div class="tp-ck">&#10003;</div>' +
-      '<div class="tp-ico">' + IC[tp.ic] + '</div>' +
-      '<div class="tp-nm">' + tp.nm + '</div>' +
-      '<div class="tp-vi">' + tp.vi + '</div>' +
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    html += '<div class="sv-r-card" data-id="' + it.id + '">' +
+      '<div class="sv-r-ico">' + it.ico + '</div>' +
+      '<div class="sv-r-nm">' + it.nm + '</div>' +
+      '<div class="sv-r-vi">' + it.vi + '</div>' +
       '</div>';
   }
   grid.innerHTML = html;
-
   grid.addEventListener("click", function(e) {
-    var card = e.target.closest(".tp-card");
+    var card = e.target.closest(".sv-r-card");
     if (!card) return;
-    var id = card.getAttribute("data-tp");
-    var idx = ST.topics.indexOf(id);
-    if (idx > -1) {
-      ST.topics.splice(idx, 1);
-      card.classList.remove("sel");
-    } else {
-      ST.topics.push(id);
-      card.classList.add("sel");
-    }
-    document.getElementById("tc-num").textContent = ST.topics.length;
-    if (ST.topics.length >= 3) document.getElementById("hint2").style.display = "none";
+    var id = card.getAttribute("data-id");
+    ST.survey[stateKey] = id;
+    var cards = grid.querySelectorAll(".sv-r-card");
+    for (var j = 0; j < cards.length; j++) cards[j].classList.remove("sel");
+    card.classList.add("sel");
+    document.getElementById("hint2").style.display = "none";
   });
+}
+
+// ── Checkbox grid builder (multi-select) ──────────────────────────────────
+function buildCheckGrid(containerId, items, stateArr, cntId) {
+  var grid = document.getElementById(containerId);
+  var html = "";
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    html += '<div class="sv-c-card" data-id="' + it.id + '">' +
+      '<div class="sv-c-ck">&#10003;</div>' +
+      '<div class="sv-c-ico">' + it.ico + '</div>' +
+      '<div class="sv-c-nm">' + it.nm + '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+  grid.addEventListener("click", function(e) {
+    var card = e.target.closest(".sv-c-card");
+    if (!card) return;
+    var id = card.getAttribute("data-id");
+    var idx = stateArr.indexOf(id);
+    if (idx > -1) { stateArr.splice(idx, 1); card.classList.remove("sel"); }
+    else           { stateArr.push(id);       card.classList.add("sel"); }
+    document.getElementById(cntId).textContent = stateArr.length + " da chon";
+    document.getElementById("hint3").style.display = "none";
+  });
+}
+
+// ── Derive QDB topic keys from survey answers ──────────────────────────────
+function hasVal(arr, v) { return arr.indexOf(v) > -1; }
+function addTopic(list, t) { if (list.indexOf(t) === -1) list.push(t); }
+
+function deriveTopics() {
+  var s = ST.survey;
+  var t = [];
+
+  // Job → always include work topic
+  addTopic(t, "work");
+  // Dwelling → always include home topic
+  addTopic(t, "home");
+
+  // Leisure
+  if (hasVal(s.leisure, "movie") || hasVal(s.leisure, "theatre")) addTopic(t, "movie");
+  if (hasVal(s.leisure, "concert"))                                addTopic(t, "music");
+  if (hasVal(s.leisure, "park") || hasVal(s.leisure, "camping") || hasVal(s.leisure, "beach")) addTopic(t, "travel");
+
+  // Hobbies
+  if (hasVal(s.hobbies, "reading"))                               addTopic(t, "read");
+  if (hasVal(s.hobbies, "music") || hasVal(s.hobbies, "instruments")) addTopic(t, "music");
+  if (hasVal(s.hobbies, "cooking"))                               addTopic(t, "food");
+  if (hasVal(s.hobbies, "shopping"))                              addTopic(t, "shop");
+  if (hasVal(s.hobbies, "painting") || hasVal(s.hobbies, "dancing") || hasVal(s.hobbies, "writing")) addTopic(t, "hobby");
+
+  // Sports
+  var hasSport = s.sports.length > 0 && !(s.sports.length === 1 && s.sports[0] === "nosport");
+  if (hasSport) addTopic(t, "sports");
+  if (hasVal(s.sports, "yoga") || hasVal(s.sports, "gym") || hasVal(s.sports, "hiking")) addTopic(t, "health");
+
+  // Travel
+  var hasTravel = s.travel.length > 0 && !(s.travel.length === 1 && s.travel[0] === "notravel");
+  if (hasTravel) addTopic(t, "travel");
+
+  // Pad with fallbacks if fewer than 4 topics
+  var fallbacks = ["tech", "movie", "music", "food", "travel", "hobby", "health", "shop", "read"];
+  for (var i = 0; i < fallbacks.length && t.length < 5; i++) addTopic(t, fallbacks[i]);
+
+  return t;
 }
 
 // ══════════════════════════════════════════
@@ -1163,8 +1398,10 @@ function bindButtons() {
   // survey nav
   document.getElementById("btn-next1").addEventListener("click", function() { svGo(2); });
   document.getElementById("btn-next2").addEventListener("click", function() { svGo(3); });
+  document.getElementById("btn-next3").addEventListener("click", function() { svGo(4); });
   document.getElementById("btn-back1").addEventListener("click", function() { svGo(1); });
   document.getElementById("btn-back2").addEventListener("click", function() { svGo(2); });
+  document.getElementById("btn-back3").addEventListener("click", function() { svGo(3); });
   document.getElementById("btn-go-mic").addEventListener("click", function() { goPage("mic"); });
 
   // mic
@@ -1207,53 +1444,68 @@ function goPage(name) {
 //  SURVEY NAVIGATION
 // ══════════════════════════════════════════
 function svGo(step) {
-  // validate
+  // ── Validation ────────────────────────────────────────
   if (step === 2 && !ST.level) {
-    document.getElementById("hint1").style.display = "block";
-    return;
+    document.getElementById("hint1").style.display = "block"; return;
   }
-  if (step === 3 && ST.topics.length < 3) {
-    document.getElementById("hint2").style.display = "block";
-    return;
+  if (step === 3 && (!ST.survey.job || !ST.survey.dwelling)) {
+    document.getElementById("hint2").style.display = "block"; return;
+  }
+  if (step === 4) {
+    var anyActivity = ST.survey.leisure.length + ST.survey.hobbies.length +
+                      ST.survey.sports.length + ST.survey.travel.length;
+    if (anyActivity === 0) {
+      document.getElementById("hint3").style.display = "block"; return;
+    }
   }
 
-  // show/hide steps
-  for (var s = 1; s <= 3; s++) {
+  // ── Show/hide step panels ─────────────────────────────
+  for (var s = 1; s <= 4; s++) {
     document.getElementById("sv" + s).style.display = (s === step) ? "block" : "none";
     var dot = document.getElementById("sd" + s);
-    if (s < step) {
-      dot.className = "sdot dn";
-      dot.textContent = "✓";
-    } else if (s === step) {
-      dot.className = "sdot act";
-      dot.textContent = String(s);
-    } else {
-      dot.className = "sdot";
-      dot.textContent = String(s);
-    }
-    if (s < 3) {
-      document.getElementById("sl" + s).className = "sln" + (s < step ? " dn" : "");
-    }
+    if (s < step)       { dot.className = "sdot dn"; dot.textContent = "✓"; }
+    else if (s === step){ dot.className = "sdot act"; dot.textContent = String(s); }
+    else                { dot.className = "sdot"; dot.textContent = String(s); }
+    if (s < 4) document.getElementById("sl" + s).className = "sln" + (s < step ? " dn" : "");
   }
 
-  // fill confirm step
-  if (step === 3) {
+  // ── Fill confirm panel ────────────────────────────────
+  if (step === 4) {
+    // Derive topics now
+    ST.topics = deriveTopics();
+
+    // Level
     var lv = null;
     for (var k = 0; k < LEVELS.length; k++) {
       if (LEVELS[k].id === ST.level) { lv = LEVELS[k]; break; }
     }
     document.getElementById("cf-lv").textContent = lv ? (lv.id + " — " + lv.lb) : ST.level;
 
+    // Job label
+    var jobLbl = ST.survey.job;
+    for (var j = 0; j < JOBS.length; j++) {
+      if (JOBS[j].id === ST.survey.job) { jobLbl = JOBS[j].nm; break; }
+    }
+    document.getElementById("cf-job").textContent = jobLbl;
+
+    // Dwelling label
+    var dwLbl = ST.survey.dwelling;
+    for (var d = 0; d < DWELLINGS.length; d++) {
+      if (DWELLINGS[d].id === ST.survey.dwelling) { dwLbl = DWELLINGS[d].nm; break; }
+    }
+    document.getElementById("cf-dwell").textContent = dwLbl;
+
+    // Topic tags
+    var TOPIC_LABELS = {
+      work:"Work", home:"Home", movie:"Movies", music:"Music", read:"Reading",
+      food:"Food", shop:"Shopping", hobby:"Hobbies", sports:"Sports",
+      health:"Health", travel:"Travel", tech:"Technology"
+    };
     var tpHtml = "";
-    for (var t = 0; t < ST.topics.length; t++) {
-      var topicId = ST.topics[t];
-      var topic = null;
-      for (var q = 0; q < TOPICS.length; q++) {
-        if (TOPICS[q].id === topicId) { topic = TOPICS[q]; break; }
-      }
-      if (topic) {
-        tpHtml += '<span style="background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:3px 9px;font-size:.7rem">' + IC[topic.ic] + ' ' + topic.nm + '</span>';
-      }
+    for (var ti = 0; ti < ST.topics.length; ti++) {
+      var tid = ST.topics[ti];
+      tpHtml += '<span style="background:var(--glow);border:1px solid var(--pri);border-radius:20px;padding:3px 10px;font-size:.7rem;color:var(--pri);font-weight:700">' +
+        (TOPIC_LABELS[tid] || tid) + '</span>';
     }
     document.getElementById("cf-tp").innerHTML = tpHtml;
   }
@@ -1351,7 +1603,14 @@ function shuffle(arr) {
 
 function quickStart() {
   ST.level = "IM2";
-  ST.topics = ["home","work","hobby","travel","tech"];
+  ST.survey = {
+    job: "worker", dwelling: "family",
+    leisure: ["movie","concert","park"],
+    hobbies: ["music","cooking","reading"],
+    sports:  ["jogging","gym"],
+    travel:  ["domestic","overseas"]
+  };
+  ST.topics = deriveTopics();
   document.getElementById("hdr-lv").textContent = "IM2";
   goPage("mic");
 }
