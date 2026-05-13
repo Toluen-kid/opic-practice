@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1117">
+<title>OPIC Practice</title>
+<style>
+:root{
+  --bg:#0f1117;--sur:#1a1d2e;--sur2:#252840;--bdr:#2e3254;
+  --pri:#6c63ff;--glow:rgba(108,99,255,.22);
+  --grn:#00d4aa;--red:#ff6b6b;--yel:#ffd93d;
+  --txt:#e8eaf0;--muted:#7c82a0;
+  --green:#4caf50;--orange:#ff9800;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--txt);
+  min-height:100vh;overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+/* bg */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.08;pointer-events:none;z-index:0;animation:fl 9s ease-in-out infinite}
+.orb1{width:500px;height:500px;background:var(--pri);top:-160px;left:-160px}
+.orb2{width:400px;height:400px;background:var(--grn);bottom:-120px;right:-120px;animation-delay:-4.5s}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-35px)}}
+.wrap{position:relative;z-index:1}
+
+/* header */
+header{
+  position:sticky;top:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));
+  background:rgba(15,17,23,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--bdr);
+}
+.logo{display:flex;align-items:center;gap:8px;font-size:1.15rem;font-weight:800;flex-shrink:0}
+.logo-ico{width:32px;height:32px;background:linear-gradient(135deg,var(--pri),var(--grn));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.logo-txt{background:linear-gradient(135deg,var(--pri),var(--grn));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav{display:flex;gap:2px}
+.nav-btn{background:none;border:none;cursor:pointer;padding:7px 11px;border-radius:9px;color:var(--muted);font-size:.8rem;font-weight:600;transition:all .2s;white-space:nowrap;min-height:36px}
+.nav-btn.act{color:var(--pri);background:var(--glow)}
+.nav-btn:hover{color:var(--txt)}
+.lv-tag{padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:700;background:var(--glow);border:1px solid var(--pri);color:var(--pri);flex-shrink:0}
+
+/* screens */
+.scr{display:none;min-height:calc(100vh - 58px);padding:24px 14px 48px}
+.scr.show{display:block}
+#pg-home.show{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 16px}
+#pg-mic.show{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px 16px}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:none;border-radius:13px;cursor:pointer;font-weight:700;
+  transition:all .18s;user-select:none;touch-action:manipulation;
+  padding:13px 22px;font-size:.9rem;min-height:48px;
+}
+.btn:active{transform:scale(.96)}
+.btn-pri{background:linear-gradient(135deg,var(--pri),#8b7cf8);color:#fff;box-shadow:0 4px 18px var(--glow)}
+.btn-pri:hover{box-shadow:0 8px 28px var(--glow);transform:translateY(-1px)}
+.btn-grn{background:linear-gradient(135deg,var(--grn),#00a884);color:#0f1117}
+.btn-red{background:linear-gradient(135deg,var(--red),#e53935);color:#fff}
+.btn-out{background:transparent;border:1.5px solid var(--bdr);color:var(--txt)}
+.btn-out:hover{border-color:var(--pri);color:var(--pri)}
+.btn-lg{padding:15px 34px;font-size:1rem;border-radius:15px}
+.btn-sm{padding:8px 15px;font-size:.78rem;min-height:38px}
+.btn-blk{width:100%}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ─── HOME ─── */
+.home-inner{max-width:540px;width:100%}
+.badge-tag{display:inline-block;padding:5px 13px;border-radius:20px;background:var(--glow);border:1px solid var(--pri);color:var(--pri);font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:18px}
+h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;margin-bottom:12px}
+.hl{background:linear-gradient(135deg,var(--pri),var(--grn));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--muted);font-size:.93rem;line-height:1.65;margin-bottom:24px}
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:24px;text-align:left}
+@media(max-width:440px){.feats{grid-template-columns:1fr}}
+.feat{background:var(--sur);border:1px solid var(--bdr);border-radius:13px;padding:13px}
+.feat-i{font-size:1.35rem;margin-bottom:6px}
+.feat-t{font-size:.8rem;font-weight:700;margin-bottom:2px}
+.feat-d{font-size:.7rem;color:var(--muted)}
+
+/* ─── SURVEY ─── */
+.sv-wrap{max-width:700px;margin:0 auto}
+.steps-bar{display:flex;align-items:center;gap:7px;margin-bottom:26px}
+.sdot{width:28px;height:28px;border-radius:50%;border:2px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .25s}
+.sdot.act{border-color:var(--pri);background:var(--pri);color:#fff}
+.sdot.dn{border-color:var(--grn);background:var(--grn);color:var(--bg)}
+.sln{flex:1;height:2px;background:var(--bdr);border-radius:2px;transition:background .25s}
+.sln.dn{background:var(--grn)}
+.step-tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--pri);margin-bottom:7px}
+.step-ttl{font-size:1.42rem;font-weight:800;margin-bottom:6px}
+.step-sub{color:var(--muted);font-size:.86rem;margin-bottom:18px;line-height:1.5}
+
+/* level cards */
+.lv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:9px;margin-bottom:18px}
+.lv-card{
+  background:var(--sur);border:2px solid var(--bdr);border-radius:13px;
+  padding:13px 10px;cursor:pointer;text-align:center;transition:all .18s;
+  touch-action:manipulation;
+}
+.lv-card:hover,.lv-card:active{border-color:var(--pri);transform:translateY(-2px)}
+.lv-card.sel{border-color:var(--pri);background:var(--glow)}
+.lv-nm{font-size:1.1rem;font-weight:900;margin-bottom:2px}
+.lv-nm.novice{color:#78909c}
+.lv-nm.intermediate{color:var(--pri)}
+.lv-nm.advanced{color:var(--yel)}
+.lv-lb{font-size:.65rem;color:var(--muted);margin-bottom:3px}
+.lv-ds{font-size:.65rem;color:var(--muted);line-height:1.35}
+
+/* topic cards */
+.tp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px;margin-bottom:18px}
+@media(max-width:380px){.tp-grid{grid-template-columns:repeat(2,1fr)}}
+.tp-card{
+  background:var(--sur);border:2px solid var(--bdr);border-radius:13px;
+  padding:13px 11px;cursor:pointer;transition:all .18s;position:relative;
+  touch-action:manipulation;
+}
+.tp-card:hover,.tp-card:active{border-color:var(--pri);transform:translateY(-2px)}
+.tp-card.sel{border-color:var(--pri);background:var(--glow)}
+.tp-ck{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.62rem;opacity:0;transition:opacity .18s}
+.tp-card.sel .tp-ck{opacity:1}
+.tp-ico{font-size:1.45rem;margin-bottom:6px}
+.tp-nm{font-size:.8rem;font-weight:700}
+.tp-vi{font-size:.68rem;color:var(--muted)}
+.hint-msg{font-size:.8rem;color:var(--yel);margin-bottom:13px;padding:9px 12px;background:rgba(255,215,61,.08);border-radius:9px;border:1px solid rgba(255,215,61,.2);display:none}
+
+/* confirm */
+.cf-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:18px;margin-bottom:16px}
+.tip-box{background:linear-gradient(135deg,rgba(108,99,255,.07),rgba(0,212,170,.05));border:1px solid rgba(108,99,255,.18);border-radius:13px;padding:15px;margin-bottom:18px;font-size:.82rem}
+.tip-ttl{font-weight:700;color:var(--pri);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.tip-row{display:flex;gap:8px;margin-bottom:6px;color:var(--muted);line-height:1.5}
+
+/* ─── MIC ─── */
+.mic-inner{max-width:400px;width:100%}
+.mic-icon{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--pri),var(--grn));display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 22px;box-shadow:0 0 40px var(--glow);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 40px var(--glow)}50%{box-shadow:0 0 70px var(--glow)}}
+.mic-ttl{font-size:1.5rem;font-weight:900;margin-bottom:9px}
+.mic-desc{color:var(--muted);line-height:1.6;margin-bottom:22px;font-size:.88rem}
+.mic-stat{display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:11px;border:1px solid var(--bdr);margin-bottom:16px;font-size:.84rem;text-align:left}
+.mic-stat.ok{border-color:var(--green);background:rgba(76,175,80,.07)}
+.mic-stat.err{border-color:var(--red);background:rgba(244,67,54,.07)}
+.mic-stat.wait{border-color:var(--orange);background:rgba(255,152,0,.07)}
+.mdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.mdot.ok{background:var(--green)}
+.mdot.err{background:var(--red)}
+.mdot.wait{background:var(--orange);animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ─── EXAM ─── */
+.ex-wrap{max-width:740px;margin:0 auto}
+.ex-bar{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.ex-lbl{font-size:.78rem;color:var(--muted);font-weight:600;white-space:nowrap;min-width:52px}
+.prog-tr{flex:1;height:6px;background:var(--bdr);border-radius:6px;overflow:hidden}
+.prog-fl{height:100%;background:linear-gradient(90deg,var(--pri),var(--grn));border-radius:6px;transition:width .45s}
+.qt-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:13px;border:1px solid}
+.qwarm{background:rgba(76,175,80,.1);border-color:#4caf50;color:#4caf50}
+.qdesc{background:rgba(108,99,255,.1);border-color:var(--pri);color:var(--pri)}
+.qhabt{background:rgba(0,212,170,.1);border-color:var(--grn);color:var(--grn)}
+.qexp{background:rgba(255,215,61,.1);border-color:var(--yel);color:var(--yel)}
+.qcmp{background:rgba(179,136,255,.1);border-color:#b388ff;color:#b388ff}
+.qrole{background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)}
+.qunex{background:rgba(255,152,0,.1);border-color:var(--orange);color:var(--orange)}
+.q-card{background:var(--sur);border:1px solid var(--bdr);border-radius:18px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pri),var(--grn))}
+.q-num{font-size:.72rem;color:var(--muted);margin-bottom:9px}
+.q-en{font-size:1.08rem;font-weight:600;line-height:1.6;margin-bottom:9px}
+.q-vi{font-size:.84rem;color:var(--muted);line-height:1.5;padding:9px 12px;background:rgba(255,255,255,.025);border-radius:9px;border-left:3px solid var(--bdr)}
+.rp-box{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.18);border-radius:11px;padding:12px;margin:11px 0;font-size:.84rem;line-height:1.6}
+.rp-lbl{font-size:.68rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.exp-btn{width:100%;text-align:left;background:none;border:1.5px dashed var(--bdr);border-radius:9px;color:var(--muted);cursor:pointer;padding:8px 12px;font-size:.78rem;transition:all .18s;margin-top:9px;touch-action:manipulation}
+.exp-btn:hover,.exp-btn:active{border-color:var(--pri);color:var(--pri)}
+.exp-btn.grn-btn:hover,.exp-btn.grn-btn:active{border-color:var(--grn);color:var(--grn)}
+.exp-body{display:none;margin-top:7px;padding:12px;border-radius:9px;font-size:.82rem;line-height:1.7;color:var(--muted)}
+.exp-body.open{display:block}
+.hint-body{background:rgba(108,99,255,.06)}
+.samp-body{background:rgba(0,212,170,.06)}
+.samp-lbl{font-size:.68rem;font-weight:700;color:var(--grn);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.hint-row{display:flex;gap:7px;margin-bottom:5px}
+.hint-row::before{content:'→';color:var(--pri);flex-shrink:0}
+
+/* timer */
+.tm-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:18px;margin-bottom:16px;text-align:center}
+.tm-phase{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.tm-phase.prep{color:var(--yel)}
+.tm-phase.speak{color:var(--red)}
+.tm-phase.done{color:var(--green)}
+.ring-wrap{width:108px;height:108px;margin:0 auto 10px;position:relative}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bdr);stroke-width:7}
+.ring-fg{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.tm-num{font-size:2.8rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;transition:color .3s}
+.tm-num.prep{color:var(--yel)}
+.tm-num.speak{color:var(--red)}
+.tm-num.warn{color:var(--orange)}
+.tm-num.urgent{color:var(--red);animation:urg .5s infinite}
+@keyframes urg{0%,100%{opacity:1}50%{opacity:.4}}
+.tm-num.fin{color:var(--green)}
+.tm-hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+.viz-wrap{height:40px;display:flex;align-items:flex-end;justify-content:center;gap:3px;margin:12px 0}
+.viz-wrap.hidden{display:none}
+.vbar{width:5px;border-radius:4px;background:var(--red);min-height:3px;transition:height .08s}
+.ex-ctrl{display:flex;gap:9px;flex-wrap:wrap}
+@media(max-width:460px){.ex-ctrl .btn{flex:1;min-width:0}}
+
+/* ─── RESULTS ─── */
+.rs-wrap{max-width:660px;margin:0 auto}
+.rs-hd{text-align:center;margin-bottom:26px}
+.rs-card{background:var(--sur);border:1px solid var(--bdr);border-radius:16px;padding:20px;margin-bottom:14px}
+.est-lv{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,var(--pri),var(--grn));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+@media(max-width:360px){.st-grid{grid-template-columns:repeat(2,1fr)}}
+.st-box{background:var(--sur2);border-radius:11px;padding:12px;text-align:center}
+.st-n{font-size:1.55rem;font-weight:800}
+.st-l{font-size:.7rem;color:var(--muted)}
+.sc-ttl{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:13px}
+.sc-track{display:flex;gap:3px;margin-bottom:10px;align-items:stretch}
+.sseg{flex:1;border-radius:5px;padding:5px 2px;text-align:center;font-size:.6rem;font-weight:700;cursor:default;transition:transform .25s}
+.sseg.cur{transform:scale(1.1);position:relative}
+.sseg.cur::after{content:'▼';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--grn)}
+.s-nl{background:rgba(120,144,156,.18);color:#78909c}
+.s-nm{background:rgba(120,144,156,.22);color:#90a4ae}
+.s-nh{background:rgba(120,144,156,.28);color:#b0bec5}
+.s-il{background:rgba(108,99,255,.14);color:#9e8fff}
+.s-im1{background:rgba(108,99,255,.2);color:#a78bfa}
+.s-im2{background:rgba(108,99,255,.28);color:var(--pri)}
+.s-im3{background:rgba(108,99,255,.35);color:#7c3aed}
+.s-ih{background:rgba(0,212,170,.18);color:var(--grn)}
+.s-al{background:rgba(255,215,61,.18);color:var(--yel)}
+.s-am{background:rgba(255,215,61,.25);color:#f59e0b}
+.s-s{background:rgba(255,107,107,.18);color:var(--red)}
+.fb-list{list-style:none}
+.fb-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:.83rem;line-height:1.5}
+.fb-row:last-child{border:none}
+
+/* ─── HISTORY ─── */
+.hs-wrap{max-width:660px;margin:0 auto}
+.hs-item{background:var(--sur);border:1px solid var(--bdr);border-radius:13px;padding:14px;margin-bottom:9px;display:flex;align-items:center;gap:13px;transition:border-color .18s}
+.hs-item:hover{border-color:var(--pri)}
+.hs-lv{padding:3px 10px;border-radius:20px;font-size:.73rem;font-weight:700;background:var(--glow);border:1px solid var(--pri);color:var(--pri);flex-shrink:0}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--sur);border:1px solid var(--bdr);border-radius:18px;padding:26px;max-width:400px;width:100%;animation:mi .28s ease}
+@keyframes mi{from{opacity:0;transform:scale(.9) translateY(18px)}to{opacity:1;transform:none}}
+.modal-ttl{font-size:1.2rem;font-weight:800;margin-bottom:7px}
+.modal-msg{color:var(--muted);font-size:.86rem;line-height:1.5;margin-bottom:20px}
+.modal-row{display:flex;gap:9px;justify-content:flex-end}
+
+/* toast */
+#toasts{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));right:14px;z-index:600;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.toast{background:var(--sur2);border:1px solid var(--bdr);border-radius:11px;padding:10px 15px;font-size:.82rem;max-width:270px;animation:ti .28s ease;pointer-events:auto}
+@keyframes ti{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <header>
+    <div class="logo"><div class="logo-ico">&#127897;</div><span class="logo-txt">OPIC Practice</span></div>
+    <nav>
+      <button class="nav-btn act" id="nb-home" onclick="goPage('home')">&#127968; Home</button>
+      <button class="nav-btn" id="nb-history" onclick="goPage('history')">&#128202; History</button>
+    </nav>
+    <div class="lv-tag" id="hdr-lv">IM2</div>
+  </header>
+
+  <div id="toasts"></div>
+
+  <!-- modal -->
+  <div class="modal-bg" id="modal">
+    <div class="modal-box">
+      <div class="modal-ttl" id="mtl"></div>
+      <div class="modal-msg" id="mmg"></div>
+      <div class="modal-row" id="mbt"></div>
+    </div>
+  </div>
+
+  <!-- ===== HOME ===== -->
+  <div class="scr show" id="pg-home">
+    <div class="home-inner">
+      <div class="badge-tag">&#127942; OPIC Speaking Practice</div>
+      <h1 class="title">Luyen noi<br><span class="hl">OPIC tieng Anh</span></h1>
+      <p class="sub">Mo phong dung format ky thi — Background Survey, cau hoi co tinh gio, roleplay va tinh huong bat ngo.</p>
+      <div class="feats">
+        <div class="feat"><div class="feat-i">&#9201;</div><div class="feat-t">Tinh gio thuc te</div><div class="feat-d">30s chuan bi · 90s noi</div></div>
+        <div class="feat"><div class="feat-i">&#127917;</div><div class="feat-t">6 loai cau hoi</div><div class="feat-d">Describe, Habit, Roleplay…</div></div>
+        <div class="feat"><div class="feat-i">&#127897;</div><div class="feat-t">Ghi am thuc te</div><div class="feat-d">Mic + visualizer song am</div></div>
+      </div>
+      <div class="row" style="justify-content:center">
+        <button class="btn btn-pri btn-lg" id="btn-start-home">&#128640; Bat dau luyen tap</button>
+        <button class="btn btn-out btn-lg" id="btn-quick">&#9889; Quick (IM2)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SURVEY ===== -->
+  <div class="scr" id="pg-survey">
+    <div class="sv-wrap">
+      <div class="steps-bar">
+        <div class="sdot act" id="sd1">1</div>
+        <div class="sln" id="sl1"></div>
+        <div class="sdot" id="sd2">2</div>
+        <div class="sln" id="sl2"></div>
+        <div class="sdot" id="sd3">3</div>
+      </div>
+
+      <!-- step 1 -->
+      <div id="sv1">
+        <div class="step-tag">Buoc 1 / 3 — Self-Assessment</div>
+        <div class="step-ttl">Trinh do hien tai cua ban?</div>
+        <div class="step-sub">Chon muc do phu hop · App se tuy chinh cau hoi theo trinh do</div>
+        <div class="lv-grid" id="lv-grid"></div>
+        <div class="hint-msg" id="hint1">&#128071; Hay chon mot trinh do de tiep tuc</div>
+        <div class="row">
+          <button class="btn btn-pri" id="btn-next1">Tiep theo &#8250;</button>
+        </div>
+      </div>
+
+      <!-- step 2 -->
+      <div id="sv2" style="display:none">
+        <div class="step-tag">Buoc 2 / 3 — Background Survey</div>
+        <div class="step-ttl">Chon chu de quen thuoc</div>
+        <div class="step-sub">Chon it nhat 3 chu de · Da chon: <strong id="tc-num">0</strong></div>
+        <div class="tp-grid" id="tp-grid"></div>
+        <div class="hint-msg" id="hint2">&#128071; Hay chon it nhat 3 chu de</div>
+        <div class="row">
+          <button class="btn btn-out" id="btn-back1">&#8249; Quay lai</button>
+          <button class="btn btn-pri" id="btn-next2">Tiep theo &#8250;</button>
+        </div>
+      </div>
+
+      <!-- step 3 -->
+      <div id="sv3" style="display:none">
+        <div class="step-tag">Buoc 3 / 3 — Xac nhan</div>
+        <div class="step-ttl">San sang bat dau?</div>
+        <div class="step-sub">12 cau hoi · khoang 20 phut · dung format OPIC</div>
+        <div class="cf-card">
+          <div style="display:flex;gap:18px;flex-wrap:wrap">
+            <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Trinh do</div><div id="cf-lv" style="font-size:1.3rem;font-weight:800;color:var(--pri)"></div></div>
+            <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">Chu de</div><div id="cf-tp" style="display:flex;flex-wrap:wrap;gap:5px"></div></div>
+          </div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-ttl">&#128161; Huong dan</div>
+          <div class="tip-row"><span>&#9203;</span><span><strong>Chuan bi:</strong> 30s doc cau hoi va nghi y</span></div>
+          <div class="tip-row"><span>&#127897;</span><span><strong>Noi:</strong> 60-90s · co gang noi du thoi gian</span></div>
+          <div class="tip-row"><span>&#128161;</span><span>Nhan <strong>Goi y</strong> neu can y tuong</span></div>
+          <div class="tip-row"><span>&#128221;</span><span>Nhan <strong>Cau mau</strong> de hoc cach dien dat</span></div>
+        </div>
+        <div class="row">
+          <button class="btn btn-out" id="btn-back2">&#8249; Quay lai</button>
+          <button class="btn btn-pri btn-lg" id="btn-go-mic">&#127897; Bat dau thi!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MIC ===== -->
+  <div class="scr" id="pg-mic">
+    <div class="mic-inner">
+      <div class="mic-icon">&#127897;</div>
+      <h2 class="mic-ttl">Cap quyen Microphone</h2>
+      <p class="mic-desc">App can quyen microphone de ghi am cau tra loi va hien thi song am. Ban co the bo qua neu khong can.</p>
+
+      <!-- HTTPS warning box -->
+      <div id="mic-https-warn" style="display:none;background:rgba(255,152,0,.1);border:1px solid var(--orange);border-radius:12px;padding:14px 16px;margin-bottom:14px;font-size:.82rem;text-align:left;max-width:360px">
+        <div style="font-weight:700;color:var(--orange);margin-bottom:6px">&#9888; Mo bang file manager khong ho tro mic</div>
+        <div style="color:var(--muted);line-height:1.6">Trinh duyet chi cho phep mic khi mo qua <strong style="color:var(--txt)">HTTPS</strong>.<br>
+        Cach fix: Upload len <strong style="color:var(--grn)">Netlify / GitHub Pages</strong> roi mo link tren dien thoai.<br><br>
+        Hien tai ban van co the <strong style="color:var(--txt)">luyen tap binh thuong</strong> — chi khong co hien thi song am.</div>
+      </div>
+
+      <div class="mic-stat wait" id="mic-stat">
+        <div class="mdot wait" id="mic-dot"></div>
+        <span id="mic-txt">Chua cap quyen</span>
+      </div>
+
+      <!-- hint after denial -->
+      <div id="mic-skip-hint" style="display:none;font-size:.8rem;color:var(--yel);margin-bottom:10px;padding:8px 12px;background:rgba(255,215,61,.08);border-radius:9px;border:1px solid rgba(255,215,61,.2)">
+        &#128071; Nhan "Bo qua" de luyen tap binh thuong ma khong can mic
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:9px;width:100%;max-width:310px">
+        <button class="btn btn-pri btn-lg btn-blk" id="btn-mic-allow">&#127897; Cho phep Microphone</button>
+        <button class="btn btn-out btn-blk" id="btn-mic-skip">&#9193; Bo qua, tiep tuc khong co mic</button>
+      </div>
+      <p style="font-size:.7rem;color:var(--muted);margin-top:14px;max-width:340px;line-height:1.6">App khong luu hay gui bat ky doan ghi am nao.</p>
+    </div>
+  </div>
+
+  <!-- ===== EXAM ===== -->
+  <div class="scr" id="pg-exam">
+    <div class="ex-wrap">
+      <div class="ex-bar">
+        <span class="ex-lbl" id="q-pos">Q 1 / 12</span>
+        <div class="prog-tr"><div class="prog-fl" id="prog" style="width:0%"></div></div>
+        <button class="btn btn-out btn-sm" id="btn-quit">&#10005; Thoat</button>
+      </div>
+      <div class="qt-badge qwarm" id="qt-badge">Warm-up</div>
+      <div class="q-card">
+        <div class="q-num" id="q-num">Question 1 of 12</div>
+        <div class="q-en" id="q-en">Loading...</div>
+        <div class="q-vi" id="q-vi"></div>
+        <div class="rp-box" id="rp-box" style="display:none">
+          <div class="rp-lbl">&#127917; Tinh huong roleplay</div>
+          <div id="rp-txt"></div>
+        </div>
+        <button class="exp-btn" id="btn-hint">&#128161; Goi y y tuong</button>
+        <div class="exp-body hint-body" id="hint-body"></div>
+        <button class="exp-btn grn-btn" id="btn-samp" style="border-color:rgba(0,212,170,.3)">&#128221; Cau tra loi mau</button>
+        <div class="exp-body samp-body" id="samp-body">
+          <div class="samp-lbl">Sample Answer</div>
+          <div id="samp-txt"></div>
+        </div>
+      </div>
+      <div class="tm-card">
+        <div class="tm-phase prep" id="tm-phase">CHUAN BI</div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120" width="108" height="108">
+            <circle class="ring-bg" cx="60" cy="60" r="52"/>
+            <circle class="ring-fg" id="ring" cx="60" cy="60" r="52" stroke="#ffd93d" stroke-dasharray="326.73" stroke-dashoffset="0"/>
+          </svg>
+        </div>
+        <div class="tm-num prep" id="tm-num">0:30</div>
+        <div class="tm-hint" id="tm-hint">Doc cau hoi va suy nghi cau tra loi</div>
+        <div class="viz-wrap hidden" id="viz">
+          <div class="vbar" id="vb0"></div><div class="vbar" id="vb1"></div>
+          <div class="vbar" id="vb2"></div><div class="vbar" id="vb3"></div>
+          <div class="vbar" id="vb4"></div><div class="vbar" id="vb5"></div>
+          <div class="vbar" id="vb6"></div><div class="vbar" id="vb7"></div>
+          <div class="vbar" id="vb8"></div><div class="vbar" id="vb9"></div>
+          <div class="vbar" id="vb10"></div><div class="vbar" id="vb11"></div>
+        </div>
+      </div>
+      <div class="ex-ctrl">
+        <button class="btn btn-pri" id="btn-speak">&#127897; Bat dau noi</button>
+        <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
+        <button class="btn btn-out" id="btn-skip">&#9193; Bo qua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS ===== -->
+  <div class="scr" id="pg-results">
+    <div class="rs-wrap">
+      <div class="rs-hd">
+        <div id="r-emoji" style="font-size:2.8rem;margin-bottom:12px">&#127881;</div>
+        <div style="font-size:1.6rem;font-weight:900;margin-bottom:7px">Hoan thanh bai luyen!</div>
+        <p style="color:var(--muted)">Danh gia tong quan buoi luyen tap</p>
+      </div>
+      <div class="rs-card">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+          <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Muc do uoc tinh</div><div class="est-lv" id="r-lv">IM2</div></div>
+          <div style="text-align:right"><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Thoi gian</div><div style="font-size:1.35rem;font-weight:800" id="r-time">--:--</div></div>
+        </div>
+        <div class="st-grid">
+          <div class="st-box"><div class="st-n" style="color:var(--grn)" id="r-comp">0</div><div class="st-l">Cau hoan thanh</div></div>
+          <div class="st-box"><div class="st-n" style="color:var(--yel)" id="r-full">0</div><div class="st-l">Noi du gio</div></div>
+          <div class="st-box"><div class="st-n" style="color:var(--red)" id="r-skip">0</div><div class="st-l">Bo qua</div></div>
+        </div>
+      </div>
+      <div class="rs-card">
+        <div class="sc-ttl">Thang diem OPIC</div>
+        <div class="sc-track">
+          <div class="sseg s-nl" data-lv="NL">NL</div><div class="sseg s-nm" data-lv="NM">NM</div>
+          <div class="sseg s-nh" data-lv="NH">NH</div><div class="sseg s-il" data-lv="IL">IL</div>
+          <div class="sseg s-im1" data-lv="IM1">IM1</div><div class="sseg s-im2" data-lv="IM2">IM2</div>
+          <div class="sseg s-im3" data-lv="IM3">IM3</div><div class="sseg s-ih" data-lv="IH">IH</div>
+          <div class="sseg s-al" data-lv="AL">AL</div><div class="sseg s-am" data-lv="AM">AM</div>
+          <div class="sseg s-s" data-lv="S">S</div>
+        </div>
+        <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM2 tro len</strong></p>
+      </div>
+      <div class="rs-card">
+        <div class="sc-ttl" style="margin-bottom:11px">Nhan xet va Loi khuyen</div>
+        <ul class="fb-list" id="fb-list"></ul>
+      </div>
+      <div class="row">
+        <button class="btn btn-pri btn-lg" id="btn-retry">&#128260; Luyen lai</button>
+        <button class="btn btn-out" id="btn-home-r">&#127968; Trang chu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORY ===== -->
+  <div class="scr" id="pg-history">
+    <div class="hs-wrap">
+      <div style="font-size:1.4rem;font-weight:800;margin-bottom:5px">&#128202; Lich su luyen tap</div>
+      <p style="color:var(--muted);font-size:.86rem;margin-bottom:18px">Theo doi tien trinh cua ban</p>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ══════════════════════════════════════════
+//  DATA — defined as arrays/objects upfront
+// ══════════════════════════════════════════
+var LEVELS = [
+  {id:"NM",g:"novice",lb:"Novice Mid",ds:"Vai tu, cum tu don gian",prep:40,spk:60},
+  {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, thi hien tai",prep:35,spk:70},
+  {id:"IL",g:"intermediate",lb:"Intermediate Low",ds:"Cau hoan chinh, con loi",prep:30,spk:80},
+  {id:"IM1",g:"intermediate",lb:"Intermediate Mid 1",ds:"Giao tiep duoc, thieu mach lac",prep:30,spk:90},
+  {id:"IM2",g:"intermediate",lb:"Intermediate Mid 2",ds:"Muc pho bien nhat khi xin viec",prep:30,spk:90},
+  {id:"IM3",g:"intermediate",lb:"Intermediate Mid 3",ds:"Troi chay trong tinh huong quen",prep:25,spk:90},
+  {id:"IH",g:"intermediate",lb:"Intermediate High",ds:"Xu ly tot tinh huong phuc tap",prep:25,spk:90},
+  {id:"AL",g:"advanced",lb:"Advanced Low",ds:"Mo ta chi tiet, ke chuyen tot",prep:20,spk:90}
+];
+
+var TOPICS = [
+  {id:"home",  ic:"home",   nm:"Home & Neighborhood", vi:"Nha & Khu dan cu"},
+  {id:"work",  ic:"work",   nm:"Work / School",        vi:"Cong viec / Truong hoc"},
+  {id:"hobby", ic:"hobby",  nm:"Hobbies",              vi:"So thich"},
+  {id:"music", ic:"music",  nm:"Music",                vi:"Am nhac"},
+  {id:"movie", ic:"movie",  nm:"Movies & TV",          vi:"Phim & TV"},
+  {id:"sports",ic:"sports", nm:"Sports & Exercise",    vi:"The thao"},
+  {id:"travel",ic:"travel", nm:"Travel",               vi:"Du lich"},
+  {id:"read",  ic:"read",   nm:"Reading",              vi:"Doc sach"},
+  {id:"food",  ic:"food",   nm:"Food & Cooking",       vi:"Am thuc & Nau an"},
+  {id:"tech",  ic:"tech",   nm:"Technology",           vi:"Cong nghe"},
+  {id:"shop",  ic:"shop",   nm:"Shopping",             vi:"Mua sam"},
+  {id:"health",ic:"health", nm:"Health",               vi:"Suc khoe"}
+];
+
+// icon map (emoji HTML entities)
+var IC = {
+  home:"&#127968;",work:"&#128188;",hobby:"&#127912;",music:"&#127925;",
+  movie:"&#127908;",sports:"&#9917;",travel:"&#9992;",read:"&#128218;",
+  food:"&#127836;",tech:"&#128187;",shop:"&#128717;",health:"&#127973;"
+};
+
+// Questions — each topic is an array of question objects
+// keys: en, vi, type, rp (roleplay context), hints[], sample
+var QDB = {};
+
+QDB.warmup = [
+  {
+    en:"Tell me a little about yourself. Where do you live and what do you do?",
+    vi:"Gioi thieu doi net ve ban than. Ban song o dau va lam gi?",
+    type:"warmup",
+    hints:["Ten, tuoi, nghe nghiep","Noi song hien tai","Vai cau ve cuoc song hang ngay"],
+    sample:"My name is Minh and I am 25 years old. I currently live in Hanoi in a small but cozy apartment near the city center. I work as a software developer at a tech company. In my free time I enjoy watching movies and going to the gym. Overall I am pretty happy with my lifestyle right now."
+  },
+  {
+    en:"Let's talk about where you live. Can you describe your home?",
+    vi:"Hay noi ve noi ban song. Ban co the mo ta ngoi nha cua minh khong?",
+    type:"warmup",
+    hints:["Loai nha (apartment / house)","Vi tri, khu vuc","Phong yeu thich"],
+    sample:"I live in a two-bedroom apartment on the 5th floor in District 3. It is compact but has everything I need. My favorite spot is the living room because it gets great natural light and I love relaxing there after work. The neighborhood is convenient with restaurants and a supermarket nearby."
+  }
+];
+
+QDB.home = [
+  {
+    en:"Describe your neighborhood. What do you like most about it?",
+    vi:"Mo ta khu vuc ban song. Ban thich dieu gi nhat?",
+    type:"describe",
+    hints:["Dac diem noi bat","Tien ich xung quanh","Cam nhan song o do"],
+    sample:"My neighborhood is a busy but lively suburban area. What I love most is how convenient everything is — grocery stores, coffee shops, and a park are all within walking distance. The streets are clean and safe so I feel comfortable coming home late. The only downside is traffic noise during rush hour."
+  },
+  {
+    en:"How has your neighborhood changed over the past few years?",
+    vi:"Khu vuc ban song da thay doi nhu the nao trong vai nam qua?",
+    type:"compare",
+    hints:["Truoc day nhu the nao","Nhung thay doi cu the","Ban thich thay doi nay khong"],
+    sample:"My neighborhood has changed quite a lot. When I first moved here it was very quiet with only a few small shops. Now new apartment buildings and shopping centers have appeared. The population has grown bringing more restaurants and entertainment but also more traffic. Personally I think the changes are mostly positive though I miss the quiet atmosphere sometimes."
+  },
+  {
+    en:"Your friend is visiting for the first time. Describe how to get to your place from downtown.",
+    vi:"Ban cua ban den tham lan dau. Mo ta duong tu trung tam thanh pho den nha ban.",
+    type:"roleplay",
+    rp:"Your friend just arrived at the city center and calls you for directions to your house.",
+    hints:["Phuong tien di chuyen","Diem moc tren duong","Khoang cach / thoi gian"],
+    sample:"From downtown take Bus 36 heading north. Ride about 20 minutes to the Big C supermarket stop — you cannot miss the big yellow sign. Get off there and walk straight for 5 minutes. My building is the white apartment tower on the left number 12B. I will be at the entrance waiting!"
+  }
+];
+
+QDB.work = [
+  {
+    en:"Tell me about your job. What do you do on a typical workday?",
+    vi:"Hay ke ve cong viec cua ban. Mot ngay lam viec binh thuong nhu the nao?",
+    type:"habit",
+    hints:["Linh vuc cong viec","Cac hoat dong hang ngay","Dieu ban thich / khong thich"],
+    sample:"I work as a marketing specialist at a mid-sized company. My day starts at 8:30. In the morning I check emails and attend a team meeting. Then I spend most of the time creating social media content or analyzing campaign performance. In the afternoon I focus on writing reports or collaborating with the design team. I usually leave around 6 PM."
+  },
+  {
+    en:"Tell me about a difficult problem you faced at work and how you solved it.",
+    vi:"Ke ve mot van de kho khan tai noi lam viec va cach ban giai quyet.",
+    type:"experience",
+    hints:["Boi canh xay ra","Van de cu the","Ban da lam gi","Ket qua"],
+    sample:"Last year our main client website crashed two days before a major launch. The dev team had left for the day and I was the only one available. I contacted tech support and coordinated the fix keeping the client updated every 30 minutes. We restored everything by midnight and the launch went smoothly. It taught me to stay calm under pressure."
+  },
+  {
+    en:"Your boss wants you to take on an extra project but you are already overloaded. What do you say?",
+    vi:"Sep muon ban nhan them du an nhung ban dang qua tai. Ban se noi gi?",
+    type:"roleplay",
+    rp:"You are an employee. Your boss asks you to lead an additional project alongside your current workload.",
+    hints:["Lich su xac nhan ban dang ban","De xuat giai phap","Hoi ve muc do uu tien"],
+    sample:"Thank you for thinking of me — I am honored. However I want to be transparent: I am currently handling three projects with tight deadlines this month. Taking on another might affect the quality of all of them. Could we discuss which project takes priority? Or perhaps find a colleague to co-lead the new one with me?"
+  }
+];
+
+QDB.hobby = [
+  {
+    en:"What do you usually do in your free time? Describe your hobbies in detail.",
+    vi:"Ban thuong lam gi trong thoi gian ranh? Mo ta so thich chi tiet.",
+    type:"describe",
+    hints:["Liet ke cac so thich","Chi tiet so thich yeu thich nhat","Tai sao ban thich","Ban thuong lam vao luc nao"],
+    sample:"In my free time I really enjoy drawing and playing guitar though drawing is my main hobby. I have done it since childhood. I usually sketch on weekends for two or three hours with a cup of coffee and background music. I mainly draw portraits and cityscapes. It clears my mind completely — I forget all about work stress. Recently I started sharing artwork on Instagram which has been a fun way to connect with other artists."
+  },
+  {
+    en:"Tell me about a hobby you had in the past but do not do anymore. Why did you stop?",
+    vi:"Ke ve mot so thich ban da co nhung khong con lam nua. Tai sao dung lai?",
+    type:"compare",
+    hints:["So thich cu la gi","Ban da lam bao lau","Ly do dung lai","Ban co muon quay lai khong"],
+    sample:"In high school I was really into basketball and practiced almost every day. But when I entered university the workload became heavy and I moved to a new city where I did not know anyone to play with. I gradually just stopped. I do miss it sometimes — there is nothing like the energy of a good game. I keep telling myself I will pick it up again once work calms down."
+  }
+];
+
+QDB.music = [
+  {
+    en:"What kind of music do you like? Tell me about your favorite artist.",
+    vi:"Ban thich the loai nhac gi? Ke ve nghe si yeu thich.",
+    type:"describe",
+    hints:["The loai nhac","Nghe si cu the","Tai sao ban thich","Khi nao thuong nghe"],
+    sample:"I am a big fan of indie pop and alternative music. My favorite artist is Hozier. What draws me to his music is the soulful vocals and deeply poetic lyrics about love nature and social issues. I usually listen during my commute or when working late. Music really helps me focus and stay in a good mood."
+  },
+  {
+    en:"Have you ever been to a live concert? Tell me about the experience.",
+    vi:"Ban da tung di xem hoa nhac truc tiep chua? Ke ve trai nghiem do.",
+    type:"experience",
+    hints:["Concert nao","Bau khong khi","Khoanh khac dang nho","Cam nhan sau khi xem"],
+    sample:"Last year I attended a concert by a Vietnamese indie band. The venue was an outdoor amphitheater holding about 5000 people. The crowd was incredibly energetic — everyone singing along and waving light sticks. The most memorable moment was the final encore when the whole crowd erupted. I left feeling so energized. It made me appreciate live music even more."
+  }
+];
+
+QDB.movie = [
+  {
+    en:"What types of movies or TV shows do you enjoy? Describe your favorites.",
+    vi:"Ban thich xem loai phim hoac chuong trinh TV nao?",
+    type:"describe",
+    hints:["The loai","Phim / series cu the","Ly do ban thich","Xem khi nao"],
+    sample:"I mostly enjoy thriller series and documentaries. My all-time favorite is Breaking Bad — the storytelling and tension kept me completely hooked. I also love nature documentaries like those by David Attenborough. I usually watch on weekends in the evening alone when I want to focus or with roommates for a more social experience."
+  },
+  {
+    en:"Compare how people watched movies 10 years ago versus today.",
+    vi:"So sanh cach xem phim 10 nam truoc va hien nay.",
+    type:"compare",
+    hints:["Cach cu (rap, DVD, TV)","Cach moi (streaming, phone)","Uu/nhuoc cua moi cach"],
+    sample:"Ten years ago people mostly went to the cinema or bought DVDs. Streaming was just starting out. Today most people use Netflix or YouTube on phones laptops or smart TVs — the variety is huge. However something is lost: watching on a big screen in a dark theater is still irreplaceable for blockbusters. Streaming is convenient but cinema still has its own magic."
+  }
+];
+
+QDB.sports = [
+  {
+    en:"What sports or physical activities do you enjoy? How often do you do them?",
+    vi:"Ban thich mon the thao nao? Ban tap bao thuong xuyen?",
+    type:"habit",
+    hints:["Mon the thao","Tan suat","Dia diem","Loi ich"],
+    sample:"I jog three or four times a week usually in the early morning at a park near my apartment — about 5 km each time. On weekends I play badminton with friends which is more competitive and social. Staying active has really improved my sleep quality and overall mood."
+  },
+  {
+    en:"Tell me about a significant achievement in sports or physical activity.",
+    vi:"Ke ve mot thanh tich dang ke trong the thao.",
+    type:"experience",
+    hints:["Su kien cu the","Chuan bi nhu the nao","Ket qua","Cam xuc"],
+    sample:"About two years ago I completed my first half marathon. I trained for six months gradually running longer distances. The race was incredibly tough especially the last few kilometers. But when I crossed the finish line in 2 hours 15 minutes with my friends cheering I felt overwhelming pride. It proved that with consistent effort you can push past your limits."
+  },
+  {
+    en:"Call a gym to ask about membership options pricing and facilities.",
+    vi:"Goi dien den gym hoi ve goi thanh vien gia va co so vat chat.",
+    type:"roleplay",
+    rp:"You want to join a new gym. Call them to ask about packages prices opening hours and equipment.",
+    hints:["Hoi ve cac goi (monthly/yearly)","Gio hoat dong","Thiet bi / lop hoc","Uu dai gi khong"],
+    sample:"Hi I am calling for information about memberships. What packages are available? I would like a monthly plan first before committing long-term. Also what are your opening hours? I work until 7 PM so I need evening access. Do you have cardio equipment and free weights? And are group fitness classes included in the fee?"
+  }
+];
+
+QDB.travel = [
+  {
+    en:"Describe a place you traveled to that you really enjoyed. What made it special?",
+    vi:"Mo ta mot noi ban da du lich va thuc su thich. Dieu gi lam no dac biet?",
+    type:"describe",
+    hints:["Dia diem cu the","Diem tham quan / hoat dong","Am thuc","Dieu dac biet nhat"],
+    sample:"I absolutely loved visiting Hoi An. It is a beautifully preserved ancient town with colorful lanterns everywhere. The blend of history and culture is magical — centuries-old merchant houses a Japanese bridge and amazing local food on every corner. I took a bicycle tour through rice paddies outside town. At night the lantern-lit streets feel truly special."
+  },
+  {
+    en:"You arrive at a hotel but they cannot find your reservation. Handle the situation.",
+    vi:"Ban den khach san nhung ho khong tim thay dat phong. Xu ly tinh huong.",
+    type:"unexpected",
+    rp:"Unexpected: You arrive after a long journey. The receptionist says there is no reservation under your name but you definitely booked online.",
+    hints:["Giu binh tinh va lich su","Cung cap confirmation email / so dat phong","Yeu cau kiem tra lai","De xuat giai phap"],
+    sample:"I understand there might be some confusion but I am certain I have a reservation. I booked online about two weeks ago — let me show you the confirmation email on my phone. The reference number is under my name. Could you check that? If there has been a system error I would appreciate it if you could find me a room since I have traveled a long way."
+  },
+  {
+    en:"Compare traveling alone versus traveling with a group of friends.",
+    vi:"So sanh du lich mot minh voi di nhom ban be.",
+    type:"compare",
+    hints:["Uu diem mot minh (tu do)","Nhuoc diem mot minh (co don, ton kem)","Uu diem nhom (vui, chia chi phi)","Nhuoc diem nhom (it linh hoat)"],
+    sample:"Both have their own appeal. Traveling alone gives complete freedom — you go wherever you want and interact more with locals. But it can get lonely and costs more. Group travel is more fun and social; you share costs and always have backup if something goes wrong. However it requires compromise on schedules. Personally I like a mix: solo trips for exploration and group trips for destinations I want to share with people I care about."
+  }
+];
+
+QDB.read = [
+  {
+    en:"Do you enjoy reading? What types of books? Tell me about a book that influenced you.",
+    vi:"Ban co thich doc sach khong? Ke ve mot cuon sach anh huong den ban.",
+    type:"describe",
+    hints:["The loai yeu thich","Cuon sach cu the","Noi dung chinh","Anh huong nhu the nao"],
+    sample:"I enjoy non-fiction and personal development books. The most influential one for me is Atomic Habits by James Clear. The core idea is that small consistent changes compound into remarkable results. Before reading it I struggled to build good habits. After applying strategies like habit stacking I have maintained routines like daily exercise for over a year. It completely changed how I approach self-improvement."
+  }
+];
+
+QDB.food = [
+  {
+    en:"Describe a typical meal you enjoy making. How do you prepare it?",
+    vi:"Mo ta mot mon an ban thich nau. Ban chuan bi nhu the nao?",
+    type:"describe",
+    hints:["Ten mon","Nguyen lieu","Cac buoc chinh","Tai sao ban thich"],
+    sample:"One of my favorites is stir-fried noodles with vegetables and tofu. I soak the noodles in hot water until soft then stir-fry garlic until fragrant. I add carrots bell peppers mushrooms and tofu then toss in the noodles with soy sauce oyster sauce and sesame oil. The whole dish takes about 15 minutes. I love it because it is quick healthy and customizable."
+  },
+  {
+    en:"You are at a restaurant and your order is wrong. Talk to the waiter.",
+    vi:"Ban dang o nha hang va mon an bi nham. Noi chuyen voi nguoi phuc vu.",
+    type:"roleplay",
+    rp:"You ordered vegetarian pasta but received a meat dish. Politely address the issue and ask for the correct dish.",
+    hints:["Thu hut su chu y lich su","Giai thich van de","Dat lai dung mon","Hoi ve thoi gian cho"],
+    sample:"Excuse me I am sorry to bother you but I think there has been a small mix-up. I ordered the vegetarian pasta with no meat but this dish has chicken in it. I am vegetarian so I cannot eat this. Could you take it back and bring the correct one? Also could you let me know roughly how long it will take? Thank you so much."
+  }
+];
+
+QDB.tech = [
+  {
+    en:"How has technology changed your daily life? Give specific examples.",
+    vi:"Cong nghe da thay doi cuoc song hang ngay cua ban nhu the nao?",
+    type:"compare",
+    hints:["Truoc khi co smartphone","Ung dung dung nhieu nhat","Thay doi tich cuc","Mat tieu cuc"],
+    sample:"Technology has changed my life dramatically especially through the smartphone. For communication I use messaging apps instead of calls — faster and cheaper. For work cloud tools allow real-time collaboration with remote teammates. Even basic tasks like navigation or ordering food are seamless. However I spend too much time on social media and feel anxious without my phone. Technology has made life efficient but also created some unhealthy dependencies."
+  },
+  {
+    en:"Tell me about a time technology failed you at a critical moment.",
+    vi:"Ke ve lan cong nghe lam ban that bai vao thoi diem quan trong.",
+    type:"unexpected",
+    hints:["Boi canh","Su co cu the","Tac dong","Cach giai quyet"],
+    sample:"During an important client presentation last year my internet dropped right in the middle. I quickly switched to my phone hotspot and reconnected within 2 minutes. I apologized explained what happened and continued from where I left off. The client was understanding. After that I always test my connection before important calls and keep a backup hotspot ready."
+  }
+];
+
+QDB.shop = [
+  {
+    en:"Describe your shopping habits. Do you prefer online or in-store shopping? Why?",
+    vi:"Mo ta thoi quen mua sam. Ban thich online hay cua hang?",
+    type:"habit",
+    hints:["Tan suat mua sam","Loai hang hoa","Online vs offline — uu nhuoc","Hang nao khong mua online"],
+    sample:"I have become mostly an online shopper. I buy clothes electronics and household items through e-commerce platforms. The convenience is great — I compare prices across sellers and have everything delivered. However for shoes or expensive clothing I still prefer trying them on in-store to make sure they fit. I have been disappointed a few times buying clothes online only to find the sizing was completely wrong."
+  }
+];
+
+QDB.health = [
+  {
+    en:"What do you do to stay healthy? Describe your habits and routines.",
+    vi:"Ban lam gi de giu suc khoe? Mo ta cac thoi quen cua ban.",
+    type:"habit",
+    hints:["Che do an","Tap the duc","Giac ngu","Thoi quen tot khac"],
+    sample:"I try to maintain a balanced lifestyle. For diet I cook most meals at home with plenty of vegetables and protein limiting junk food. For exercise I run and do yoga — running three times a week and yoga on other days. I also aim for 7 hours of sleep nightly which makes the biggest difference in how I feel. The hardest part is consistency during busy periods but I remind myself health is a long-term investment."
+  }
+];
+
+var EXTRAS = [
+  {
+    en:"Tell me about the most interesting person you have ever met. What made them memorable?",
+    vi:"Ke ve nguoi thu vi nhat ban tung gap.",
+    type:"experience",
+    hints:["Gap ho o dau","Dieu dac biet o ho","Anh huong den ban"],
+    sample:"The most interesting person I ever met was a retired professor on a long train journey. He had worked in over 30 countries as an anthropologist. What made him memorable was his boundless curiosity — he saw everything without judgment. His stories about living with indigenous communities were fascinating. He inspired me to travel more and approach new experiences with an open mind."
+  },
+  {
+    en:"If you could change one thing about your city what would it be and why?",
+    vi:"Neu ban co the thay doi mot dieu ve thanh pho do la gi?",
+    type:"describe",
+    hints:["Van de cu the","Tai sao quan trong","Giai phap","Tac dong tich cuc"],
+    sample:"I would improve public transportation. Most people use motorbikes because buses are slow and do not cover enough areas leading to massive traffic jams and pollution. I would love a comprehensive metro system connecting all districts efficiently like Singapore or Tokyo. This single change would make my city much more livable."
+  },
+  {
+    en:"How has your life changed in the past 5 years? What will change in the next 5?",
+    vi:"Cuoc song ban da thay doi nhu the nao trong 5 nam qua? Dieu gi se thay doi 5 nam toi?",
+    type:"compare",
+    hints:["Thay doi ve cong viec/hoc tap","Thay doi ve suy nghi","Ke hoach tuong lai","Muc tieu cu the"],
+    sample:"Five years ago I was a student with few responsibilities. Today I work full-time manage my own finances and live independently. I have become more practical and disciplined. Looking ahead I hope to advance to a senior position and perhaps start a side project. I would also like to travel more intentionally and become more financially secure with better work-life balance."
+  }
+];
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+var ST = {
+  level: null,
+  topics: [],
+  questions: [],
+  qi: 0,
+  phase: "prep",
+  secs: 30,
+  prepTime: 30,
+  spkTime: 90,
+  tick: null,
+  t0: null,
+  micStream: null,
+  micOk: false,
+  audioCtx: null,
+  analyser: null,
+  raf: null,
+  res: {comp:0, full:0, skip:0},
+  hist: []
+};
+
+// load history safely
+try { ST.hist = JSON.parse(localStorage.getItem("opic_hist") || "[]"); } catch(e) { ST.hist = []; }
+
+// ══════════════════════════════════════════
+//  BOOT — runs after DOM ready
+// ══════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", function() {
+  buildLvGrid();
+  buildTpGrid();
+  bindButtons();
+});
+
+// ══════════════════════════════════════════
+//  BUILD GRIDS
+// ══════════════════════════════════════════
+function buildLvGrid() {
+  var grid = document.getElementById("lv-grid");
+  var html = "";
+  for (var i = 0; i < LEVELS.length; i++) {
+    var lv = LEVELS[i];
+    html += '<div class="lv-card" data-lv="' + lv.id + '">' +
+      '<div class="lv-nm ' + lv.g + '">' + lv.id + '</div>' +
+      '<div class="lv-lb">' + lv.lb + '</div>' +
+      '<div class="lv-ds">' + lv.ds + '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+
+  // click via event delegation
+  grid.addEventListener("click", function(e) {
+    var card = e.target.closest(".lv-card");
+    if (!card) return;
+    var id = card.getAttribute("data-lv");
+    // deselect all
+    var cards = grid.querySelectorAll(".lv-card");
+    for (var j = 0; j < cards.length; j++) cards[j].classList.remove("sel");
+    // select this
+    card.classList.add("sel");
+    ST.level = id;
+    document.getElementById("hdr-lv").textContent = id;
+    document.getElementById("hint1").style.display = "none";
+  });
+}
+
+function buildTpGrid() {
+  var grid = document.getElementById("tp-grid");
+  var html = "";
+  for (var i = 0; i < TOPICS.length; i++) {
+    var tp = TOPICS[i];
+    html += '<div class="tp-card" data-tp="' + tp.id + '">' +
+      '<div class="tp-ck">&#10003;</div>' +
+      '<div class="tp-ico">' + IC[tp.ic] + '</div>' +
+      '<div class="tp-nm">' + tp.nm + '</div>' +
+      '<div class="tp-vi">' + tp.vi + '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+
+  grid.addEventListener("click", function(e) {
+    var card = e.target.closest(".tp-card");
+    if (!card) return;
+    var id = card.getAttribute("data-tp");
+    var idx = ST.topics.indexOf(id);
+    if (idx > -1) {
+      ST.topics.splice(idx, 1);
+      card.classList.remove("sel");
+    } else {
+      ST.topics.push(id);
+      card.classList.add("sel");
+    }
+    document.getElementById("tc-num").textContent = ST.topics.length;
+    if (ST.topics.length >= 3) document.getElementById("hint2").style.display = "none";
+  });
+}
+
+// ══════════════════════════════════════════
+//  BIND ALL BUTTONS
+// ══════════════════════════════════════════
+function bindButtons() {
+  // home
+  document.getElementById("btn-start-home").addEventListener("click", function() { goPage("survey"); });
+  document.getElementById("btn-quick").addEventListener("click", quickStart);
+
+  // survey nav
+  document.getElementById("btn-next1").addEventListener("click", function() { svGo(2); });
+  document.getElementById("btn-next2").addEventListener("click", function() { svGo(3); });
+  document.getElementById("btn-back1").addEventListener("click", function() { svGo(1); });
+  document.getElementById("btn-back2").addEventListener("click", function() { svGo(2); });
+  document.getElementById("btn-go-mic").addEventListener("click", function() { goPage("mic"); });
+
+  // mic
+  document.getElementById("btn-mic-allow").addEventListener("click", reqMic);
+  document.getElementById("btn-mic-skip").addEventListener("click", function() { ST.micOk = false; startExam(); });
+
+  // exam
+  document.getElementById("btn-speak").addEventListener("click", startSpeak);
+  document.getElementById("btn-nextq").addEventListener("click", nextQ);
+  document.getElementById("btn-skip").addEventListener("click", skipQ);
+  document.getElementById("btn-quit").addEventListener("click", confirmQuit);
+  document.getElementById("btn-hint").addEventListener("click", function() { togBody("hint-body"); });
+  document.getElementById("btn-samp").addEventListener("click", function() { togBody("samp-body"); });
+
+  // results
+  document.getElementById("btn-retry").addEventListener("click", function() { goPage("survey"); });
+  document.getElementById("btn-home-r").addEventListener("click", function() { goPage("home"); });
+}
+
+// ══════════════════════════════════════════
+//  PAGE NAVIGATION
+// ══════════════════════════════════════════
+function goPage(name) {
+  var all = document.querySelectorAll(".scr");
+  for (var i = 0; i < all.length; i++) all[i].classList.remove("show");
+  document.getElementById("pg-" + name).classList.add("show");
+
+  var btns = document.querySelectorAll(".nav-btn");
+  for (var j = 0; j < btns.length; j++) btns[j].classList.remove("act");
+  var nb = document.getElementById("nb-" + name);
+  if (nb) nb.classList.add("act");
+
+  if (name === "history") renderHistory();
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════
+//  SURVEY NAVIGATION
+// ══════════════════════════════════════════
+function svGo(step) {
+  // validate
+  if (step === 2 && !ST.level) {
+    document.getElementById("hint1").style.display = "block";
+    return;
+  }
+  if (step === 3 && ST.topics.length < 3) {
+    document.getElementById("hint2").style.display = "block";
+    return;
+  }
+
+  // show/hide steps
+  for (var s = 1; s <= 3; s++) {
+    document.getElementById("sv" + s).style.display = (s === step) ? "block" : "none";
+    var dot = document.getElementById("sd" + s);
+    if (s < step) {
+      dot.className = "sdot dn";
+      dot.textContent = "✓";
+    } else if (s === step) {
+      dot.className = "sdot act";
+      dot.textContent = String(s);
+    } else {
+      dot.className = "sdot";
+      dot.textContent = String(s);
+    }
+    if (s < 3) {
+      document.getElementById("sl" + s).className = "sln" + (s < step ? " dn" : "");
+    }
+  }
+
+  // fill confirm step
+  if (step === 3) {
+    var lv = null;
+    for (var k = 0; k < LEVELS.length; k++) {
+      if (LEVELS[k].id === ST.level) { lv = LEVELS[k]; break; }
+    }
+    document.getElementById("cf-lv").textContent = lv ? (lv.id + " — " + lv.lb) : ST.level;
+
+    var tpHtml = "";
+    for (var t = 0; t < ST.topics.length; t++) {
+      var topicId = ST.topics[t];
+      var topic = null;
+      for (var q = 0; q < TOPICS.length; q++) {
+        if (TOPICS[q].id === topicId) { topic = TOPICS[q]; break; }
+      }
+      if (topic) {
+        tpHtml += '<span style="background:var(--sur2);border:1px solid var(--bdr);border-radius:20px;padding:3px 9px;font-size:.7rem">' + IC[topic.ic] + ' ' + topic.nm + '</span>';
+      }
+    }
+    document.getElementById("cf-tp").innerHTML = tpHtml;
+  }
+
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════
+//  MICROPHONE
+// ══════════════════════════════════════════
+function reqMic() {
+  var stat = document.getElementById("mic-stat");
+  var dot  = document.getElementById("mic-dot");
+  var txt  = document.getElementById("mic-txt");
+  var btn  = document.getElementById("btn-mic-allow");
+  var warn = document.getElementById("mic-https-warn");
+
+  // --- Check secure context (HTTPS / localhost required for mic) ---
+  var proto = location.protocol;
+  var isSecure = (proto === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1");
+  if (!isSecure) {
+    stat.className = "mic-stat err";
+    dot.className  = "mdot err";
+    txt.textContent = "Can HTTPS de su dung mic (mo qua file:// hoac content:// khong ho tro)";
+    if (warn) warn.style.display = "block";
+    btn.disabled = false;
+    btn.textContent = "Thu lai";
+    return;
+  }
+
+  stat.className = "mic-stat wait";
+  dot.className  = "mdot wait";
+  txt.textContent = "Dang yeu cau quyen...";
+  btn.disabled = true;
+  if (warn) warn.style.display = "none";
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    stat.className = "mic-stat err";
+    dot.className  = "mdot err";
+    txt.textContent = "Trinh duyet khong ho tro microphone";
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.mediaDevices.getUserMedia({audio: true, video: false})
+    .then(function(stream) {
+      ST.micStream = stream;
+      ST.micOk = true;
+
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          ST.audioCtx = new AC();
+          ST.analyser = ST.audioCtx.createAnalyser();
+          ST.analyser.fftSize = 64;
+          var src = ST.audioCtx.createMediaStreamSource(stream);
+          src.connect(ST.analyser);
+        }
+      } catch(e) {}
+
+      stat.className = "mic-stat ok";
+      dot.className  = "mdot ok";
+      txt.textContent = "Microphone da duoc cap quyen!";
+      btn.disabled = false;
+      btn.textContent = "Da ket noi - Bat dau!";
+
+      showToast("Microphone san sang!");
+      setTimeout(startExam, 800);
+    })
+    .catch(function(err) {
+      stat.className = "mic-stat err";
+      dot.className  = "mdot err";
+      txt.textContent = err.name === "NotAllowedError"
+        ? "Quyen bi tu choi - Nhan 'Bo qua' de tiep tuc khong co mic"
+        : "Khong tim thay microphone";
+      btn.disabled = false;
+      btn.textContent = "Thu lai";
+      // auto show skip hint
+      var skipHint = document.getElementById("mic-skip-hint");
+      if (skipHint) skipHint.style.display = "block";
+    });
+}
+
+// ══════════════════════════════════════════
+//  BUILD + START EXAM
+// ══════════════════════════════════════════
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function quickStart() {
+  ST.level = "IM2";
+  ST.topics = ["home","work","hobby","travel","tech"];
+  document.getElementById("hdr-lv").textContent = "IM2";
+  goPage("mic");
+}
+
+function startExam() {
+  // build question list
+  var lv = null;
+  for (var i = 0; i < LEVELS.length; i++) {
+    if (LEVELS[i].id === ST.level) { lv = LEVELS[i]; break; }
+  }
+  if (!lv) lv = LEVELS[4]; // default IM2
+
+  var qs = [];
+
+  // 1 warmup
+  var wu = shuffle(QDB.warmup);
+  qs.push(clone(wu[0]));
+
+  // topic questions
+  var tqs = [];
+  for (var t = 0; t < ST.topics.length; t++) {
+    var tid = ST.topics[t];
+    var pool = QDB[tid];
+    if (!pool || pool.length === 0) continue;
+    var picked = shuffle(pool).slice(0, pool.length >= 3 ? 2 : 1);
+    for (var p = 0; p < picked.length; p++) tqs.push(clone(picked[p]));
+  }
+  tqs = shuffle(tqs).slice(0, 8);
+  for (var q = 0; q < tqs.length; q++) qs.push(tqs[q]);
+
+  // extras to fill to 12
+  if (qs.length < 12) {
+    var ex = shuffle(EXTRAS).slice(0, 12 - qs.length);
+    for (var e = 0; e < ex.length; e++) qs.push(clone(ex[e]));
+  }
+
+  qs = qs.slice(0, 12);
+
+  // attach timing
+  for (var n = 0; n < qs.length; n++) {
+    qs[n].prepTime = lv.prep;
+    qs[n].spkTime  = lv.spk;
+    qs[n].done = false;
+    qs[n].full = false;
+    qs[n].skipped = false;
+  }
+
+  ST.questions = qs;
+  ST.qi = 0;
+  ST.res = {comp:0, full:0, skip:0};
+  ST.t0 = Date.now();
+
+  goPage("exam");
+  renderQ();
+}
+
+function clone(obj) {
+  var c = {};
+  for (var k in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, k)) {
+      c[k] = obj[k] instanceof Array ? obj[k].slice() : obj[k];
+    }
+  }
+  return c;
+}
+
+// ══════════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════════
+var QT_INFO = {
+  warmup:    {lbl:"&#127777; Warm-up",  cls:"qwarm"},
+  describe:  {lbl:"&#128269; Describe", cls:"qdesc"},
+  habit:     {lbl:"&#128197; Habit",    cls:"qhabt"},
+  experience:{lbl:"&#128172; Experience",cls:"qexp"},
+  compare:   {lbl:"&#9878; Compare",   cls:"qcmp"},
+  roleplay:  {lbl:"&#127917; Role-play",cls:"qrole"},
+  unexpected:{lbl:"&#9889; Unexpected", cls:"qunex"}
+};
+
+function renderQ() {
+  var q = ST.questions[ST.qi];
+  if (!q) { finishExam(); return; }
+
+  var tot = ST.questions.length;
+  var cur = ST.qi + 1;
+
+  document.getElementById("q-pos").textContent = "Q " + cur + " / " + tot;
+  document.getElementById("prog").style.width = ((cur - 1) / tot * 100) + "%";
+
+  var qt = QT_INFO[q.type] || QT_INFO.describe;
+  var badge = document.getElementById("qt-badge");
+  badge.innerHTML = qt.lbl;
+  badge.className = "qt-badge " + qt.cls;
+
+  document.getElementById("q-num").textContent = "Question " + cur + " of " + tot;
+  document.getElementById("q-en").textContent = q.en;
+  document.getElementById("q-vi").textContent = q.vi;
+
+  var rpBox = document.getElementById("rp-box");
+  if (q.rp) {
+    rpBox.style.display = "block";
+    document.getElementById("rp-txt").textContent = q.rp;
+  } else {
+    rpBox.style.display = "none";
+  }
+
+  // hints
+  var hb = document.getElementById("hint-body");
+  hb.classList.remove("open");
+  var hHtml = "";
+  if (q.hints) {
+    for (var i = 0; i < q.hints.length; i++) {
+      hHtml += '<div class="hint-row">' + q.hints[i] + '</div>';
+    }
+  }
+  hb.innerHTML = hHtml;
+
+  // sample
+  var sb = document.getElementById("samp-body");
+  sb.classList.remove("open");
+  document.getElementById("samp-txt").textContent = q.sample || "";
+
+  // buttons
+  document.getElementById("btn-speak").style.display = "inline-flex";
+  document.getElementById("btn-nextq").style.display = "none";
+  document.getElementById("btn-skip").style.display = "inline-flex";
+
+  stopViz();
+  document.getElementById("viz").classList.add("hidden");
+
+  clearTick();
+  startPrep(q.prepTime, q.spkTime);
+}
+
+function togBody(id) {
+  document.getElementById(id).classList.toggle("open");
+}
+
+// ══════════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════════
+var CIRC = 2 * Math.PI * 52; // r=52 → circumference ≈ 326.73
+
+function clearTick() {
+  if (ST.tick) { clearInterval(ST.tick); ST.tick = null; }
+}
+
+function setRing(ratio, color) {
+  var ring = document.getElementById("ring");
+  ring.setAttribute("stroke", color);
+  ring.style.strokeDashoffset = CIRC * (1 - Math.max(0, Math.min(1, ratio)));
+}
+
+function setTimerUI(phase, secs, total) {
+  var ph  = document.getElementById("tm-phase");
+  var num = document.getElementById("tm-num");
+  var ht  = document.getElementById("tm-hint");
+  var m = Math.floor(secs / 60);
+  var s = secs % 60;
+  num.textContent = m + ":" + (s < 10 ? "0" : "") + s;
+
+  var ratio = total > 0 ? secs / total : 0;
+
+  if (phase === "prep") {
+    ph.textContent = "&#9203; CHUAN BI"; ph.className = "tm-phase prep";
+    num.className = "tm-num prep";
+    setRing(ratio, "#ffd93d");
+    ht.textContent = "Doc cau hoi va suy nghi cau tra loi";
+  } else if (phase === "speak") {
+    ph.innerHTML = "&#127897; NOI NGAY";
+    ph.className = "tm-phase speak";
+    ht.textContent = "Hay noi — dung dung lai!";
+    setRing(ratio, secs <= 10 ? "#f44336" : secs <= 20 ? "#ff9800" : "#ff6b6b");
+    if (secs <= 10)      num.className = "tm-num urgent";
+    else if (secs <= 20) num.className = "tm-num warn";
+    else                 num.className = "tm-num speak";
+  } else {
+    ph.textContent = "HOAN THANH"; ph.className = "tm-phase done";
+    num.className = "tm-num fin";
+    num.textContent = "Done!";
+    setRing(1, "#4caf50");
+    ht.textContent = "Nhan 'Cau tiep theo' de tiep tuc";
+  }
+}
+
+function startPrep(prepTime, spkTime) {
+  ST.phase = "prep";
+  ST.secs = prepTime;
+  ST.prepTime = prepTime;
+  ST.spkTime = spkTime;
+  setTimerUI("prep", prepTime, prepTime);
+
+  ST.tick = setInterval(function() {
+    ST.secs--;
+    setTimerUI("prep", ST.secs, ST.prepTime);
+    if (ST.secs <= 0) { clearTick(); startSpeak(); }
+  }, 1000);
+}
+
+function startSpeak() {
+  clearTick();
+  ST.phase = "speak";
+  ST.secs = ST.spkTime;
+
+  document.getElementById("btn-speak").style.display = "none";
+  document.getElementById("btn-nextq").style.display = "inline-flex";
+
+  if (ST.micOk) {
+    document.getElementById("viz").classList.remove("hidden");
+    startViz();
+  }
+
+  setTimerUI("speak", ST.spkTime, ST.spkTime);
+
+  ST.tick = setInterval(function() {
+    ST.secs--;
+    setTimerUI("speak", ST.secs, ST.spkTime);
+    if (ST.secs <= 0) {
+      clearTick();
+      if (ST.questions[ST.qi]) ST.questions[ST.qi].full = true;
+      setTimerUI("done", 0, ST.spkTime);
+      stopViz();
+      document.getElementById("viz").classList.add("hidden");
+      showToast("&#9989; Tuyet! Ban da noi du thoi gian!");
+    }
+  }, 1000);
+}
+
+// ══════════════════════════════════════════
+//  AUDIO VISUALIZER
+// ══════════════════════════════════════════
+function startViz() {
+  if (!ST.analyser) { fakeViz(); return; }
+  var data = new Uint8Array(ST.analyser.frequencyBinCount);
+  function draw() {
+    ST.raf = requestAnimationFrame(draw);
+    ST.analyser.getByteFrequencyData(data);
+    for (var i = 0; i < 12; i++) {
+      var bar = document.getElementById("vb" + i);
+      if (!bar) continue;
+      var v = data[i] || 0;
+      bar.style.height = Math.max(3, (v / 255) * 38) + "px";
+    }
+  }
+  draw();
+}
+
+function fakeViz() {
+  // animated bars without real mic
+  var t = 0;
+  function draw() {
+    ST.raf = requestAnimationFrame(draw);
+    t += 0.15;
+    for (var i = 0; i < 12; i++) {
+      var bar = document.getElementById("vb" + i);
+      if (!bar) continue;
+      var h = 4 + Math.abs(Math.sin(t + i * 0.6)) * 30;
+      bar.style.height = h + "px";
+    }
+  }
+  draw();
+}
+
+function stopViz() {
+  if (ST.raf) { cancelAnimationFrame(ST.raf); ST.raf = null; }
+  for (var i = 0; i < 12; i++) {
+    var bar = document.getElementById("vb" + i);
+    if (bar) bar.style.height = "3px";
+  }
+}
+
+// ══════════════════════════════════════════
+//  EXAM CONTROLS
+// ══════════════════════════════════════════
+function nextQ() {
+  clearTick(); stopViz();
+  document.getElementById("viz").classList.add("hidden");
+  var q = ST.questions[ST.qi];
+  if (q) { q.done = true; ST.res.comp++; if (q.full) ST.res.full++; }
+  ST.qi++;
+  if (ST.qi >= ST.questions.length) finishExam();
+  else renderQ();
+}
+
+function skipQ() {
+  clearTick(); stopViz();
+  document.getElementById("viz").classList.add("hidden");
+  var q = ST.questions[ST.qi];
+  if (q) { q.skipped = true; ST.res.skip++; }
+  ST.qi++;
+  if (ST.qi >= ST.questions.length) finishExam();
+  else renderQ();
+}
+
+// ══════════════════════════════════════════
+//  FINISH
+// ══════════════════════════════════════════
+function finishExam() {
+  clearTick(); stopViz();
+  if (ST.micStream) {
+    var tracks = ST.micStream.getTracks();
+    for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+    ST.micStream = null;
+  }
+  if (ST.audioCtx) { try { ST.audioCtx.close(); } catch(e) {} ST.audioCtx = null; ST.analyser = null; }
+  ST.micOk = false;
+
+  var elapsed = Math.floor((Date.now() - ST.t0) / 1000);
+  var em = Math.floor(elapsed / 60);
+  var es = elapsed % 60;
+  var timeStr = em + ":" + (es < 10 ? "0" : "") + es;
+
+  var tot = ST.questions.length || 1;
+  var cr = ST.res.comp / tot;
+  var ft = ST.res.comp > 0 ? ST.res.full / ST.res.comp : 0;
+  var estLv = estimateLv(cr, ft);
+
+  var rec = {
+    date: new Date().toLocaleString("vi-VN"),
+    level: estLv,
+    comp: ST.res.comp,
+    full: ST.res.full,
+    skip: ST.res.skip,
+    time: timeStr,
+    topics: ST.topics.slice()
+  };
+  ST.hist.unshift(rec);
+  if (ST.hist.length > 30) ST.hist.pop();
+  try { localStorage.setItem("opic_hist", JSON.stringify(ST.hist)); } catch(e) {}
+
+  document.getElementById("r-lv").textContent = estLv;
+  document.getElementById("r-time").textContent = timeStr;
+  document.getElementById("r-comp").textContent = ST.res.comp;
+  document.getElementById("r-full").textContent = ST.res.full;
+  document.getElementById("r-skip").textContent = ST.res.skip;
+
+  var segs = document.querySelectorAll(".sseg");
+  for (var i = 0; i < segs.length; i++) {
+    segs[i].classList.remove("cur");
+    if (segs[i].getAttribute("data-lv") === estLv) segs[i].classList.add("cur");
+  }
+
+  document.getElementById("r-emoji").innerHTML = ft >= .8 ? "&#127942;" : ft >= .5 ? "&#127881;" : "&#128170;";
+  document.getElementById("fb-list").innerHTML = genFeedback(cr, ft, ST.res);
+
+  goPage("results");
+}
+
+var LVS = ["NM","NH","IL","IM1","IM2","IM3","IH","AL"];
+function estimateLv(cr, ft) {
+  var score = cr * 0.4 + ft * 0.6;
+  var base = 4; // default IM2
+  for (var i = 0; i < LEVELS.length; i++) {
+    if (LEVELS[i].id === ST.level) { base = i; break; }
+  }
+  var adj = score >= .9 ? 1 : score >= .7 ? 0 : score >= .5 ? -1 : -2;
+  var idx = Math.max(0, Math.min(LVS.length - 1, base + adj));
+  return LVS[idx];
+}
+
+function genFeedback(cr, ft, res) {
+  var items = [];
+  if (ft >= .8)
+    items.push(["&#127919;","Xuat sac! Ban noi du thoi gian cho hau het cac cau — dau hieu rat tot ve kha nang duy tri hoi thoai OPIC."]);
+  else if (ft >= .5)
+    items.push(["&#128077;","Tot! Hay co gang mo rong cau tra loi bang vi du cu the hon de dat diem cao hon."]);
+  else
+    items.push(["&#128161;","Can cai thien: Co gang noi du 60-90 giay moi cau. Them vi du chi tiet va mo rong y tuong."]);
+
+  if (res.skip > 3)
+    items.push(["&#9888;","Ban bo qua " + res.skip + " cau. Trong thi that, hay co gang tra loi moi cau du chua hoan hao."]);
+
+  items.push(["&#128221;","Meo OPIC: Dung cau truc PREP (Point - Reason - Example - Point) de cau tra loi luon du noi dung va mach lac."]);
+  items.push(["&#127919;","De dat IM2+: Dung tu noi (however, although, as a result), thi phuc tap va phat am ro rang."]);
+  items.push(["&#128260;","Luyen tap 20-30 phut moi ngay se giup cai thien nhanh. Tap trung vao roleplay va unexpected situation."]);
+
+  var html = "";
+  for (var i = 0; i < items.length; i++) {
+    html += '<li class="fb-row"><span style="font-size:.95rem;flex-shrink:0">' + items[i][0] + '</span><span>' + items[i][1] + '</span></li>';
+  }
+  return html;
+}
+
+// ══════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════
+function renderHistory() {
+  var el = document.getElementById("hist-list");
+  if (!ST.hist || ST.hist.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:50px 0;color:var(--muted)"><div style="font-size:2.8rem;margin-bottom:12px">&#128202;</div><p>Chua co lich su luyen tap</p><br><button class="btn btn-pri" onclick="goPage(\'home\')">Bat dau ngay</button></div>';
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < ST.hist.length; i++) {
+    var r = ST.hist[i];
+    html += '<div class="hs-item">' +
+      '<div style="flex:1"><div style="font-weight:700;margin-bottom:3px">Buoi luyen #' + (ST.hist.length - i) + '</div>' +
+      '<div style="font-size:.73rem;color:var(--muted)">' + r.date + ' · ' + r.time + '</div>' +
+      '<div style="font-size:.73rem;color:var(--muted);margin-top:3px">&#9989; ' + r.comp + ' cau · &#9201; ' + r.full + ' du gio · &#9193; ' + r.skip + ' bo qua</div></div>' +
+      '<div class="hs-lv">' + r.level + '</div>' +
+      '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════
+//  MODAL / TOAST
+// ══════════════════════════════════════════
+function confirmQuit() {
+  document.getElementById("mtl").textContent = "Thoat bai thi?";
+  document.getElementById("mmg").textContent = "Tien trinh hien tai se bi mat. Ban co chac khong?";
+  document.getElementById("mbt").innerHTML =
+    '<button class="btn btn-out" onclick="closeModal()">Tiep tuc thi</button>' +
+    '<button class="btn btn-red" onclick="doQuit()">Thoat</button>';
+  document.getElementById("modal").classList.add("open");
+}
+function closeModal() { document.getElementById("modal").classList.remove("open"); }
+function doQuit() {
+  clearTick(); stopViz();
+  if (ST.micStream) {
+    var tracks = ST.micStream.getTracks();
+    for (var i = 0; i < tracks.length; i++) tracks[i].stop();
+    ST.micStream = null;
+  }
+  ST.micOk = false;
+  closeModal();
+  goPage("home");
+}
+
+function showToast(msg, ms) {
+  if (!ms) ms = 3000;
+  var d = document.createElement("div");
+  d.className = "toast";
+  d.innerHTML = msg;
+  document.getElementById("toasts").appendChild(d);
+  setTimeout(function() {
+    d.style.opacity = "0";
+    d.style.transform = "translateX(100%)";
+    d.style.transition = "all .28s";
+    setTimeout(function() { if (d.parentNode) d.parentNode.removeChild(d); }, 300);
+  }, ms);
+}
+</script>
+</body>
+</html>
