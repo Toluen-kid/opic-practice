@@ -312,8 +312,8 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <h1 class="title">Luyen noi<br><span class="hl">OPIC tieng Anh</span></h1>
       <p class="sub">Mo phong dung format ky thi — Background Survey, cau hoi co tinh gio, roleplay va tinh huong bat ngo.</p>
       <div class="feats">
-        <div class="feat"><div class="feat-i">&#9201;</div><div class="feat-t">Tinh gio thuc te</div><div class="feat-d">30s chuan bi · 90s noi</div></div>
-        <div class="feat"><div class="feat-i">&#127917;</div><div class="feat-t">6 loai cau hoi</div><div class="feat-d">Describe, Habit, Roleplay…</div></div>
+        <div class="feat"><div class="feat-i">&#9201;</div><div class="feat-t">Tinh gio thuc te</div><div class="feat-d">30s chuan bi · 60s noi (RP: 90s)</div></div>
+        <div class="feat"><div class="feat-i">&#127917;</div><div class="feat-t">18 cau hoi / buoi</div><div class="feat-d">3 cau roleplay · nghe 2 lan</div></div>
         <div class="feat"><div class="feat-i">&#127897;</div><div class="feat-t">Ghi am thuc te</div><div class="feat-d">Mic + visualizer song am</div></div>
       </div>
       <div class="row" style="justify-content:center">
@@ -363,7 +363,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div id="sv3" style="display:none">
         <div class="step-tag">Buoc 3 / 3 — Xac nhan</div>
         <div class="step-ttl">San sang bat dau?</div>
-        <div class="step-sub">12 cau hoi · khoang 20 phut · dung format OPIC</div>
+        <div class="step-sub">18 cau hoi · khoang 30 phut · dung format OPIC</div>
         <div class="cf-card">
           <div style="display:flex;gap:18px;flex-wrap:wrap">
             <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Trinh do</div><div id="cf-lv" style="font-size:1.3rem;font-weight:800;color:var(--pri)"></div></div>
@@ -455,7 +455,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
             <circle class="ring-fg" id="ring" cx="60" cy="60" r="52" stroke="#ffd93d" stroke-dasharray="326.73" stroke-dashoffset="0"/>
           </svg>
         </div>
-        <div class="tm-num prep" id="tm-num">0:30</div>
+        <div class="tm-num prep" id="tm-num">1:00</div>
         <div class="tm-hint" id="tm-hint">Doc cau hoi va suy nghi cau tra loi</div>
         <div class="viz-wrap hidden" id="viz">
           <div class="vbar" id="vb0"></div><div class="vbar" id="vb1"></div>
@@ -469,8 +469,9 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="ex-ctrl">
         <button class="btn btn-pri" id="btn-speak">&#127897; Bat dau noi</button>
         <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
-        <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#9193; Bo qua nghe</button>
-        <button class="btn btn-out" id="btn-skip">&#9193; Bo qua</button>
+        <button class="btn btn-pri" id="btn-relisten" style="display:none">&#128266; Nghe lai (lan 2)</button>
+        <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#9193; Hien cau hoi</button>
+        <button class="btn btn-out" id="btn-skip">&#9193; Bo qua cau</button>
       </div>
     </div>
   </div>
@@ -548,13 +549,13 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 var LEVELS = [
   {id:"NM",g:"novice",lb:"Novice Mid",ds:"Vai tu, cum tu don gian",prep:40,spk:60},
-  {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, thi hien tai",prep:35,spk:70},
-  {id:"IL",g:"intermediate",lb:"Intermediate Low",ds:"Cau hoan chinh, con loi",prep:30,spk:80},
-  {id:"IM1",g:"intermediate",lb:"Intermediate Mid 1",ds:"Giao tiep duoc, thieu mach lac",prep:30,spk:90},
-  {id:"IM2",g:"intermediate",lb:"Intermediate Mid 2",ds:"Muc pho bien nhat khi xin viec",prep:30,spk:90},
-  {id:"IM3",g:"intermediate",lb:"Intermediate Mid 3",ds:"Troi chay trong tinh huong quen",prep:25,spk:90},
-  {id:"IH",g:"intermediate",lb:"Intermediate High",ds:"Xu ly tot tinh huong phuc tap",prep:25,spk:90},
-  {id:"AL",g:"advanced",lb:"Advanced Low",ds:"Mo ta chi tiet, ke chuyen tot",prep:20,spk:90}
+  {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, thi hien tai",prep:35,spk:60},
+  {id:"IL",g:"intermediate",lb:"Intermediate Low",ds:"Cau hoan chinh, con loi",prep:30,spk:60},
+  {id:"IM1",g:"intermediate",lb:"Intermediate Mid 1",ds:"Giao tiep duoc, thieu mach lac",prep:30,spk:60},
+  {id:"IM2",g:"intermediate",lb:"Intermediate Mid 2",ds:"Muc pho bien nhat khi xin viec",prep:30,spk:60},
+  {id:"IM3",g:"intermediate",lb:"Intermediate Mid 3",ds:"Troi chay trong tinh huong quen",prep:25,spk:60},
+  {id:"IH",g:"intermediate",lb:"Intermediate High",ds:"Xu ly tot tinh huong phuc tap",prep:25,spk:60},
+  {id:"AL",g:"advanced",lb:"Advanced Low",ds:"Mo ta chi tiet, ke chuyen tot",prep:20,spk:60}
 ];
 
 var TOPICS = [
@@ -1174,6 +1175,7 @@ function bindButtons() {
   document.getElementById("btn-speak").addEventListener("click", startSpeak);
   document.getElementById("btn-nextq").addEventListener("click", nextQ);
   document.getElementById("btn-skip").addEventListener("click", skipQ);
+  document.getElementById("btn-relisten").addEventListener("click", startListen2);
   document.getElementById("btn-skip-listen").addEventListener("click", skipListen);
   document.getElementById("btn-quit").addEventListener("click", confirmQuit);
   document.getElementById("btn-hint").addEventListener("click", function() { togBody("hint-body"); });
@@ -1354,44 +1356,78 @@ function quickStart() {
   goPage("mic");
 }
 
+function isRoleplay(q) {
+  return q.type === "roleplay" || q.type === "unexpected";
+}
+
 function startExam() {
-  // build question list
   var lv = null;
   for (var i = 0; i < LEVELS.length; i++) {
     if (LEVELS[i].id === ST.level) { lv = LEVELS[i]; break; }
   }
   if (!lv) lv = LEVELS[4]; // default IM2
 
-  var qs = [];
-
-  // 1 warmup
-  var wu = shuffle(QDB.warmup);
-  qs.push(clone(wu[0]));
-
-  // topic questions
-  var tqs = [];
+  // ── collect ALL topic questions ──────────────────
+  var pool = [];
   for (var t = 0; t < ST.topics.length; t++) {
     var tid = ST.topics[t];
-    var pool = QDB[tid];
-    if (!pool || pool.length === 0) continue;
-    var picked = shuffle(pool).slice(0, pool.length >= 3 ? 2 : 1);
-    for (var p = 0; p < picked.length; p++) tqs.push(clone(picked[p]));
+    var topicPool = QDB[tid];
+    if (!topicPool || topicPool.length === 0) continue;
+    for (var p = 0; p < topicPool.length; p++) pool.push(clone(topicPool[p]));
   }
-  tqs = shuffle(tqs).slice(0, 8);
-  for (var q = 0; q < tqs.length; q++) qs.push(tqs[q]);
+  // also add EXTRAS as fallback
+  var extraPool = [];
+  for (var e2 = 0; e2 < EXTRAS.length; e2++) extraPool.push(clone(EXTRAS[e2]));
 
-  // extras to fill to 12
-  if (qs.length < 12) {
-    var ex = shuffle(EXTRAS).slice(0, 12 - qs.length);
-    for (var e = 0; e < ex.length; e++) qs.push(clone(ex[e]));
+  pool = shuffle(pool);
+  extraPool = shuffle(extraPool);
+
+  // ── separate roleplay vs regular ─────────────────
+  var rpQuestions   = [];
+  var regQuestions  = [];
+  for (var j = 0; j < pool.length; j++) {
+    if (isRoleplay(pool[j])) rpQuestions.push(pool[j]);
+    else regQuestions.push(pool[j]);
+  }
+  // extras fill if needed
+  for (var k = 0; k < extraPool.length; k++) {
+    if (isRoleplay(extraPool[k])) rpQuestions.push(extraPool[k]);
+    else regQuestions.push(extraPool[k]);
   }
 
-  qs = qs.slice(0, 12);
+  // ── pick exactly 3 roleplay questions ────────────
+  rpQuestions = shuffle(rpQuestions).slice(0, 3);
+  // pad with unexpected/extra if < 3
+  while (rpQuestions.length < 3) {
+    rpQuestions.push({
+      en:"Your flight is delayed by 4 hours. Go to the airline counter and ask for assistance.",
+      vi:"Chuyen bay cua ban bi hoan 4 tieng. Den quay hang hang khong va yeu cau ho tro.",
+      type:"unexpected",
+      rp:"Your flight has been delayed significantly. Ask the airline staff about the reason, meal vouchers, and rebooking options.",
+      hints:["Hoi ly do bi hoan","Yeu cau voucher an/uong","Hoi co the doi chuyen khong"],
+      sample:"Excuse me, I just found out my flight has been delayed by 4 hours. Could you tell me the reason? Also, is the airline providing any meal vouchers or accommodation for the wait? I have an important meeting at my destination tomorrow morning — is there any earlier flight I could be transferred to? I would really appreciate any help you can offer."
+    });
+  }
 
-  // attach timing
+  // ── pick 14 regular (non-roleplay) + 1 warmup ────
+  var wu = shuffle(QDB.warmup);
+  var warmup = clone(wu[0]);
+
+  regQuestions = shuffle(regQuestions).slice(0, 14);
+  while (regQuestions.length < 14) {
+    regQuestions.push(clone(EXTRAS[regQuestions.length % EXTRAS.length]));
+  }
+
+  // ── assemble: warmup first, then shuffle rest ────
+  var middle = shuffle(rpQuestions.concat(regQuestions));
+  var qs = [warmup].concat(middle);
+  qs = qs.slice(0, 18);
+
+  // ── attach timing ─────────────────────────────────
   for (var n = 0; n < qs.length; n++) {
     qs[n].prepTime = lv.prep;
-    qs[n].spkTime  = lv.spk;
+    // roleplay/unexpected get 90s speaking time, others get 60s
+    qs[n].spkTime  = isRoleplay(qs[n]) ? 90 : lv.spk;
     qs[n].done = false;
     qs[n].full = false;
     qs[n].skipped = false;
@@ -1472,19 +1508,26 @@ function renderQ() {
   sb.classList.remove("open");
   document.getElementById("samp-txt").textContent = q.sample || "";
 
-  // buttons — will be shown after listen phases
+  // Reset visibility & buttons before listen phases
+  document.getElementById("q-en").style.visibility = "hidden";
+  document.getElementById("q-vi").style.visibility = "hidden";
+  // rp-box visibility handled below after its display is set
   document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-nextq").style.display = "none";
   document.getElementById("btn-skip").style.display = "none";
+  document.getElementById("btn-relisten").style.display = "none";
+  document.getElementById("btn-skip-listen").style.display = "none";
   document.getElementById("btn-hint").style.display = "none";
   document.getElementById("btn-samp").style.display = "none";
   document.getElementById("listen-badge").className = "listen-badge";
+  // hide rp-box visibility too
+  document.getElementById("rp-box").style.visibility = "hidden";
 
   stopViz();
   document.getElementById("viz").classList.add("hidden");
 
   clearTick();
-  // Start with listen phases (TTS plays twice before prep)
+  // Start with listen phase 1 (TTS, text hidden)
   startListen1();
 }
 
@@ -1530,12 +1573,13 @@ function speakTTS(text, onEnd) {
 
 function skipListen() {
   cancelTTS();
-  // Reveal text and go straight to prep
-  document.getElementById("q-en").classList.remove("q-hidden");
-  document.getElementById("q-vi").classList.remove("q-hidden");
-  document.getElementById("rp-box").classList.remove("q-hidden");
+  // Reveal text and go straight to prep (skip remaining listen phases)
+  document.getElementById("q-en").style.visibility = "";
+  document.getElementById("q-vi").style.visibility = "";
+  document.getElementById("rp-box").style.visibility = "";
   document.getElementById("listen-badge").className = "listen-badge";
   document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-relisten").style.display = "none";
   document.getElementById("btn-speak").style.display = "inline-flex";
   document.getElementById("btn-skip").style.display = "inline-flex";
   document.getElementById("btn-hint").style.display = "";
@@ -1545,55 +1589,67 @@ function skipListen() {
 }
 
 function startListen1() {
+  cancelTTS();
   clearTick();
   ST.phase = "listen1";
   var q = ST.questions[ST.qi];
 
-  // Blur question text
-  document.getElementById("q-en").classList.add("q-hidden");
-  document.getElementById("q-vi").classList.add("q-hidden");
-  var rp = document.getElementById("rp-box");
-  rp.classList.add("q-hidden");
-
-  // Show listen badge, skip-listen button; hide action buttons
-  var badge = document.getElementById("listen-badge");
-  badge.className = "listen-badge active";
-  document.getElementById("listen-badge-txt").textContent = "Lang nghe cau hoi (lan 1/2)";
-  document.getElementById("btn-speak").style.display = "none";
-  document.getElementById("btn-skip").style.display = "none";
-  document.getElementById("btn-skip-listen").style.display = "inline-flex";
+  // HIDE question text completely (not blur — truly hidden)
+  document.getElementById("q-en").style.visibility = "hidden";
+  document.getElementById("q-vi").style.visibility = "hidden";
+  document.getElementById("rp-box").style.visibility = "hidden";
   document.getElementById("btn-hint").style.display = "none";
   document.getElementById("btn-samp").style.display = "none";
+  document.getElementById("btn-speak").style.display = "none";
+  document.getElementById("btn-skip").style.display = "inline-flex";
+  document.getElementById("btn-relisten").style.display = "none";
+  document.getElementById("btn-skip-listen").style.display = "none";
+
+  // Show listen badge
+  var badge = document.getElementById("listen-badge");
+  badge.className = "listen-badge active";
+  document.getElementById("listen-badge-txt").textContent = "Dang phat cau hoi (lan 1)...";
 
   setTimerUI("listen1", 0, 1);
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    setTimeout(startListen2, 700);
+    // Audio done: show "Nghe lai" and "Hien cau hoi" buttons; text still hidden
+    ST.phase = "wait-relisten";
+    document.getElementById("listen-badge-txt").textContent = "Nhan 'Nghe lai' de nghe lan 2 va hien cau hoi";
+    document.getElementById("btn-relisten").style.display = "inline-flex";
+    document.getElementById("btn-skip-listen").style.display = "inline-flex";
+    // update timer display
+    var ph = document.getElementById("tm-phase");
+    ph.innerHTML = "&#128266; NGHE XONG LAN 1";
+    ph.className = "tm-phase listen";
+    document.getElementById("tm-hint").textContent = "Nhan 'Nghe lai lan 2' de hien cau hoi";
   });
 }
 
 function startListen2() {
+  cancelTTS();
   clearTick();
   ST.phase = "listen2";
   var q = ST.questions[ST.qi];
 
-  // Reveal question text
-  document.getElementById("q-en").classList.remove("q-hidden");
-  document.getElementById("q-vi").classList.remove("q-hidden");
-  document.getElementById("rp-box").classList.remove("q-hidden");
+  // NOW reveal question text
+  document.getElementById("q-en").style.visibility = "";
+  document.getElementById("q-vi").style.visibility = "";
+  document.getElementById("rp-box").style.visibility = "";
 
-  document.getElementById("listen-badge-txt").textContent = "Nghe lan 2/2 — cau hoi da hien";
+  document.getElementById("btn-relisten").style.display = "none";
   document.getElementById("btn-skip-listen").style.display = "inline-flex";
+  document.getElementById("listen-badge-txt").textContent = "Dang phat cau hoi (lan 2)...";
+  document.getElementById("listen-badge").className = "listen-badge active";
   setTimerUI("listen2", 0, 1);
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    // Hide listen badge, show buttons, start prep
+    // Listen 2 done: hide badge, show all controls, start prep
     document.getElementById("listen-badge").className = "listen-badge";
     document.getElementById("btn-skip-listen").style.display = "none";
     document.getElementById("btn-speak").style.display = "inline-flex";
-    document.getElementById("btn-skip").style.display = "inline-flex";
     document.getElementById("btn-hint").style.display = "";
     document.getElementById("btn-samp").style.display = "";
     startPrep(q.prepTime, q.spkTime);
@@ -1616,14 +1672,14 @@ function setTimerUI(phase, secs, total) {
     num.className = "tm-num listen";
     num.textContent = "...";
     setRing(1, "#6c63ff");
-    ht.textContent = phase === "listen1" ? "Hay lang nghe — chua hien chu" : "Lang nghe lan 2 — cau hoi da hien";
+    ht.textContent = phase === "listen1" ? "Hay lang nghe — nhan 'Nghe lai' de hien cau hoi" : "Lang nghe lan 2 — cau hoi da hien — sau do chuan bi noi";
     return;
   }
 
   num.textContent = m + ":" + (s < 10 ? "0" : "") + s;
 
   if (phase === "prep") {
-    ph.textContent = "&#9203; CHUAN BI"; ph.className = "tm-phase prep";
+    ph.innerHTML = "&#9203; CHUAN BI"; ph.className = "tm-phase prep";
     num.className = "tm-num prep";
     setRing(ratio, "#ffd93d");
     ht.textContent = "Doc cau hoi va suy nghi cau tra loi";
@@ -1735,6 +1791,13 @@ function stopViz() {
 // ══════════════════════════════════════════
 function cancelTTS() {
   if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+}
+
+function resetQVisibility() {
+  // always reset visibility so next question starts fresh
+  document.getElementById("q-en").style.visibility = "";
+  document.getElementById("q-vi").style.visibility = "";
+  document.getElementById("rp-box").style.visibility = "";
 }
 
 function nextQ() {
