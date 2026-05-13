@@ -474,8 +474,8 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
         <div class="tip-box">
           <div class="tip-ttl">&#128161; How the test works</div>
           <div class="tip-row"><span>&#128266;</span><span>Each question is <strong>read aloud twice</strong> — text is hidden on the 1st listen</span></div>
-          <div class="tip-row"><span>&#9203;</span><span><strong>Prep:</strong> read &amp; think (20-40s depending on level)</span></div>
-          <div class="tip-row"><span>&#127897;</span><span><strong>Speak:</strong> 60s normal · <strong>90s</strong> for roleplay situations</span></div>
+          <div class="tip-row"><span>&#9203;</span><span>Sau khi nghe lan 2 xong → <strong>vao noi ngay</strong>, khong co thoi gian chuan bi</span></div>
+          <div class="tip-row"><span>&#127897;</span><span><strong>Speak:</strong> 60s cau thuong · <strong>90s</strong> cau roleplay / tinh huong</span></div>
           <div class="tip-row"><span>&#127917;</span><span>3 roleplay / unexpected situation questions included</span></div>
         </div>
         <div class="row">
@@ -1832,19 +1832,20 @@ function speakTTS(text, onEnd) {
 
 function skipListen() {
   cancelTTS();
-  // Reveal text and go straight to prep (skip remaining listen phases)
+  // Reveal text and go straight to speaking (no prep)
   document.getElementById("q-en").style.visibility = "";
   document.getElementById("q-vi").style.visibility = "";
   document.getElementById("rp-box").style.visibility = "";
   document.getElementById("listen-badge").className = "listen-badge";
   document.getElementById("btn-skip-listen").style.display = "none";
   document.getElementById("btn-relisten").style.display = "none";
-  document.getElementById("btn-speak").style.display = "inline-flex";
+  document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-skip").style.display = "inline-flex";
   document.getElementById("btn-hint").style.display = "";
   document.getElementById("btn-samp").style.display = "";
   var q = ST.questions[ST.qi];
-  startPrep(q.prepTime, q.spkTime);
+  ST.spkTime = q.spkTime;
+  startSpeak();
 }
 
 function startListen1() {
@@ -1905,13 +1906,14 @@ function startListen2() {
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    // Listen 2 done: hide badge, show all controls, start prep
+    // Listen 2 done → go straight to speaking (no prep)
     document.getElementById("listen-badge").className = "listen-badge";
     document.getElementById("btn-skip-listen").style.display = "none";
-    document.getElementById("btn-speak").style.display = "inline-flex";
+    document.getElementById("btn-nextq").style.display = "none";
     document.getElementById("btn-hint").style.display = "";
     document.getElementById("btn-samp").style.display = "";
-    startPrep(q.prepTime, q.spkTime);
+    ST.spkTime = q.spkTime;
+    startSpeak();
   });
 }
 
@@ -1931,7 +1933,7 @@ function setTimerUI(phase, secs, total) {
     num.className = "tm-num listen";
     num.textContent = "...";
     setRing(1, "#6c63ff");
-    ht.textContent = phase === "listen1" ? "Hay lang nghe — nhan 'Nghe lai' de hien cau hoi" : "Lang nghe lan 2 — cau hoi da hien — sau do chuan bi noi";
+    ht.textContent = phase === "listen1" ? "Hay lang nghe — nhan 'Nghe lai' de hien cau hoi" : "Lang nghe lan 2 — sau khi phat xong se vao noi ngay";
     return;
   }
 
