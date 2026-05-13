@@ -201,7 +201,28 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 .tm-num.urgent{color:var(--red);animation:urg .5s infinite}
 @keyframes urg{0%,100%{opacity:1}50%{opacity:.4}}
 .tm-num.fin{color:var(--green)}
+.tm-phase.listen{color:var(--pri)}
+.tm-num.listen{color:var(--pri)}
 .tm-hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+/* listen phases */
+.q-hidden{filter:blur(7px);user-select:none;pointer-events:none;transition:filter .4s}
+.listen-wave{display:none;align-items:center;justify-content:center;gap:4px;height:36px;margin:8px 0}
+.listen-wave.active{display:flex}
+.lwave{width:5px;border-radius:4px;background:var(--pri);animation:lwav 1s ease-in-out infinite}
+.lwave:nth-child(1){animation-delay:0s;height:10px}
+.lwave:nth-child(2){animation-delay:.12s;height:18px}
+.lwave:nth-child(3){animation-delay:.24s;height:28px}
+.lwave:nth-child(4){animation-delay:.12s;height:18px}
+.lwave:nth-child(5){animation-delay:0s;height:10px}
+@keyframes lwav{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.listen-badge{display:none;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.3);font-size:.8rem;font-weight:600;color:var(--pri);margin-bottom:10px}
+.listen-badge.active{display:flex}
+/* scoring criteria */
+.crit-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+@media(max-width:420px){.crit-grid{grid-template-columns:1fr}}
+.crit-box{background:var(--sur2);border-radius:11px;padding:12px}
+.crit-ttl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.crit-txt{font-size:.75rem;color:var(--muted);line-height:1.55}
 .viz-wrap{height:40px;display:flex;align-items:flex-end;justify-content:center;gap:3px;margin:12px 0}
 .viz-wrap.hidden{display:none}
 .vbar{width:5px;border-radius:4px;background:var(--red);min-height:3px;transition:height .08s}
@@ -408,6 +429,10 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="qt-badge qwarm" id="qt-badge">Warm-up</div>
       <div class="q-card">
         <div class="q-num" id="q-num">Question 1 of 12</div>
+        <div class="listen-badge" id="listen-badge">
+          <div class="listen-wave active"><div class="lwave"></div><div class="lwave"></div><div class="lwave"></div><div class="lwave"></div><div class="lwave"></div></div>
+          <span id="listen-badge-txt">Dang phat cau hoi...</span>
+        </div>
         <div class="q-en" id="q-en">Loading...</div>
         <div class="q-vi" id="q-vi"></div>
         <div class="rp-box" id="rp-box" style="display:none">
@@ -444,6 +469,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="ex-ctrl">
         <button class="btn btn-pri" id="btn-speak">&#127897; Bat dau noi</button>
         <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
+        <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#9193; Bo qua nghe</button>
         <button class="btn btn-out" id="btn-skip">&#9193; Bo qua</button>
       </div>
     </div>
@@ -479,6 +505,19 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <div class="sseg s-s" data-lv="S">S</div>
         </div>
         <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM2 tro len</strong></p>
+      </div>
+      <div class="rs-card">
+        <div class="sc-ttl" style="margin-bottom:4px">Tieu chi cham diem OPIC</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">OPIC danh gia dua tren 5 tieu chi chinh:</p>
+        <div class="crit-grid">
+          <div class="crit-box"><div class="crit-ttl" style="color:var(--pri)">Task Completion</div><div class="crit-txt">Tra loi day du cau hoi, bao gom du thong tin can thiet, khong lac chu de.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:var(--grn)">Fluency & Delivery</div><div class="crit-txt">Noi tron tru, tu nhien, khong ngap nhieu, duy tri nhip do giao tiep.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:var(--yel)">Vocabulary</div><div class="crit-txt">Dung tu phong phu, dung cho. Dung ngon ngu mo ta, so sanh, bieu cam.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:#b388ff)">Grammar</div><div class="crit-txt">Dung da dang thi (present, past, conditional), cau phuc hop, it loi co ban.</div></div>
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(108,99,255,.07);border-radius:9px;font-size:.76rem;color:var(--muted);line-height:1.65">
+          <strong style="color:var(--pri)">Chien luoc dat IH-AL:</strong> (1) So sanh / Tuong phan (however, whereas) · (2) Nen / Khong nen (pros & cons) · (3) Dua ra quan diem + lap luan (In my opinion... because...) · (4) Li tuong vs thuc te (Ideally... but in reality...)
+        </div>
       </div>
       <div class="rs-card">
         <div class="sc-ttl" style="margin-bottom:11px">Nhan xet va Loi khuyen</div>
@@ -561,6 +600,16 @@ QDB.warmup = [
   }
 ];
 
+QDB.warmup.push(
+  {
+    en:"Please tell me about the city or town you live in.",
+    vi:"Hay ke ve thanh pho hoac thi tran ban dang song.",
+    type:"warmup",
+    hints:["Ten thanh pho","Dac diem noi bat","Dieu ban yeu thich nhat"],
+    sample:"I live in Ho Chi Minh City, which is the largest city in Vietnam. It is a very fast-paced and modern city with countless restaurants, shopping centers, and entertainment options. What I love most is how vibrant the street life is — the food stalls are open late and there is always something happening. It can be quite noisy and crowded but I have grown to love the energy."
+  }
+);
+
 QDB.home = [
   {
     en:"Describe your neighborhood. What do you like most about it?",
@@ -585,6 +634,23 @@ QDB.home = [
     sample:"From downtown take Bus 36 heading north. Ride about 20 minutes to the Big C supermarket stop — you cannot miss the big yellow sign. Get off there and walk straight for 5 minutes. My building is the white apartment tower on the left number 12B. I will be at the entrance waiting!"
   }
 ];
+
+QDB.home.push(
+  {
+    en:"Tell me about the furniture and decorations in your living room.",
+    vi:"Ke ve do noi that va trang tri trong phong khach cua ban.",
+    type:"describe",
+    hints:["Loai sofa, ban ghe","Mau sac, phong cach","Goc ban thich nhat"],
+    sample:"My living room is quite simple but comfortable. I have a dark gray L-shaped sofa that takes up most of the space, a wooden coffee table, and a flat-screen TV mounted on the wall. I added some indoor plants near the window which brighten up the room. The walls are painted white to make it feel larger. My favorite corner is by the window with a reading chair and a small bookshelf."
+  },
+  {
+    en:"Would you like to move to a different neighborhood or city? Why or why not?",
+    vi:"Ban co muon chuyen den khu pho hoac thanh pho khac khong? Tai sao?",
+    type:"compare",
+    hints:["Ly do muon/khong muon chuyen","Noi ban muon den","So sanh voi noi dang song"],
+    sample:"Sometimes I think about moving to a quieter area like Da Lat or Hoi An. The pace of life here is very fast and the air quality is not great. A smaller city would offer fresher air, lower cost of living, and a more relaxed lifestyle. However my job and social network are here so practically it is difficult. For now I will stay but I would love to move in a few years when I have more flexibility."
+  }
+);
 
 QDB.work = [
   {
@@ -611,6 +677,23 @@ QDB.work = [
   }
 ];
 
+QDB.work.push(
+  {
+    en:"What kind of work environment do you prefer — working alone or in a team? Why?",
+    vi:"Ban thich moi truong lam viec nao — lam viec doc lap hay nhom? Tai sao?",
+    type:"compare",
+    hints:["Uu diem lam viec doc lap","Uu diem lam nhom","Phong cach lam viec cua ban"],
+    sample:"I actually enjoy both depending on the task. For creative work like writing reports or designing, I prefer working alone because I can focus deeply without distractions. But for brainstorming or complex problem-solving, a team is far more effective since different perspectives lead to better solutions. In my current job I have a good mix of both, which suits me perfectly."
+  },
+  {
+    en:"Describe an achievement at work or school that you are particularly proud of.",
+    vi:"Mo ta mot thanh tich tai cong viec hoac truong hoc ban dac biet tu hao.",
+    type:"experience",
+    hints:["Su kien cu the","Kho khan gap phai","Ban vuot qua nhu the nao","Cam xuc va ket qua"],
+    sample:"I am most proud of leading a product launch campaign last year. It was my first time managing a whole project independently. The team had tight deadlines and limited budget. I organized weekly check-ins, divided tasks clearly, and stayed calm when issues came up. The launch exceeded our targets by 30 percent. My manager praised the work in front of the whole department and it gave me real confidence in my leadership skills."
+  }
+);
+
 QDB.hobby = [
   {
     en:"What do you usually do in your free time? Describe your hobbies in detail.",
@@ -627,6 +710,23 @@ QDB.hobby = [
     sample:"In high school I was really into basketball and practiced almost every day. But when I entered university the workload became heavy and I moved to a new city where I did not know anyone to play with. I gradually just stopped. I do miss it sometimes — there is nothing like the energy of a good game. I keep telling myself I will pick it up again once work calms down."
   }
 ];
+
+QDB.hobby.push(
+  {
+    en:"Is there a hobby or activity you have always wanted to try but have not yet? Why?",
+    vi:"Co so thich nao ban muon thu nhung chua lam duoc khong? Tai sao?",
+    type:"describe",
+    hints:["Hoat dong ban muon thu","Ly do chua lam","Ke hoach trong tuong lai"],
+    sample:"I have always wanted to learn how to play the piano. There is something deeply calming about piano music and I admire people who can play well. I tried to start twice but stopped because of time. Now I am looking at online courses which seem more flexible. I plan to start seriously once my current project wraps up next quarter."
+  },
+  {
+    en:"Tell me about a hobby that you and your friend or family member share.",
+    vi:"Ke ve so thich ban chia se voi ban be hoac gia dinh.",
+    type:"habit",
+    hints:["So thich la gi","Thuong lam cung nhau nhu the nao","Dieu do co y nghia gi"],
+    sample:"My father and I both love photography. On weekends we sometimes go to interesting locations around the city to take pictures. He taught me the basics of composition and lighting when I was in high school. Now we have a kind of friendly competition where we share photos after each trip and vote on favorites. It keeps us connected even though we live separately and gives us something meaningful to talk about."
+  }
+);
 
 QDB.music = [
   {
@@ -645,6 +745,16 @@ QDB.music = [
   }
 ];
 
+QDB.music.push(
+  {
+    en:"Compare the music that was popular when you were young to the music popular today.",
+    vi:"So sanh nhac pho bien khi ban con tre voi nhac hien nay.",
+    type:"compare",
+    hints:["Nhac hoi nho ban la gi","Nhac hien nay nhu the nao","Su khac biet chinh","Y kien ca nhan"],
+    sample:"When I was growing up in the 2000s, pop and R&B dominated. Artists had polished live performances and intricate arrangements. Today the music landscape is very different — electronic and hip-hop beats are everywhere, and songs are often shorter to fit streaming attention spans. Production quality has improved enormously but I sometimes feel the emotional depth is missing. That said, some modern artists are truly innovative. Both eras have their gems."
+  }
+);
+
 QDB.movie = [
   {
     en:"What types of movies or TV shows do you enjoy? Describe your favorites.",
@@ -661,6 +771,16 @@ QDB.movie = [
     sample:"Ten years ago people mostly went to the cinema or bought DVDs. Streaming was just starting out. Today most people use Netflix or YouTube on phones laptops or smart TVs — the variety is huge. However something is lost: watching on a big screen in a dark theater is still irreplaceable for blockbusters. Streaming is convenient but cinema still has its own magic."
   }
 ];
+
+QDB.movie.push(
+  {
+    en:"Tell me about a movie or TV show that had a lasting impact on you. What was it about?",
+    vi:"Ke ve phim hoac chuong trinh TV co anh huong sau sac den ban.",
+    type:"experience",
+    hints:["Ten phim / series","Noi dung chinh","Bai hoc hoac cam xuc","Anh huong den cuoc song"],
+    sample:"The documentary series Blue Planet II had a lasting impact on me. It explored the world's oceans in stunning detail and revealed how severely pollution is damaging marine life. I knew ocean pollution was a problem but seeing it so vividly made me feel personally responsible. After watching it I started reducing single-use plastic and became more vocal about environmental issues. A documentary has never changed my behavior so directly before."
+  }
+);
 
 QDB.sports = [
   {
@@ -687,6 +807,16 @@ QDB.sports = [
   }
 ];
 
+QDB.sports.push(
+  {
+    en:"Compare a sport you played in the past with how you stay active now.",
+    vi:"So sanh mon the thao ban tung tap voi cach ban van dong hien nay.",
+    type:"compare",
+    hints:["Mon the thao cu la gi","Ban dung lai tai sao","Hoat dong hien tai","Uu nhuoc moi cach"],
+    sample:"In high school I played football seriously three times a week. It was intense and social but required coordinating with a team. These days I mostly run and do home workouts because my schedule is unpredictable. Solo exercise is more flexible but I do miss the camaraderie and competitive spirit of team sports. I keep thinking about joining a weekend football club to get that team experience back."
+  }
+);
+
 QDB.travel = [
   {
     en:"Describe a place you traveled to that you really enjoyed. What made it special?",
@@ -712,6 +842,24 @@ QDB.travel = [
   }
 ];
 
+QDB.travel.push(
+  {
+    en:"You are on vacation and your bag has been lost at the airport. What do you do?",
+    vi:"Ban dang di du lich va tui xach bi that lac tai san bay. Ban lam gi?",
+    type:"unexpected",
+    rp:"Unexpected situation: You land at your destination and discover your suitcase did not arrive. You need to report it and find a solution.",
+    hints:["Den quay bao cao hanh ly","Cung cap so hieu chuyen bay, mo ta tui","Hoi ve thoi gian giao lai","Hoi ve chi phi tam thoi"],
+    sample:"First I would not panic. I would go directly to the airline's baggage service counter and explain the situation calmly. I would provide my flight number, baggage claim tag, and a description of my suitcase. I would ask them to file a missing baggage report and get a reference number. Then I would ask whether they can cover essential items like toiletries and a change of clothes while waiting. I have travel insurance so I would document everything carefully."
+  },
+  {
+    en:"What is your most memorable travel experience? What made it unforgettable?",
+    vi:"Trai nghiem du lich dang nho nhat cua ban la gi? Dieu gi lam no kho quen?",
+    type:"experience",
+    hints:["Noi ban den","Dieu bat ngo xay ra","Cam xuc luc do","Anh huong ve sau"],
+    sample:"My most memorable trip was to Japan two years ago. What made it unforgettable was a spontaneous experience in Kyoto — I stumbled into a small neighborhood festival that I never planned. Locals in traditional costumes were dancing and carrying portable shrines. Nobody spoke English but people smiled and gestured for me to join in. I ate food I could not name and watched fireworks with strangers. It taught me that the best travel moments are unplanned."
+  }
+);
+
 QDB.read = [
   {
     en:"Do you enjoy reading? What types of books? Tell me about a book that influenced you.",
@@ -721,6 +869,16 @@ QDB.read = [
     sample:"I enjoy non-fiction and personal development books. The most influential one for me is Atomic Habits by James Clear. The core idea is that small consistent changes compound into remarkable results. Before reading it I struggled to build good habits. After applying strategies like habit stacking I have maintained routines like daily exercise for over a year. It completely changed how I approach self-improvement."
   }
 ];
+
+QDB.read.push(
+  {
+    en:"How have your reading habits changed compared to when you were a child?",
+    vi:"Thoi quen doc sach cua ban da thay doi nhu the nao so voi hoi con nho?",
+    type:"compare",
+    hints:["Hoi nho doc gi","Hien nay doc gi","Tai sao thay doi","Ban co doc nhieu hon truoc khong"],
+    sample:"As a child I read mostly adventure and fantasy novels for pure entertainment. I would read under my blanket with a flashlight. Now I mainly read non-fiction — business, psychology, and self-development. The shift happened when I started working and realized knowledge has direct practical value. I read less for pleasure now which I slightly regret. I recently started keeping a fiction book on my bedside table to rediscover reading for joy."
+  }
+);
 
 QDB.food = [
   {
@@ -740,6 +898,23 @@ QDB.food = [
   }
 ];
 
+QDB.food.push(
+  {
+    en:"Compare eating habits of the older generation with those of young people today.",
+    vi:"So sanh thoi quen an uong cua the he cu voi gioi tre hien nay.",
+    type:"compare",
+    hints:["The he cu an gi / nhu the nao","Gioi tre hien nay khac ra sao","Uu nhuoc moi kieu","Y kien ca nhan"],
+    sample:"The older generation cooked almost every meal at home using fresh local ingredients and ate together as a family. Young people today, including myself, eat out far more often or order delivery. We are more exposed to international cuisines and food trends through social media. The older way was healthier and more connected but time-consuming. The modern way is convenient but can be expensive and nutritionally imbalanced. Ideally I think a mix of both is best."
+  },
+  {
+    en:"Tell me about a food or dish from another culture that you have tried and enjoyed.",
+    vi:"Ke ve mon an tu nen van hoa khac ma ban da thu va thich.",
+    type:"experience",
+    hints:["Mon an tu dau","Ban thu lan dau khi nao","Huong vi nhu the nao","Ban co tu nau thu chua"],
+    sample:"I first tried Japanese ramen at a small restaurant in the city about three years ago. I ordered a tonkotsu ramen with a rich pork bone broth, soft noodles, and a perfectly soft-boiled egg. It was unlike anything I had eaten before — deeply savory and comforting. I was so impressed that I started learning how to make broth from scratch at home. It takes six hours but the result is worth every minute."
+  }
+);
+
 QDB.tech = [
   {
     en:"How has technology changed your daily life? Give specific examples.",
@@ -757,6 +932,16 @@ QDB.tech = [
   }
 ];
 
+QDB.tech.push(
+  {
+    en:"What are the pros and cons of social media? Do you think it does more good or harm?",
+    vi:"Uu va nhuoc diem cua mang xa hoi? Ban nghi no co ich hay hai hon?",
+    type:"compare",
+    hints:["Loi ich (ket noi, thong tin)","Tac hai (nghien, tin gia)","Y kien ca nhan va ly do"],
+    sample:"Social media has undeniable benefits — it connects people across distances, spreads important information quickly, and gives ordinary people a voice. However the downsides are serious: comparison culture damages self-esteem, misinformation spreads rapidly, and excessive use can harm mental health. Personally I think it does more harm than good in the current form because the platforms are designed to maximize engagement, not wellbeing. We need better regulation and digital literacy education."
+  }
+);
+
 QDB.shop = [
   {
     en:"Describe your shopping habits. Do you prefer online or in-store shopping? Why?",
@@ -767,6 +952,24 @@ QDB.shop = [
   }
 ];
 
+QDB.shop.push(
+  {
+    en:"Tell me about an experience when you returned or exchanged a product. What happened?",
+    vi:"Ke ve lan ban tra lai hoac doi san pham. Chuyen gi da xay ra?",
+    type:"experience",
+    hints:["San pham gi","Van de la gi","Qua trinh xu ly","Ket qua"],
+    sample:"Last year I bought a jacket online that looked great in the photos but the stitching came apart after one week. I contacted customer service and explained the defect. They initially offered a discount voucher but I insisted on a full refund since the item was clearly defective. After sending photos as evidence they agreed and processed the refund within five days. It was a bit stressful but I learned to always read return policies carefully before purchasing."
+  },
+  {
+    en:"Call a store to ask whether a specific item is in stock, and if not, when it will be available.",
+    vi:"Goi dien den cua hang hoi xem mot mon hang co san khong, neu khong thi khi nao co.",
+    type:"roleplay",
+    rp:"You want to buy a specific model of running shoes. Call the store to check stock and delivery options.",
+    hints:["Neu ten san pham / model","Hoi co san khong","Hoi them ve size, mau","Dat hang truoc hoac doi khi nao"],
+    sample:"Hi, I am calling to ask about a product. I am looking for the Nike Pegasus 40 in size 42, preferably in black or white. Do you have it in stock right now? If not, do you know when you expect to receive it? Also is it possible to place a pre-order or reserve a pair? I am quite flexible on color but the size is important. Could you also check your online store or another branch for availability?"
+  }
+);
+
 QDB.health = [
   {
     en:"What do you do to stay healthy? Describe your habits and routines.",
@@ -776,6 +979,23 @@ QDB.health = [
     sample:"I try to maintain a balanced lifestyle. For diet I cook most meals at home with plenty of vegetables and protein limiting junk food. For exercise I run and do yoga — running three times a week and yoga on other days. I also aim for 7 hours of sleep nightly which makes the biggest difference in how I feel. The hardest part is consistency during busy periods but I remind myself health is a long-term investment."
   }
 ];
+
+QDB.health.push(
+  {
+    en:"Tell me about a time when you were sick and how you recovered.",
+    vi:"Ke ve lan ban bi benh va ban da hoi phuc nhu the nao.",
+    type:"experience",
+    hints:["Benh gi, bao gio","Trieu chung","Ban da lam gi de khoi","Bai hoc rut ra"],
+    sample:"About two years ago I had a serious flu that kept me bedridden for a full week. I had a high fever, body aches, and almost no appetite. I rested completely, drank plenty of fluids, and followed my doctor's prescription. The hardest part was staying away from work during a busy period. After recovering I realized I had been neglecting sleep and nutrition for months leading up to it. Since then I have been much more careful about maintaining a healthy routine."
+  },
+  {
+    en:"Compare the healthcare system now versus when your parents were young. What has changed?",
+    vi:"So sanh he thong y te hien nay voi hoi bo me ban con tre. Dieu gi da thay doi?",
+    type:"compare",
+    hints:["He thong y te truoc day","Nhung tien bo lon","Van de chua giai quyet","Y kien ca nhan"],
+    sample:"The healthcare system has improved dramatically. When my parents were young, access to doctors in rural areas was very limited and treatments were basic. Today we have modern hospitals, advanced diagnostic equipment, and universal health insurance covers a large portion of costs. Telemedicine has also made consultations more accessible. However the system still struggles with overcrowding in public hospitals and rising medical costs. Overall it is much better but still has room to grow."
+  }
+);
 
 var EXTRAS = [
   {
@@ -800,6 +1020,38 @@ var EXTRAS = [
     sample:"Five years ago I was a student with few responsibilities. Today I work full-time manage my own finances and live independently. I have become more practical and disciplined. Looking ahead I hope to advance to a senior position and perhaps start a side project. I would also like to travel more intentionally and become more financially secure with better work-life balance."
   }
 ];
+
+EXTRAS.push(
+  {
+    en:"Describe a person who has had a major positive influence on your life.",
+    vi:"Mo ta nguoi co anh huong tich cuc lon nhat den cuoc doi ban.",
+    type:"describe",
+    hints:["Ho la ai","Dieu dac biet o ho","Ho da giup ban nhu the nao","Anh huong cu the den ban"],
+    sample:"My high school English teacher had a major impact on me. She was strict but genuinely invested in each student. She pushed me to read widely and think critically rather than just memorize answers. She once told me that language is not just a skill but a window to the world, and that idea has stayed with me. Because of her encouragement I pursued English seriously, which opened countless opportunities including my current career."
+  },
+  {
+    en:"What do you think is the biggest challenge facing your generation? How should it be addressed?",
+    vi:"Ban nghi thach thuc lon nhat the he ban dang phai doi mat la gi?",
+    type:"describe",
+    hints:["Neu ro van de","Ly do tai sao no la van de lon","Giai phap ban nghi ra","Ai phai hanh dong"],
+    sample:"I think the biggest challenge for my generation is mental health — particularly anxiety and burnout related to work pressure and social media comparison. We have more information and opportunity than any previous generation but also more uncertainty and social pressure. I think the solution requires action at multiple levels: employers offering better work-life balance, schools teaching emotional intelligence, and reducing the stigma around seeking help. Personally I have started setting phone-free hours which has helped enormously."
+  },
+  {
+    en:"You promised to meet a friend but suddenly cannot make it. Call to explain and reschedule.",
+    vi:"Ban da hen gap ban nhung dot ngot khong the den. Goi dien giai thich va doi lich.",
+    type:"roleplay",
+    rp:"You and a friend planned to meet for lunch today but a work emergency has come up. Call your friend to apologize and suggest a new time.",
+    hints:["Xin loi truoc","Giai thich ngan gon","De xuat thoi gian moi","Giu cuoc hen"],
+    sample:"Hey, I am so sorry to do this at the last minute. Something urgent just came up at work — my manager called an emergency meeting that I really cannot skip. I feel terrible because I know you have been looking forward to this. Can we reschedule? I am completely free this Saturday and Sunday. Or if you prefer, we could meet for coffee on Thursday evening. Again I really apologize and I promise this will not happen again."
+  },
+  {
+    en:"Do you think people today are more or less environmentally aware than in the past? Give examples.",
+    vi:"Ban nghi nguoi hien nay co y thuc moi truong hon hay kem hon qua khu?",
+    type:"compare",
+    hints:["Y thuc hien nay (recycling, EV)","So voi truoc (it biet hon)","Nguyen nhan thay doi","Van de con ton tai"],
+    sample:"I think people today are significantly more environmentally aware than in the past, largely driven by education, media coverage, and visible climate events. Terms like carbon footprint and sustainability are part of everyday conversation now. I see more recycling bins, electric vehicles, and eco-friendly products than ever before. However awareness does not always translate into action. Many people still choose convenience over sustainability. The gap between knowing and doing remains the core challenge."
+  }
+);
 
 // ══════════════════════════════════════════
 //  STATE
@@ -922,6 +1174,7 @@ function bindButtons() {
   document.getElementById("btn-speak").addEventListener("click", startSpeak);
   document.getElementById("btn-nextq").addEventListener("click", nextQ);
   document.getElementById("btn-skip").addEventListener("click", skipQ);
+  document.getElementById("btn-skip-listen").addEventListener("click", skipListen);
   document.getElementById("btn-quit").addEventListener("click", confirmQuit);
   document.getElementById("btn-hint").addEventListener("click", function() { togBody("hint-body"); });
   document.getElementById("btn-samp").addEventListener("click", function() { togBody("samp-body"); });
@@ -1219,16 +1472,20 @@ function renderQ() {
   sb.classList.remove("open");
   document.getElementById("samp-txt").textContent = q.sample || "";
 
-  // buttons
-  document.getElementById("btn-speak").style.display = "inline-flex";
+  // buttons — will be shown after listen phases
+  document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-nextq").style.display = "none";
-  document.getElementById("btn-skip").style.display = "inline-flex";
+  document.getElementById("btn-skip").style.display = "none";
+  document.getElementById("btn-hint").style.display = "none";
+  document.getElementById("btn-samp").style.display = "none";
+  document.getElementById("listen-badge").className = "listen-badge";
 
   stopViz();
   document.getElementById("viz").classList.add("hidden");
 
   clearTick();
-  startPrep(q.prepTime, q.spkTime);
+  // Start with listen phases (TTS plays twice before prep)
+  startListen1();
 }
 
 function togBody(id) {
@@ -1250,15 +1507,120 @@ function setRing(ratio, color) {
   ring.style.strokeDashoffset = CIRC * (1 - Math.max(0, Math.min(1, ratio)));
 }
 
+// ══════════════════════════════════════════
+//  TTS — Text-To-Speech helpers
+// ══════════════════════════════════════════
+function speakTTS(text, onEnd) {
+  if (!window.speechSynthesis) { if (onEnd) setTimeout(onEnd, 0); return; }
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.lang = "en-US";
+  utt.rate = 0.85;
+  utt.pitch = 1;
+  var fired = false;
+  function done() { if (!fired) { fired = true; if (onEnd) onEnd(); } }
+  utt.onend = done;
+  utt.onerror = done;
+  // Fallback timeout: estimate ~60ms per word + 2s buffer
+  var words = text.split(" ").length;
+  var ms = Math.max(4000, words * 400 + 2000);
+  setTimeout(done, ms);
+  window.speechSynthesis.speak(utt);
+}
+
+function skipListen() {
+  cancelTTS();
+  // Reveal text and go straight to prep
+  document.getElementById("q-en").classList.remove("q-hidden");
+  document.getElementById("q-vi").classList.remove("q-hidden");
+  document.getElementById("rp-box").classList.remove("q-hidden");
+  document.getElementById("listen-badge").className = "listen-badge";
+  document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-speak").style.display = "inline-flex";
+  document.getElementById("btn-skip").style.display = "inline-flex";
+  document.getElementById("btn-hint").style.display = "";
+  document.getElementById("btn-samp").style.display = "";
+  var q = ST.questions[ST.qi];
+  startPrep(q.prepTime, q.spkTime);
+}
+
+function startListen1() {
+  clearTick();
+  ST.phase = "listen1";
+  var q = ST.questions[ST.qi];
+
+  // Blur question text
+  document.getElementById("q-en").classList.add("q-hidden");
+  document.getElementById("q-vi").classList.add("q-hidden");
+  var rp = document.getElementById("rp-box");
+  rp.classList.add("q-hidden");
+
+  // Show listen badge, skip-listen button; hide action buttons
+  var badge = document.getElementById("listen-badge");
+  badge.className = "listen-badge active";
+  document.getElementById("listen-badge-txt").textContent = "Lang nghe cau hoi (lan 1/2)";
+  document.getElementById("btn-speak").style.display = "none";
+  document.getElementById("btn-skip").style.display = "none";
+  document.getElementById("btn-skip-listen").style.display = "inline-flex";
+  document.getElementById("btn-hint").style.display = "none";
+  document.getElementById("btn-samp").style.display = "none";
+
+  setTimerUI("listen1", 0, 1);
+
+  var text = q.en + (q.rp ? ". " + q.rp : "");
+  speakTTS(text, function() {
+    setTimeout(startListen2, 700);
+  });
+}
+
+function startListen2() {
+  clearTick();
+  ST.phase = "listen2";
+  var q = ST.questions[ST.qi];
+
+  // Reveal question text
+  document.getElementById("q-en").classList.remove("q-hidden");
+  document.getElementById("q-vi").classList.remove("q-hidden");
+  document.getElementById("rp-box").classList.remove("q-hidden");
+
+  document.getElementById("listen-badge-txt").textContent = "Nghe lan 2/2 — cau hoi da hien";
+  document.getElementById("btn-skip-listen").style.display = "inline-flex";
+  setTimerUI("listen2", 0, 1);
+
+  var text = q.en + (q.rp ? ". " + q.rp : "");
+  speakTTS(text, function() {
+    // Hide listen badge, show buttons, start prep
+    document.getElementById("listen-badge").className = "listen-badge";
+    document.getElementById("btn-skip-listen").style.display = "none";
+    document.getElementById("btn-speak").style.display = "inline-flex";
+    document.getElementById("btn-skip").style.display = "inline-flex";
+    document.getElementById("btn-hint").style.display = "";
+    document.getElementById("btn-samp").style.display = "";
+    startPrep(q.prepTime, q.spkTime);
+  });
+}
+
 function setTimerUI(phase, secs, total) {
   var ph  = document.getElementById("tm-phase");
   var num = document.getElementById("tm-num");
   var ht  = document.getElementById("tm-hint");
   var m = Math.floor(secs / 60);
   var s = secs % 60;
-  num.textContent = m + ":" + (s < 10 ? "0" : "") + s;
 
   var ratio = total > 0 ? secs / total : 0;
+
+  if (phase === "listen1" || phase === "listen2") {
+    var n = phase === "listen1" ? "1/2" : "2/2";
+    ph.innerHTML = "&#128266; NGHE CAU HOI " + n;
+    ph.className = "tm-phase listen";
+    num.className = "tm-num listen";
+    num.textContent = "...";
+    setRing(1, "#6c63ff");
+    ht.textContent = phase === "listen1" ? "Hay lang nghe — chua hien chu" : "Lang nghe lan 2 — cau hoi da hien";
+    return;
+  }
+
+  num.textContent = m + ":" + (s < 10 ? "0" : "") + s;
 
   if (phase === "prep") {
     ph.textContent = "&#9203; CHUAN BI"; ph.className = "tm-phase prep";
@@ -1371,8 +1733,12 @@ function stopViz() {
 // ══════════════════════════════════════════
 //  EXAM CONTROLS
 // ══════════════════════════════════════════
+function cancelTTS() {
+  if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+}
+
 function nextQ() {
-  clearTick(); stopViz();
+  cancelTTS(); clearTick(); stopViz();
   document.getElementById("viz").classList.add("hidden");
   var q = ST.questions[ST.qi];
   if (q) { q.done = true; ST.res.comp++; if (q.full) ST.res.full++; }
@@ -1382,7 +1748,7 @@ function nextQ() {
 }
 
 function skipQ() {
-  clearTick(); stopViz();
+  cancelTTS(); clearTick(); stopViz();
   document.getElementById("viz").classList.add("hidden");
   var q = ST.questions[ST.qi];
   if (q) { q.skipped = true; ST.res.skip++; }
@@ -1395,7 +1761,7 @@ function skipQ() {
 //  FINISH
 // ══════════════════════════════════════════
 function finishExam() {
-  clearTick(); stopViz();
+  cancelTTS(); clearTick(); stopViz();
   if (ST.micStream) {
     var tracks = ST.micStream.getTracks();
     for (var i = 0; i < tracks.length; i++) tracks[i].stop();
@@ -1515,7 +1881,7 @@ function confirmQuit() {
 }
 function closeModal() { document.getElementById("modal").classList.remove("open"); }
 function doQuit() {
-  clearTick(); stopViz();
+  cancelTTS(); clearTick(); stopViz();
   if (ST.micStream) {
     var tracks = ST.micStream.getTracks();
     for (var i = 0; i < tracks.length; i++) tracks[i].stop();
