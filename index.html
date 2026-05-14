@@ -276,9 +276,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 .s-nm{background:rgba(120,144,156,.22);color:#90a4ae}
 .s-nh{background:rgba(120,144,156,.28);color:#b0bec5}
 .s-il{background:rgba(108,99,255,.14);color:#9e8fff}
-.s-im1{background:rgba(108,99,255,.2);color:#a78bfa}
-.s-im2{background:rgba(108,99,255,.28);color:var(--pri)}
-.s-im3{background:rgba(108,99,255,.35);color:#7c3aed}
+.s-im{background:rgba(108,99,255,.28);color:var(--pri)}
 .s-ih{background:rgba(0,212,170,.18);color:var(--grn)}
 .s-al{background:rgba(255,215,61,.18);color:var(--yel)}
 .s-am{background:rgba(255,215,61,.25);color:#f59e0b}
@@ -344,7 +342,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <button class="nav-btn act" id="nb-home" onclick="goPage('home')">&#127968; Home</button>
       <button class="nav-btn" id="nb-history" onclick="goPage('history')">&#128202; History</button>
     </nav>
-    <div class="lv-tag" id="hdr-lv">IM2</div>
+    <div class="lv-tag" id="hdr-lv">IM</div>
   </header>
 
   <div id="toasts"></div>
@@ -371,7 +369,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       </div>
       <div class="row" style="justify-content:center">
         <button class="btn btn-pri btn-lg" id="btn-start-home">&#128640; Bat dau luyen tap</button>
-        <button class="btn btn-out btn-lg" id="btn-quick">&#9889; Quick (IM2)</button>
+        <button class="btn btn-out btn-lg" id="btn-quick">&#9889; Quick (IM)</button>
       </div>
     </div>
   </div>
@@ -596,8 +594,9 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="ex-ctrl">
         <button class="btn btn-pri" id="btn-speak">&#127897; Bat dau noi</button>
         <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
-        <button class="btn btn-pri" id="btn-relisten" style="display:none">&#128266; Nghe lai (lan 2)</button>
-        <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#9193; Hien cau hoi</button>
+        <button class="btn btn-pri" id="btn-relisten" style="display:none">&#128266; Nghe lan 2</button>
+        <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#127897; Tra loi ngay</button>
+        <button class="btn btn-out btn-sm" id="btn-answer-hide" style="display:none">&#128683; Tra loi (an cau hoi)</button>
         <button class="btn btn-out" id="btn-skip">&#9193; Bo qua cau</button>
       </div>
     </div>
@@ -627,12 +626,10 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
         <div class="sc-track">
           <div class="sseg s-nl" data-lv="NL">NL</div><div class="sseg s-nm" data-lv="NM">NM</div>
           <div class="sseg s-nh" data-lv="NH">NH</div><div class="sseg s-il" data-lv="IL">IL</div>
-          <div class="sseg s-im1" data-lv="IM1">IM1</div><div class="sseg s-im2" data-lv="IM2">IM2</div>
-          <div class="sseg s-im3" data-lv="IM3">IM3</div><div class="sseg s-ih" data-lv="IH">IH</div>
-          <div class="sseg s-al" data-lv="AL">AL</div><div class="sseg s-am" data-lv="AM">AM</div>
-          <div class="sseg s-s" data-lv="S">S</div>
+          <div class="sseg s-im" data-lv="IM">IM</div><div class="sseg s-ih" data-lv="IH">IH</div>
+          <div class="sseg s-al" data-lv="AL">AL</div>
         </div>
-        <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM2 tro len</strong></p>
+        <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM tro len</strong></p>
       </div>
 
       <!-- FACT AI Scoring Card -->
@@ -814,14 +811,13 @@ var TRAVEL_ITEMS = [
 ];
 
 var LEVELS = [
-  {id:"NM",g:"novice",lb:"Novice Mid",ds:"Vai tu, cum tu don gian",prep:40,spk:60},
-  {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, thi hien tai",prep:35,spk:60},
-  {id:"IL",g:"intermediate",lb:"Intermediate Low",ds:"Cau hoan chinh, con loi",prep:30,spk:60},
-  {id:"IM1",g:"intermediate",lb:"Intermediate Mid 1",ds:"Giao tiep duoc, thieu mach lac",prep:30,spk:60},
-  {id:"IM2",g:"intermediate",lb:"Intermediate Mid 2",ds:"Muc pho bien nhat khi xin viec",prep:30,spk:60},
-  {id:"IM3",g:"intermediate",lb:"Intermediate Mid 3",ds:"Troi chay trong tinh huong quen",prep:25,spk:60},
-  {id:"IH",g:"intermediate",lb:"Intermediate High",ds:"Xu ly tot tinh huong phuc tap",prep:25,spk:60},
-  {id:"AL",g:"advanced",lb:"Advanced Low",ds:"Mo ta chi tiet, ke chuyen tot",prep:20,spk:60}
+  {id:"NL",g:"novice",lb:"Novice Low",ds:"Vai tu don le, chua ghep cau duoc",prep:40,spk:60},
+  {id:"NM",g:"novice",lb:"Novice Mid",ds:"Cum tu, cau ngan da hoc thuoc long",prep:40,spk:60},
+  {id:"NH",g:"novice",lb:"Novice High",ds:"Cau don gian, chu yeu thi hien tai",prep:35,spk:60},
+  {id:"IL",g:"intermediate",lb:"Intermediate Low",ds:"Cau hoan chinh, con nhieu loi ngu phap",prep:30,spk:60},
+  {id:"IM",g:"intermediate",lb:"Intermediate Mid",ds:"Giao tiep duoc, muc pho bien nhat khi xin viec",prep:30,spk:60},
+  {id:"IH",g:"intermediate",lb:"Intermediate High",ds:"Xu ly tot tinh huong phuc tap, ke chuyen mach lac",prep:25,spk:60},
+  {id:"AL",g:"advanced",lb:"Advanced Low",ds:"Mo ta chi tiet, luan diem ro rang, dung 3 thi",prep:20,spk:60}
 ];
 
 var TOPICS = [
@@ -1516,6 +1512,7 @@ function bindButtons() {
   document.getElementById("btn-skip").addEventListener("click", skipQ);
   document.getElementById("btn-relisten").addEventListener("click", startListen2);
   document.getElementById("btn-skip-listen").addEventListener("click", skipListen);
+  document.getElementById("btn-answer-hide").addEventListener("click", startSpeakHidden);
   document.getElementById("btn-quit").addEventListener("click", confirmQuit);
   document.getElementById("btn-hint").addEventListener("click", function() { togBody("hint-body"); });
   document.getElementById("btn-samp").addEventListener("click", function() { togBody("samp-body"); });
@@ -1719,7 +1716,7 @@ function shuffle(arr) {
 }
 
 function quickStart() {
-  ST.level = "IM2";
+  ST.level = "IM";
   ST.survey = {
     job: "worker", dwelling: "family",
     leisure: ["movie","concert","park"],
@@ -1728,7 +1725,7 @@ function quickStart() {
     travel:  ["domestic","overseas"]
   };
   ST.topics = deriveTopics();
-  document.getElementById("hdr-lv").textContent = "IM2";
+  document.getElementById("hdr-lv").textContent = "IM";
   goPage("mic");
 }
 
@@ -1741,7 +1738,7 @@ function startExam() {
   for (var i = 0; i < LEVELS.length; i++) {
     if (LEVELS[i].id === ST.level) { lv = LEVELS[i]; break; }
   }
-  if (!lv) lv = LEVELS[4]; // default IM2
+  if (!lv) lv = LEVELS[4]; // default IM
 
   // ── collect ALL topic questions ──────────────────
   var pool = [];
@@ -1893,6 +1890,7 @@ function renderQ() {
   document.getElementById("btn-skip").style.display = "none";
   document.getElementById("btn-relisten").style.display = "none";
   document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-answer-hide").style.display = "none";
   document.getElementById("btn-hint").style.display = "none";
   document.getElementById("btn-samp").style.display = "none";
   document.getElementById("listen-badge").className = "listen-badge";
@@ -1949,12 +1947,27 @@ function speakTTS(text, onEnd) {
 
 function skipListen() {
   cancelTTS();
-  // Reveal text and go straight to speaking (no prep)
   document.getElementById("q-en").style.visibility = "";
   document.getElementById("q-vi").style.visibility = "";
   document.getElementById("rp-box").style.visibility = "";
   document.getElementById("listen-badge").className = "listen-badge";
   document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-answer-hide").style.display = "none";
+  document.getElementById("btn-relisten").style.display = "none";
+  document.getElementById("btn-speak").style.display = "none";
+  document.getElementById("btn-skip").style.display = "inline-flex";
+  document.getElementById("btn-hint").style.display = "";
+  document.getElementById("btn-samp").style.display = "";
+  var q = ST.questions[ST.qi];
+  ST.spkTime = q.spkTime;
+  startSpeak();
+}
+
+function startSpeakHidden() {
+  cancelTTS();
+  document.getElementById("listen-badge").className = "listen-badge";
+  document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-answer-hide").style.display = "none";
   document.getElementById("btn-relisten").style.display = "none";
   document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-skip").style.display = "inline-flex";
@@ -1991,16 +2004,15 @@ function startListen1() {
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    // Audio done: show "Nghe lai" and "Hien cau hoi" buttons; text still hidden
     ST.phase = "wait-relisten";
-    document.getElementById("listen-badge-txt").textContent = "Nhan 'Nghe lai' de nghe lan 2 va hien cau hoi";
+    document.getElementById("listen-badge-txt").textContent = "Da nghe xong — chon hanh dong";
     document.getElementById("btn-relisten").style.display = "inline-flex";
+    document.getElementById("btn-skip-listen").innerHTML = "&#127897; Tra loi ngay";
     document.getElementById("btn-skip-listen").style.display = "inline-flex";
-    // update timer display
     var ph = document.getElementById("tm-phase");
     ph.innerHTML = "&#128266; NGHE XONG LAN 1";
     ph.className = "tm-phase listen";
-    document.getElementById("tm-hint").textContent = "Nhan 'Nghe lai lan 2' de hien cau hoi";
+    document.getElementById("tm-hint").textContent = "Tra loi ngay hoac nghe them lan 2";
   });
 }
 
@@ -2010,27 +2022,24 @@ function startListen2() {
   ST.phase = "listen2";
   var q = ST.questions[ST.qi];
 
-  // NOW reveal question text
-  document.getElementById("q-en").style.visibility = "";
-  document.getElementById("q-vi").style.visibility = "";
-  document.getElementById("rp-box").style.visibility = "";
-
   document.getElementById("btn-relisten").style.display = "none";
-  document.getElementById("btn-skip-listen").style.display = "inline-flex";
+  document.getElementById("btn-skip-listen").style.display = "none";
+  document.getElementById("btn-answer-hide").style.display = "none";
   document.getElementById("listen-badge-txt").textContent = "Dang phat cau hoi (lan 2)...";
   document.getElementById("listen-badge").className = "listen-badge active";
   setTimerUI("listen2", 0, 1);
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    // Listen 2 done → go straight to speaking (no prep)
+    ST.phase = "wait-answer";
     document.getElementById("listen-badge").className = "listen-badge";
-    document.getElementById("btn-skip-listen").style.display = "none";
-    document.getElementById("btn-nextq").style.display = "none";
-    document.getElementById("btn-hint").style.display = "";
-    document.getElementById("btn-samp").style.display = "";
-    ST.spkTime = q.spkTime;
-    startSpeak();
+    var ph = document.getElementById("tm-phase");
+    ph.innerHTML = "&#128266; NGHE XONG LAN 2";
+    ph.className = "tm-phase listen";
+    document.getElementById("tm-hint").textContent = "Chon: hien cau hoi de doc lai, hoac tra loi ngay";
+    document.getElementById("btn-skip-listen").innerHTML = "&#128214; Hien cau hoi &amp; Tra loi";
+    document.getElementById("btn-skip-listen").style.display = "inline-flex";
+    document.getElementById("btn-answer-hide").style.display = "inline-flex";
   });
 }
 
@@ -2287,7 +2296,7 @@ function finishExam() {
   }
 }
 
-var LVS = ["NM","NH","IL","IM1","IM2","IM3","IH","AL","AM"];
+var LVS = ["NL","NM","NH","IL","IM","IH","AL"];
 function estimateLvFromFACT(avgOverall) {
   var base = 4;
   for (var i = 0; i < LEVELS.length; i++) {
