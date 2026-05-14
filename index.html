@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-010";
+var APP_VERSION = "20260514-011";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2491,14 +2491,13 @@ function showToast(msg, ms) {
 function startRecognition() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return;
-  if (ST.recognition) { try { ST.recognition.stop(); } catch(e) {} }
+  if (ST.recognition) { try { ST.recognition.stop(); } catch(e) {} ST.recognition = null; }
   var rec = new SR();
   rec.lang = "en-US";
   rec.continuous = true;
   rec.interimResults = true;
   rec.maxAlternatives = 1;
-  ST.finalTranscript = "";
-  ST.currentTranscript = "";
+  // Transcripts are reset by startSpeak() — do NOT reset here so restarts preserve captured text
 
   rec.onresult = function(event) {
     var interim = "";
@@ -2517,12 +2516,20 @@ function startRecognition() {
   };
 
   rec.onerror = function(event) {
-    if (event.error === "no-speech" || event.error === "aborted") return;
+    // not-allowed / service-not-allowed = permanent failure, don't retry
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      var txEl = document.getElementById("tx-live");
+      if (txEl) txEl.textContent = "Trình duyệt chưa cấp quyền nhận dạng giọng nói.";
+    }
+    // all other errors (network, audio-capture, no-speech, aborted) — onend fires next and restarts
   };
 
   rec.onend = function() {
     if (ST.phase === "speak") {
-      try { rec.start(); } catch(e) {}
+      // Use a fresh instance — restarting the same rec after an error silently fails on mobile
+      setTimeout(function() {
+        if (ST.phase === "speak") startRecognition();
+      }, 300);
     }
   };
 
