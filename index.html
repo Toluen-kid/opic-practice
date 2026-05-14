@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-013";
+var APP_VERSION = "20260514-014";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2185,7 +2185,13 @@ function startSpeak() {
 
   if (ST.micOk) {
     document.getElementById("viz").classList.remove("hidden");
-    startViz();
+    // On mobile, suspend AudioContext so SpeechRecognition gets exclusive mic access
+    if (/Mobi|Android/i.test(navigator.userAgent) && ST.audioCtx && ST.audioCtx.state === "running") {
+      ST.audioCtx.suspend().catch(function(){});
+      fakeViz();
+    } else {
+      startViz();
+    }
   }
 
   ST.recRetries = 0;
@@ -2271,6 +2277,7 @@ function resetQVisibility() {
 function nextQ() {
   cancelTTS(); clearTick(); stopViz();
   stopRecognition();
+  if (ST.audioCtx && ST.audioCtx.state === "suspended") ST.audioCtx.resume().catch(function(){});
   hideTxLive();
   document.getElementById("viz").classList.add("hidden");
   document.getElementById("btn-toggle-q").style.display = "none";
@@ -2289,6 +2296,7 @@ function nextQ() {
 function skipQ() {
   cancelTTS(); clearTick(); stopViz();
   stopRecognition();
+  if (ST.audioCtx && ST.audioCtx.state === "suspended") ST.audioCtx.resume().catch(function(){});
   hideTxLive();
   document.getElementById("viz").classList.add("hidden");
   document.getElementById("btn-toggle-q").style.display = "none";
@@ -2509,6 +2517,13 @@ function startRecognition() {
   rec.interimResults = true;
   rec.maxAlternatives = 1;
   // Do NOT reset transcripts here — startSpeak() already resets; restarts must preserve captured text
+
+  rec.onstart = function() {
+    if (!ST.currentTranscript) {
+      var txEl = document.getElementById("tx-live");
+      if (txEl && txEl.classList.contains("active")) txEl.textContent = "Đang nghe...";
+    }
+  };
 
   rec.onresult = function(event) {
     ST.recRetries = 0; // got a result — reset failure counter
