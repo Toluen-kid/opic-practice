@@ -306,6 +306,31 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 #toasts{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));right:14px;z-index:600;display:flex;flex-direction:column;gap:7px;pointer-events:none}
 .toast{background:var(--sur2);border:1px solid var(--bdr);border-radius:11px;padding:10px 15px;font-size:.82rem;max-width:270px;animation:ti .28s ease;pointer-events:auto}
 @keyframes ti{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:none}}
+
+/* ─── FACT / TRANSCRIPT / API KEY ─── */
+.fact-grid{display:flex;flex-direction:column;gap:11px;margin-bottom:14px}
+.fact-row{display:flex;align-items:center;gap:10px}
+.fact-lbl{width:110px;font-size:.78rem;font-weight:700;flex-shrink:0}
+.fact-bar-wrap{flex:1;height:9px;background:var(--bdr);border-radius:5px;overflow:hidden}
+.fact-bar{height:100%;border-radius:5px;transition:width 1.3s ease}
+.fact-score{width:38px;text-align:right;font-size:.84rem;font-weight:800;flex-shrink:0}
+.fact-note{font-size:.72rem;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5}
+.fact-loading{text-align:center;padding:16px;color:var(--muted);font-size:.84rem;display:none}
+.api-row{display:flex;gap:8px;margin-top:10px}
+.api-input{flex:1;background:var(--sur2);border:1.5px solid var(--bdr);border-radius:10px;padding:9px 12px;color:var(--txt);font-size:.78rem;outline:none;font-family:monospace;min-width:0}
+.api-input:focus{border-color:var(--pri)}
+.tx-live{font-size:.74rem;color:var(--muted);font-style:italic;line-height:1.6;background:rgba(255,255,255,.03);border:1px dashed var(--bdr);border-radius:9px;padding:8px 11px;margin-top:10px;min-height:34px;overflow:hidden;display:none}
+.tx-live.active{display:block;border-color:rgba(255,107,107,.3);color:var(--txt)}
+.tx-q-item{padding:9px 0;border-bottom:1px solid var(--bdr)}
+.tx-q-item:last-child{border:none;padding-bottom:0}
+.tx-q-hd{display:flex;align-items:flex-start;gap:8px;cursor:pointer;user-select:none}
+.tx-q-no{font-size:.68rem;color:var(--muted);flex-shrink:0;padding-top:2px;min-width:26px}
+.tx-q-en{font-size:.78rem;font-weight:600;flex:1;line-height:1.45}
+.tx-q-lv{font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:14px;background:var(--glow);border:1px solid var(--pri);color:var(--pri);flex-shrink:0;margin-top:1px}
+.tx-q-body{display:none;padding:6px 0 0 34px}
+.tx-q-body.open{display:block}
+.tx-q-text{font-size:.75rem;color:var(--muted);font-style:italic;line-height:1.6;background:rgba(255,255,255,.025);border-radius:8px;padding:8px 10px;border-left:3px solid var(--bdr)}
+.tx-q-meta{font-size:.68rem;color:var(--muted);margin-top:4px;display:flex;gap:12px}
 </style>
 </head>
 <body>
@@ -567,6 +592,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <div class="vbar" id="vb10"></div><div class="vbar" id="vb11"></div>
         </div>
       </div>
+      <div class="tx-live" id="tx-live"></div>
       <div class="ex-ctrl">
         <button class="btn btn-pri" id="btn-speak">&#127897; Bat dau noi</button>
         <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
@@ -608,6 +634,52 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
         </div>
         <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM2 tro len</strong></p>
       </div>
+
+      <!-- FACT AI Scoring Card -->
+      <div class="rs-card" id="fact-card">
+        <div class="sc-ttl" style="margin-bottom:13px">&#129302; Phan tich ACTFL FACT</div>
+        <div class="fact-loading" id="fact-loading">&#9203; AI dang phan tich bai noi...</div>
+        <div id="fact-content">
+          <div class="fact-grid">
+            <div class="fact-row">
+              <div class="fact-lbl"><span style="color:var(--pri)">F</span> · Functions</div>
+              <div class="fact-bar-wrap"><div class="fact-bar" id="fb-F" style="width:0%;background:var(--pri)"></div></div>
+              <div class="fact-score" id="fs-F">—</div>
+            </div>
+            <div class="fact-row">
+              <div class="fact-lbl"><span style="color:var(--grn)">A</span> · Accuracy</div>
+              <div class="fact-bar-wrap"><div class="fact-bar" id="fb-A" style="width:0%;background:var(--grn)"></div></div>
+              <div class="fact-score" id="fs-A">—</div>
+            </div>
+            <div class="fact-row">
+              <div class="fact-lbl"><span style="color:var(--yel)">C</span> · Context</div>
+              <div class="fact-bar-wrap"><div class="fact-bar" id="fb-C" style="width:0%;background:var(--yel)"></div></div>
+              <div class="fact-score" id="fs-C">—</div>
+            </div>
+            <div class="fact-row">
+              <div class="fact-lbl"><span style="color:#b388ff">T</span> · Text Type</div>
+              <div class="fact-bar-wrap"><div class="fact-bar" id="fb-T" style="width:0%;background:#b388ff"></div></div>
+              <div class="fact-score" id="fs-T">—</div>
+            </div>
+          </div>
+          <div class="fact-note" id="fact-note"></div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr)">
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">&#128273; Claude API key de AI cham diem chinh xac (tuy chon):</div>
+          <div class="api-row">
+            <input class="api-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"/>
+            <button class="btn btn-pri btn-sm" id="btn-save-key">Luu</button>
+          </div>
+          <div id="api-key-status" style="font-size:.7rem;color:var(--muted);margin-top:6px"></div>
+        </div>
+      </div>
+
+      <!-- Per-question transcript review -->
+      <div class="rs-card" id="tx-card" style="display:none">
+        <div class="sc-ttl" style="margin-bottom:11px">&#128172; Transcript tung cau <span style="font-size:.7rem;font-weight:400;color:var(--muted)">(nhan de mo)</span></div>
+        <div id="tx-q-list"></div>
+      </div>
+
       <div class="rs-card">
         <div class="sc-ttl" style="margin-bottom:4px">Tieu chi cham diem OPIC</div>
         <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">OPIC danh gia dua tren 5 tieu chi chinh:</p>
@@ -1244,7 +1316,10 @@ var ST = {
   analyser: null,
   raf: null,
   res: {comp:0, full:0, skip:0},
-  hist: []
+  hist: [],
+  currentTranscript: "",
+  finalTranscript: "",
+  recognition: null
 };
 
 // load history safely
@@ -1421,6 +1496,21 @@ function bindButtons() {
   // results
   document.getElementById("btn-retry").addEventListener("click", function() { goPage("survey"); });
   document.getElementById("btn-home-r").addEventListener("click", function() { goPage("home"); });
+
+  // API key
+  document.getElementById("btn-save-key").addEventListener("click", function() {
+    var key = document.getElementById("api-key-input").value.trim();
+    try { localStorage.setItem("opic_apikey", key); } catch(e) {}
+    var status = document.getElementById("api-key-status");
+    if (key) {
+      status.textContent = "Da luu — se dung Claude de cham diem lan sau";
+      status.style.color = "var(--grn)";
+      runClaudeScoring(key);
+    } else {
+      status.textContent = "Da xoa API key";
+      status.style.color = "var(--muted)";
+    }
+  });
 }
 
 // ══════════════════════════════════════════
@@ -1979,6 +2069,8 @@ function startSpeak() {
   clearTick();
   ST.phase = "speak";
   ST.secs = ST.spkTime;
+  ST.currentTranscript = "";
+  ST.finalTranscript = "";
 
   document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-nextq").style.display = "inline-flex";
@@ -1987,6 +2079,10 @@ function startSpeak() {
     document.getElementById("viz").classList.remove("hidden");
     startViz();
   }
+
+  startRecognition();
+  var txEl = document.getElementById("tx-live");
+  if (txEl) { txEl.textContent = "Dang nghe..."; txEl.className = "tx-live active"; }
 
   setTimerUI("speak", ST.spkTime, ST.spkTime);
 
@@ -2063,9 +2159,16 @@ function resetQVisibility() {
 
 function nextQ() {
   cancelTTS(); clearTick(); stopViz();
+  stopRecognition();
+  hideTxLive();
   document.getElementById("viz").classList.add("hidden");
   var q = ST.questions[ST.qi];
-  if (q) { q.done = true; ST.res.comp++; if (q.full) ST.res.full++; }
+  if (q) {
+    q.done = true;
+    q.transcript = (ST.finalTranscript + " " + ST.currentTranscript).trim();
+    ST.res.comp++;
+    if (q.full) ST.res.full++;
+  }
   ST.qi++;
   if (ST.qi >= ST.questions.length) finishExam();
   else renderQ();
@@ -2073,9 +2176,11 @@ function nextQ() {
 
 function skipQ() {
   cancelTTS(); clearTick(); stopViz();
+  stopRecognition();
+  hideTxLive();
   document.getElementById("viz").classList.add("hidden");
   var q = ST.questions[ST.qi];
-  if (q) { q.skipped = true; ST.res.skip++; }
+  if (q) { q.skipped = true; q.transcript = ""; ST.res.skip++; }
   ST.qi++;
   if (ST.qi >= ST.questions.length) finishExam();
   else renderQ();
@@ -2086,6 +2191,9 @@ function skipQ() {
 // ══════════════════════════════════════════
 function finishExam() {
   cancelTTS(); clearTick(); stopViz();
+  stopRecognition();
+  hideTxLive();
+
   if (ST.micStream) {
     var tracks = ST.micStream.getTracks();
     for (var i = 0; i < tracks.length; i++) tracks[i].stop();
@@ -2099,10 +2207,11 @@ function finishExam() {
   var es = elapsed % 60;
   var timeStr = em + ":" + (es < 10 ? "0" : "") + es;
 
-  var tot = ST.questions.length || 1;
-  var cr = ST.res.comp / tot;
+  var factResult = runMockScoring(ST.questions);
+  var estLv = estimateLvFromFACT(factResult.avg.overall);
+
+  var cr = ST.res.comp / (ST.questions.length || 1);
   var ft = ST.res.comp > 0 ? ST.res.full / ST.res.comp : 0;
-  var estLv = estimateLv(cr, ft);
 
   var rec = {
     date: new Date().toLocaleString("vi-VN"),
@@ -2111,7 +2220,8 @@ function finishExam() {
     full: ST.res.full,
     skip: ST.res.skip,
     time: timeStr,
-    topics: ST.topics.slice()
+    topics: ST.topics.slice(),
+    fact: factResult.avg
   };
   ST.hist.unshift(rec);
   if (ST.hist.length > 30) ST.hist.pop();
@@ -2130,38 +2240,73 @@ function finishExam() {
   }
 
   document.getElementById("r-emoji").innerHTML = ft >= .8 ? "&#127942;" : ft >= .5 ? "&#127881;" : "&#128170;";
-  document.getElementById("fb-list").innerHTML = genFeedback(cr, ft, ST.res);
+  document.getElementById("fb-list").innerHTML = genFeedback(factResult.avg, cr, ft);
+
+  renderFACT(factResult.avg, false, factResult.hasTranscripts);
+  renderTranscriptReview();
+
+  var savedKey = "";
+  try { savedKey = localStorage.getItem("opic_apikey") || ""; } catch(e) {}
+  if (savedKey) {
+    var ki = document.getElementById("api-key-input");
+    if (ki) ki.value = savedKey;
+    document.getElementById("api-key-status").textContent = "API key da luu";
+  }
 
   goPage("results");
+
+  if (savedKey && factResult.hasTranscripts) {
+    setTimeout(function() { runClaudeScoring(savedKey); }, 400);
+  }
 }
 
-var LVS = ["NM","NH","IL","IM1","IM2","IM3","IH","AL"];
-function estimateLv(cr, ft) {
-  var score = cr * 0.4 + ft * 0.6;
-  var base = 4; // default IM2
+var LVS = ["NM","NH","IL","IM1","IM2","IM3","IH","AL","AM"];
+function estimateLvFromFACT(avgOverall) {
+  var base = 4;
   for (var i = 0; i < LEVELS.length; i++) {
     if (LEVELS[i].id === ST.level) { base = i; break; }
   }
-  var adj = score >= .9 ? 1 : score >= .7 ? 0 : score >= .5 ? -1 : -2;
-  var idx = Math.max(0, Math.min(LVS.length - 1, base + adj));
-  return LVS[idx];
+  var adj;
+  if (avgOverall >= 8.5)      adj = 2;
+  else if (avgOverall >= 7)   adj = 1;
+  else if (avgOverall >= 5.5) adj = 0;
+  else if (avgOverall >= 4)   adj = -1;
+  else                        adj = -2;
+  return LVS[Math.max(0, Math.min(LVS.length - 1, base + adj))];
 }
 
-function genFeedback(cr, ft, res) {
+function genFeedback(fact, cr, ft) {
   var items = [];
-  if (ft >= .8)
-    items.push(["&#127919;","Xuat sac! Ban noi du thoi gian cho hau het cac cau — dau hieu rat tot ve kha nang duy tri hoi thoai OPIC."]);
-  else if (ft >= .5)
-    items.push(["&#128077;","Tot! Hay co gang mo rong cau tra loi bang vi du cu the hon de dat diem cao hon."]);
-  else
-    items.push(["&#128161;","Can cai thien: Co gang noi du 60-90 giay moi cau. Them vi du chi tiet va mo rong y tuong."]);
 
-  if (res.skip > 3)
-    items.push(["&#9888;","Ban bo qua " + res.skip + " cau. Trong thi that, hay co gang tra loi moi cau du chua hoan hao."]);
+  if (fact.T >= 8) {
+    items.push(["&#127942;", "Xuat sac! Ban noi nhieu va day du — day la dau hieu ro rang cua trinh do AL+."]);
+  } else if (fact.T >= 6.5) {
+    items.push(["&#128077;", "Tot! Luong noi o muc IM2-IH. Co gang noi 150+ tu/cau, them vi du cu the de dat AL."]);
+  } else {
+    items.push(["&#128161;", "Can cai thien: Co gang noi du 60-90 giay moi cau. OPIC danh gia cao nguoi noi duoc nhieu (150+ tu moi cau)."]);
+  }
 
-  items.push(["&#128221;","Meo OPIC: Dung cau truc PREP (Point - Reason - Example - Point) de cau tra loi luon du noi dung va mach lac."]);
-  items.push(["&#127919;","De dat IM2+: Dung tu noi (however, although, as a result), thi phuc tap va phat am ro rang."]);
-  items.push(["&#128260;","Luyen tap 20-30 phut moi ngay se giup cai thien nhanh. Tap trung vao roleplay va unexpected situation."]);
+  if (fact.F >= 7) {
+    items.push(["&#9989;", "Functions tot: Ban dung tu noi (however, because, therefore) va da phuong ngu. Hay thu them cac luan diem phuc tap hon."]);
+  } else {
+    items.push(["&#128221;", "Cai thien Functions: Dung cau truc PREP (Point-Reason-Example-Point). Them however/although/therefore de the hien luan diem."]);
+  }
+
+  if (fact.A >= 7) {
+    items.push(["&#127919;", "Grammar tot. Hay thu them cau phuc tap (if/when clauses, relative clauses) de phan biet IH-AL."]);
+  } else {
+    items.push(["&#128260;", "Luyen grammar: Dung da dang thi (past/present/future) va menh de phu. Day la khac biet chinh giua IM va IH/AL."]);
+  }
+
+  if (fact.C >= 7) {
+    items.push(["&#127881;", "Tu vung phong phu! Nhieu cach dien dat khac nhau — day la dieu quan trong trong OPIC."]);
+  } else {
+    items.push(["&#128218;", "Mo rong tu vung: Hoc tu vung theo chu de (travel, work, food) va luyen dung trong bai noi."]);
+  }
+
+  if (cr < 0.7) {
+    items.push(["&#9888;", "Ban bo qua nhieu cau. Trong OPIC that, hay tra loi moi cau — du chua hoan hao van tot hon bo trong."]);
+  }
 
   var html = "";
   for (var i = 0; i < items.length; i++) {
@@ -2206,6 +2351,8 @@ function confirmQuit() {
 function closeModal() { document.getElementById("modal").classList.remove("open"); }
 function doQuit() {
   cancelTTS(); clearTick(); stopViz();
+  stopRecognition();
+  hideTxLive();
   if (ST.micStream) {
     var tracks = ST.micStream.getTracks();
     for (var i = 0; i < tracks.length; i++) tracks[i].stop();
@@ -2228,6 +2375,306 @@ function showToast(msg, ms) {
     d.style.transition = "all .28s";
     setTimeout(function() { if (d.parentNode) d.parentNode.removeChild(d); }, 300);
   }, ms);
+}
+
+// ══════════════════════════════════════════
+//  SPEECH RECOGNITION (Web Speech API)
+// ══════════════════════════════════════════
+function startRecognition() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  if (ST.recognition) { try { ST.recognition.stop(); } catch(e) {} }
+  var rec = new SR();
+  rec.lang = "en-US";
+  rec.continuous = true;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  ST.finalTranscript = "";
+  ST.currentTranscript = "";
+
+  rec.onresult = function(event) {
+    var interim = "";
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        ST.finalTranscript += event.results[i][0].transcript + " ";
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    ST.currentTranscript = (ST.finalTranscript + interim).trim();
+    var txEl = document.getElementById("tx-live");
+    if (txEl && txEl.classList.contains("active")) {
+      txEl.textContent = ST.currentTranscript || "Dang nghe...";
+    }
+  };
+
+  rec.onerror = function(event) {
+    if (event.error === "no-speech" || event.error === "aborted") return;
+  };
+
+  rec.onend = function() {
+    if (ST.phase === "speak") {
+      try { rec.start(); } catch(e) {}
+    }
+  };
+
+  try { rec.start(); ST.recognition = rec; } catch(e) {}
+}
+
+function stopRecognition() {
+  if (ST.recognition) {
+    try { ST.recognition.stop(); } catch(e) {}
+    ST.recognition = null;
+  }
+}
+
+function hideTxLive() {
+  var txEl = document.getElementById("tx-live");
+  if (txEl) { txEl.textContent = ""; txEl.className = "tx-live"; }
+}
+
+// ══════════════════════════════════════════
+//  ACTFL FACT MOCK SCORING ENGINE
+// ══════════════════════════════════════════
+function scoreTranscript(transcript) {
+  if (!transcript) return { F:1, A:1, C:1, T:1, overall:1, wordCount:0 };
+  var text = transcript.toLowerCase().trim();
+  var words = text.split(/\s+/).filter(function(w) { return w.length > 0; });
+  var wc = words.length;
+  if (wc < 5) return { F:1, A:1, C:1, T:1, overall:1, wordCount:wc };
+
+  // T — Text Type (word count → proficiency level proxy)
+  var T;
+  if      (wc < 15)  T = 1.5;
+  else if (wc < 30)  T = 3;
+  else if (wc < 55)  T = 4.5;
+  else if (wc < 80)  T = 5.5;
+  else if (wc < 110) T = 6.5;
+  else if (wc < 145) T = 7.5;
+  else if (wc < 180) T = 8.5;
+  else               T = 9.5;
+
+  // Vocabulary diversity
+  var seen = {};
+  var uniq = 0;
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i].replace(/[^a-z]/g, "");
+    if (w.length > 2 && !seen[w]) { seen[w] = true; uniq++; }
+  }
+  var diversity = uniq / wc;
+
+  // F — Functions (discourse markers, tense range, task accomplishment)
+  var discourse = ["however","although","therefore","moreover","furthermore","because","meanwhile","in addition","on the other hand","in my opinion","i believe","i think","for example","for instance","in contrast","firstly","secondly","finally","as a result","even though","despite","nevertheless","personally","overall","in general","whereas","consequently","on the contrary","not only","both","such as"];
+  var dc = 0;
+  for (var j = 0; j < discourse.length; j++) {
+    if (text.indexOf(discourse[j]) >= 0) dc++;
+  }
+  var hasPast = /\b(was|were|had|went|did|came|saw|felt|thought|made|took|got|became|started|ended|learned|worked|played|lived|tried|found|used to|could|would)\b/.test(text);
+  var hasFuture = /\b(will|would like|plan to|going to|hope to|want to|intend to|expect to|looking forward)\b/.test(text);
+  var F = Math.min(10, T * 0.45 + dc * 0.55 + (hasPast ? 1.2 : 0) + (hasFuture ? 0.8 : 0) + 1);
+
+  // A — Accuracy (complex grammatical structures)
+  var A = Math.min(10, T * 0.45 + 2);
+  var structs = [
+    /\b(if|unless)\b.{3,}\b(i|you|he|she|it|we|they)\b/,
+    /\b(although|even though|whereas|while|despite)\b/,
+    /\b(which|who|that)\b.{5,30}\b(is|are|was|were|has|have)\b/,
+    /\b(could have|would have|should have|might have)\b/,
+    /\b(have been|has been|had been|have had)\b/,
+    /\b(not only|both.*and|either.*or)\b/,
+    /\b(more|less|better|worse|rather)\b.{2,}\b(than)\b/
+  ];
+  var sc = 0;
+  for (var k = 0; k < structs.length; k++) {
+    if (structs[k].test(text)) sc++;
+  }
+  A = Math.min(10, A + sc * 0.65);
+
+  // C — Context / Content (vocab richness + specificity)
+  var C = Math.min(10, diversity * 11 + 2.5);
+  if (/\b\d+\b/.test(transcript)) C += 0.4;
+  if (/\b(last year|last month|two years ago|years ago|recently|nowadays|these days|in the past|back then|growing up)\b/.test(text)) C += 0.5;
+  if (/\b[A-Z][a-z]{2,}\b/.test(transcript)) C += 0.3;
+  C = Math.min(10, C);
+
+  var overall = +((F + A + C + T) / 4).toFixed(1);
+  return { F: +F.toFixed(1), A: +A.toFixed(1), C: +C.toFixed(1), T: +T.toFixed(1), overall: overall, wordCount: wc };
+}
+
+function runMockScoring(questions) {
+  var totals = { F:0, A:0, C:0, T:0, count:0 };
+  var hasTranscripts = false;
+  for (var i = 0; i < questions.length; i++) {
+    var q = questions[i];
+    if (q.skipped || !q.transcript) continue;
+    var s = scoreTranscript(q.transcript);
+    q._score = s;
+    totals.F += s.F; totals.A += s.A; totals.C += s.C; totals.T += s.T;
+    totals.count++;
+    if (q.transcript.trim().length > 5) hasTranscripts = true;
+  }
+  var avg;
+  if (totals.count > 0) {
+    avg = {
+      F: +(totals.F / totals.count).toFixed(1),
+      A: +(totals.A / totals.count).toFixed(1),
+      C: +(totals.C / totals.count).toFixed(1),
+      T: +(totals.T / totals.count).toFixed(1)
+    };
+    avg.overall = +((avg.F + avg.A + avg.C + avg.T) / 4).toFixed(1);
+  } else {
+    avg = { F:2, A:2, C:2, T:2, overall:2 };
+  }
+  return { avg: avg, hasTranscripts: hasTranscripts };
+}
+
+// ══════════════════════════════════════════
+//  RENDER FACT BARS
+// ══════════════════════════════════════════
+function renderFACT(scores, fromAI, hasTranscripts) {
+  var dims = ["F","A","C","T"];
+  document.getElementById("fact-loading").style.display = "none";
+  document.getElementById("fact-content").style.display = "";
+  for (var i = 0; i < dims.length; i++) {
+    var d = dims[i];
+    var val = scores[d] || 0;
+    var bar = document.getElementById("fb-" + d);
+    var sc  = document.getElementById("fs-" + d);
+    if (sc) sc.textContent = val.toFixed(1) + "/10";
+    if (bar) {
+      (function(b, v) {
+        setTimeout(function() { b.style.width = (v / 10 * 100) + "%"; }, 150);
+      })(bar, val);
+    }
+  }
+  var note = document.getElementById("fact-note");
+  if (note) {
+    if (fromAI) {
+      note.innerHTML = '<span style="color:var(--grn)">&#10003; Cham diem bang Claude AI</span>';
+    } else if (!hasTranscripts) {
+      note.textContent = "Chua co transcript — cho phep mic va dung Chrome/Edge de nhan dien giong noi";
+    } else {
+      note.textContent = "Uoc tinh tu phan tich transcript · Them Claude API key phia duoi de cham chinh xac hon";
+    }
+  }
+}
+
+// ══════════════════════════════════════════
+//  RENDER TRANSCRIPT REVIEW
+// ══════════════════════════════════════════
+function lvFromScore(s) {
+  if (s >= 9)   return "AM+";
+  if (s >= 8)   return "AL";
+  if (s >= 7)   return "IH";
+  if (s >= 6.5) return "IM3";
+  if (s >= 5.5) return "IM2";
+  if (s >= 4.5) return "IM1";
+  if (s >= 3.5) return "IL";
+  if (s >= 2.5) return "NH";
+  return "NM";
+}
+
+function renderTranscriptReview() {
+  var txCard = document.getElementById("tx-card");
+  var txList = document.getElementById("tx-q-list");
+  if (!txCard || !txList) return;
+  var html = "";
+  var hasAny = false;
+  for (var i = 0; i < ST.questions.length; i++) {
+    var q = ST.questions[i];
+    var tx = q.transcript || "";
+    if (!tx && !q.skipped) continue;
+    hasAny = true;
+    var sc = tx ? scoreTranscript(tx) : null;
+    var badge = q.skipped
+      ? '<span class="tx-q-lv" style="background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)">skip</span>'
+      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : "");
+    var shortQ = q.en.length > 58 ? q.en.substring(0, 55) + "..." : q.en;
+    var txShow = tx ? (tx.length > 320 ? tx.substring(0, 317) + "..." : tx) : "(Khong co transcript)";
+    var meta = sc
+      ? '<span>&#128172; ' + sc.wordCount + ' tu</span><span>FACT: ' + sc.overall.toFixed(1) + '/10</span>'
+      : '';
+    html += '<div class="tx-q-item">' +
+      '<div class="tx-q-hd" onclick="var b=this.nextElementSibling;b.classList.toggle(\'open\')">' +
+      '<span class="tx-q-no">Q' + (i+1) + '</span>' +
+      '<span class="tx-q-en">' + shortQ + '</span>' + badge +
+      '</div>' +
+      '<div class="tx-q-body">' +
+      '<div class="tx-q-text">' + txShow + '</div>' +
+      '<div class="tx-q-meta">' + meta + '</div>' +
+      '</div></div>';
+  }
+  if (hasAny) { txList.innerHTML = html; txCard.style.display = ""; }
+}
+
+// ══════════════════════════════════════════
+//  CLAUDE API SCORING
+// ══════════════════════════════════════════
+function runClaudeScoring(apiKey) {
+  var msgs = [];
+  for (var i = 0; i < ST.questions.length; i++) {
+    var q = ST.questions[i];
+    if (q.skipped || !q.transcript || q.transcript.trim().length < 5) continue;
+    msgs.push("Q" + (i+1) + " [" + (q.type || "describe") + "]: " + q.en + "\nAnswer: " + q.transcript.trim());
+  }
+  if (msgs.length === 0) return;
+
+  document.getElementById("fact-loading").style.display = "block";
+  document.getElementById("fact-content").style.display = "none";
+
+  var prompt = "You are an expert ACTFL OPIc rater. The test-taker self-assessed as level " + (ST.level || "IM2") + ".\n\nSpoken responses:\n\n" + msgs.join("\n\n---\n\n") + "\n\nRate their overall spoken English using ACTFL FACT criteria (score 1-10 each):\n- F (Functions/Tasks): range of communication tasks performed\n- A (Accuracy): grammar, vocabulary precision\n- C (Context/Content): topic range, vocabulary richness\n- T (Text Type): length and complexity of spoken output\n\nAlso estimate their ACTFL OPIc level: NM, NH, IL, IM1, IM2, IM3, IH, AL, or AM.\n\nProvide exactly 3 concise feedback tips in Vietnamese (tieng Viet, no diacritics needed).\n\nRespond ONLY as valid JSON, no markdown:\n{\"F\":X,\"A\":X,\"C\":X,\"T\":X,\"level\":\"XX\",\"tips\":[\"tip1\",\"tip2\",\"tip3\"]}";
+
+  fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-calls": "true"
+    },
+    body: JSON.stringify({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 600,
+      messages: [{ role: "user", content: prompt }]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    try {
+      var text = (data.content && data.content[0]) ? data.content[0].text : "";
+      var parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      renderFACT(parsed, true, true);
+      // Update estimated level
+      if (parsed.level) {
+        document.getElementById("r-lv").textContent = parsed.level;
+        var segs = document.querySelectorAll(".sseg");
+        for (var i = 0; i < segs.length; i++) {
+          segs[i].classList.remove("cur");
+          if (segs[i].getAttribute("data-lv") === parsed.level) segs[i].classList.add("cur");
+        }
+      }
+      // Append AI tips to feedback
+      if (parsed.tips && parsed.tips.length) {
+        var fbList = document.getElementById("fb-list");
+        var extra = "";
+        for (var j = 0; j < parsed.tips.length; j++) {
+          extra += '<li class="fb-row"><span style="font-size:.95rem;flex-shrink:0">&#129302;</span><span>' + parsed.tips[j] + '</span></li>';
+        }
+        if (fbList) fbList.innerHTML += extra;
+      }
+      showToast("&#129302; Claude da cham diem xong!");
+    } catch(e) {
+      document.getElementById("fact-loading").style.display = "none";
+      document.getElementById("fact-content").style.display = "";
+      showToast("&#9888; Loi phan tich ket qua AI");
+    }
+  })
+  .catch(function(err) {
+    document.getElementById("fact-loading").style.display = "none";
+    document.getElementById("fact-content").style.display = "";
+    var msg = err.message && err.message.indexOf("401") >= 0 ? "API key khong hop le" : "Khong the ket noi Anthropic API";
+    showToast("&#9888; " + msg);
+  });
 }
 </script>
 </body>
