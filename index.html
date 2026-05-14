@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-014";
+var APP_VERSION = "20260514-015";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1732,12 +1732,38 @@ function reqMic() {
 
       stat.className = "mic-stat ok";
       dot.className  = "mdot ok";
-      txt.textContent = "Microphone da duoc cap quyen!";
+      txt.textContent = "Microphone đã được cấp quyền!";
       btn.disabled = false;
       btn.textContent = "Đã kết nối - Bắt đầu!";
 
-      showToast("Microphone san sang!");
-      setTimeout(startExam, 800);
+      // Quick SpeechRecognition probe — start + immediately stop to check support
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        try {
+          var probe = new SR();
+          probe.lang = "en-US";
+          probe.continuous = false;
+          probe.interimResults = false;
+          var probeOk = false;
+          probe.onstart = function() { probeOk = true; probe.stop(); };
+          probe.onerror = function(ev) {
+            probe.stop();
+            if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+              ST.recBlocked = true;
+              txt.textContent = "Microphone OK · ⚠️ Nhận dạng giọng nói bị chặn — transcript sẽ không hoạt động";
+            } else if (ev.error === "network") {
+              txt.textContent = "Microphone OK · ⚠️ Không kết nối được dịch vụ nhận dạng (lỗi: " + ev.error + ")";
+            }
+          };
+          probe.onend = function() {};
+          probe.start();
+        } catch(e) {}
+      } else {
+        txt.textContent = "Microphone OK · ⚠️ Trình duyệt không hỗ trợ nhận dạng giọng nói";
+      }
+
+      showToast("Microphone sẵn sàng!");
+      setTimeout(startExam, 1200);
     })
     .catch(function(err) {
       stat.className = "mic-stat err";
@@ -2285,6 +2311,7 @@ function nextQ() {
   if (q) {
     q.done = true;
     q.transcript = (ST.finalTranscript + " " + ST.currentTranscript).trim();
+    q.recError = ST.lastRecError || "";
     ST.res.comp++;
     if (q.full) ST.res.full++;
   }
@@ -2749,7 +2776,7 @@ function renderTranscriptReview() {
     var sc = tx ? scoreTranscript(tx) : null;
     var badge = q.skipped
       ? '<span class="tx-q-lv" style="background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)">Bỏ qua</span>'
-      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : '<span class="tx-q-lv" style="color:var(--muted);border-color:var(--bdr);background:none">chưa nhận dạng</span>');
+      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : '<span class="tx-q-lv" style="color:var(--muted);border-color:var(--bdr);background:none" title="' + (q.recError||'no-result') + '">chưa nhận dạng' + (q.recError ? ' ['+q.recError+']' : '') + '</span>');
     var shortQ = q.en.length > 58 ? q.en.substring(0, 55) + "..." : q.en;
     var txContent = tx
       ? '<div class="tx-q-text">' + tx + '</div>'
