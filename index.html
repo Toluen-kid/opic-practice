@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-011";
+var APP_VERSION = "20260514-012";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1394,7 +1394,9 @@ var ST = {
   hist: [],
   currentTranscript: "",
   finalTranscript: "",
-  recognition: null
+  recognition: null,
+  recRetries: 0,
+  recBlocked: false
 };
 
 // load history safely
@@ -2185,6 +2187,7 @@ function startSpeak() {
     startViz();
   }
 
+  ST.recRetries = 0;
   startRecognition();
   var txEl = document.getElementById("tx-live");
   if (txEl) { txEl.textContent = "Đang nghe..."; txEl.className = "tx-live active"; }
@@ -2490,16 +2493,23 @@ function showToast(msg, ms) {
 // ══════════════════════════════════════════
 function startRecognition() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return;
+  if (!SR) {
+    var txEl = document.getElementById("tx-live");
+    if (txEl) txEl.textContent = "Trình duyệt không hỗ trợ nhận dạng giọng nói. Dùng Chrome/Edge để có transcript.";
+    return;
+  }
+  if (ST.recBlocked) return;
   if (ST.recognition) { try { ST.recognition.stop(); } catch(e) {} ST.recognition = null; }
+
   var rec = new SR();
   rec.lang = "en-US";
-  rec.continuous = true;
+  rec.continuous = false; // more reliable on mobile than continuous:true
   rec.interimResults = true;
   rec.maxAlternatives = 1;
-  // Transcripts are reset by startSpeak() — do NOT reset here so restarts preserve captured text
+  // Do NOT reset transcripts here — startSpeak() already resets; restarts must preserve captured text
 
   rec.onresult = function(event) {
+    ST.recRetries = 0; // got a result — reset failure counter
     var interim = "";
     for (var i = event.resultIndex; i < event.results.length; i++) {
       if (event.results[i].isFinal) {
@@ -2516,24 +2526,37 @@ function startRecognition() {
   };
 
   rec.onerror = function(event) {
-    // not-allowed / service-not-allowed = permanent failure, don't retry
     if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      ST.recBlocked = true;
       var txEl = document.getElementById("tx-live");
-      if (txEl) txEl.textContent = "Trình duyệt chưa cấp quyền nhận dạng giọng nói.";
+      if (txEl) txEl.textContent = "Chưa cấp quyền nhận dạng giọng nói — vui lòng kiểm tra cài đặt trình duyệt.";
     }
-    // all other errors (network, audio-capture, no-speech, aborted) — onend fires next and restarts
+    // no-speech / network / aborted → onend fires next and we retry
   };
 
   rec.onend = function() {
-    if (ST.phase === "speak") {
-      // Use a fresh instance — restarting the same rec after an error silently fails on mobile
-      setTimeout(function() {
-        if (ST.phase === "speak") startRecognition();
-      }, 300);
+    // Clear this instance so the next restart check works
+    if (ST.recognition === rec) ST.recognition = null;
+    if (ST.recBlocked || ST.phase !== "speak") return;
+    ST.recRetries++;
+    if (ST.recRetries > 15) {
+      // Persistent failure — give up and tell user
+      var txEl = document.getElementById("tx-live");
+      if (txEl) txEl.textContent = "Không thể nhận dạng giọng nói. Vẫn có thể luyện nói theo đồng hồ đếm ngược.";
+      return;
     }
+    // Fresh instance — restarting the same rec after an error silently fails on mobile
+    setTimeout(function() {
+      if (ST.phase === "speak" && !ST.recognition) startRecognition();
+    }, 150);
   };
 
-  try { rec.start(); ST.recognition = rec; } catch(e) {}
+  try {
+    rec.start();
+    ST.recognition = rec;
+  } catch(e) {
+    ST.recognition = null;
+  }
 }
 
 function stopRecognition() {
