@@ -685,30 +685,30 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 
       <!-- Per-question transcript review -->
       <div class="rs-card" id="tx-card" style="display:none">
-        <div class="sc-ttl" style="margin-bottom:11px">&#128172; Transcript tung cau <span style="font-size:.7rem;font-weight:400;color:var(--muted)">(nhan de mo)</span></div>
+        <div class="sc-ttl" style="margin-bottom:11px">&#128172; Transcript từng câu <span style="font-size:.7rem;font-weight:400;color:var(--muted)">(nhấn để mở)</span></div>
         <div id="tx-q-list"></div>
       </div>
 
       <div class="rs-card">
-        <div class="sc-ttl" style="margin-bottom:4px">Tieu chi cham diem OPIC</div>
-        <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">OPIC danh gia dua tren 5 tieu chi chinh:</p>
+        <div class="sc-ttl" style="margin-bottom:4px">Tiêu chí chấm điểm OPIC</div>
+        <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">OPIC đánh giá dựa trên 5 tiêu chí chính:</p>
         <div class="crit-grid">
           <div class="crit-box"><div class="crit-ttl" style="color:var(--pri)">Task Completion</div><div class="crit-txt">Trả lời đầy đủ câu hỏi, bao gồm đủ thông tin cần thiết, không lạc chủ đề.</div></div>
-          <div class="crit-box"><div class="crit-ttl" style="color:var(--grn)">Fluency & Delivery</div><div class="crit-txt">Noi tron tru, tu nhien, khong ngap nhieu, duy tri nhip do giao tiep.</div></div>
-          <div class="crit-box"><div class="crit-ttl" style="color:var(--yel)">Vocabulary</div><div class="crit-txt">Dung tu phong phu, dung cho. Dung ngon ngu mo ta, so sanh, bieu cam.</div></div>
-          <div class="crit-box"><div class="crit-ttl" style="color:#b388ff)">Grammar</div><div class="crit-txt">Dung da dang thi (present, past, conditional), cau phuc hop, it loi co ban.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:var(--grn)">Fluency & Delivery</div><div class="crit-txt">Nói trơn tru, tự nhiên, không ngập nhiều, duy trì nhịp độ giao tiếp.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:var(--yel)">Vocabulary</div><div class="crit-txt">Dùng từ phong phú, đúng chỗ. Dùng ngôn ngữ mô tả, so sánh, biểu cảm.</div></div>
+          <div class="crit-box"><div class="crit-ttl" style="color:#b388ff">Grammar</div><div class="crit-txt">Dùng đa dạng thì (present, past, conditional), câu phức hợp, ít lỗi cơ bản.</div></div>
         </div>
         <div style="margin-top:10px;padding:10px 12px;background:rgba(108,99,255,.07);border-radius:9px;font-size:.76rem;color:var(--muted);line-height:1.65">
-          <strong style="color:var(--pri)">Chien luoc dat IH-AL:</strong> (1) So sanh / Tuong phan (however, whereas) · (2) Nen / Khong nen (pros & cons) · (3) Dua ra quan diem + lap luan (In my opinion... because...) · (4) Li tuong vs thuc te (Ideally... but in reality...)
+          <strong style="color:var(--pri)">Chiến lược đạt IH-AL:</strong> (1) So sánh / Tương phản (however, whereas) · (2) Nên / Không nên (pros & cons) · (3) Đưa ra quan điểm + lập luận (In my opinion... because...) · (4) Lý tưởng vs thực tế (Ideally... but in reality...)
         </div>
       </div>
       <div class="rs-card">
-        <div class="sc-ttl" style="margin-bottom:11px">Nhan xet va Loi khuyen</div>
+        <div class="sc-ttl" style="margin-bottom:11px">Nhận xét và Lời khuyên</div>
         <ul class="fb-list" id="fb-list"></ul>
       </div>
       <div class="row">
-        <button class="btn btn-pri btn-lg" id="btn-retry">&#128260; Luyen lai</button>
-        <button class="btn btn-out" id="btn-home-r">&#127968; Trang chu</button>
+        <button class="btn btn-pri btn-lg" id="btn-retry">&#128260; Luyện lại</button>
+        <button class="btn btn-out" id="btn-home-r">&#127968; Trang chủ</button>
       </div>
     </div>
   </div>
@@ -717,7 +717,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
   <div class="scr" id="pg-history">
     <div class="hs-wrap">
       <div style="font-size:1.4rem;font-weight:800;margin-bottom:5px">&#128202; Lịch sử luyện tập</div>
-      <p style="color:var(--muted);font-size:.86rem;margin-bottom:18px">Theo doi tien trinh cua ban</p>
+      <p style="color:var(--muted);font-size:.86rem;margin-bottom:18px">Theo dõi tiến trình của bạn</p>
       <div id="hist-list"></div>
     </div>
   </div>
@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-007";
+var APP_VERSION = "20260514-008";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2688,25 +2688,28 @@ function renderTranscriptReview() {
   var hasAny = false;
   for (var i = 0; i < ST.questions.length; i++) {
     var q = ST.questions[i];
-    var tx = q.transcript || "";
-    if (!tx && !q.skipped) continue;
+    if (!q.done && !q.skipped) continue;  // only show attempted questions
     hasAny = true;
+    var tx = (q.transcript || "").trim();
     var sc = tx ? scoreTranscript(tx) : null;
     var badge = q.skipped
-      ? '<span class="tx-q-lv" style="background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)">skip</span>'
-      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : "");
+      ? '<span class="tx-q-lv" style="background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)">Bỏ qua</span>'
+      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : '<span class="tx-q-lv" style="color:var(--muted);border-color:var(--bdr);background:none">mic off</span>');
     var shortQ = q.en.length > 58 ? q.en.substring(0, 55) + "..." : q.en;
-    var txShow = tx ? (tx.length > 320 ? tx.substring(0, 317) + "..." : tx) : "(Khong co transcript)";
+    var txContent = tx
+      ? '<div class="tx-q-text">' + tx + '</div>'
+      : '<div class="tx-q-text" style="color:var(--muted);font-style:italic">Không có transcript — bật mic và dùng Chrome/Edge để ghi âm giọng nói.</div>';
     var meta = sc
-      ? '<span>&#128172; ' + sc.wordCount + ' tu</span><span>FACT: ' + sc.overall.toFixed(1) + '/10</span>'
+      ? '<span>&#128172; ' + sc.wordCount + ' từ</span><span>FACT: ' + sc.overall.toFixed(1) + '/10</span>'
       : '';
+    var autoOpen = (tx.length > 0) ? " open" : "";  // auto-expand if has transcript
     html += '<div class="tx-q-item">' +
       '<div class="tx-q-hd" onclick="var b=this.nextElementSibling;b.classList.toggle(\'open\')">' +
       '<span class="tx-q-no">Q' + (i+1) + '</span>' +
       '<span class="tx-q-en">' + shortQ + '</span>' + badge +
       '</div>' +
-      '<div class="tx-q-body">' +
-      '<div class="tx-q-text">' + txShow + '</div>' +
+      '<div class="tx-q-body' + autoOpen + '">' +
+      txContent +
       '<div class="tx-q-meta">' + meta + '</div>' +
       '</div></div>';
   }
