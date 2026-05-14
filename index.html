@@ -597,6 +597,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
         <button class="btn btn-pri" id="btn-relisten" style="display:none">&#128266; Nghe lan 2</button>
         <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#127897; Tra loi ngay</button>
         <button class="btn btn-out btn-sm" id="btn-answer-hide" style="display:none">&#128683; Tra loi (an cau hoi)</button>
+        <button class="btn btn-out btn-sm" id="btn-toggle-q" style="display:none">&#128065; Hien cau hoi</button>
         <button class="btn btn-out" id="btn-skip">&#9193; Bo qua cau</button>
       </div>
     </div>
@@ -717,7 +718,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-002";
+var APP_VERSION = "20260514-003";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1513,6 +1514,13 @@ function bindButtons() {
   document.getElementById("btn-relisten").addEventListener("click", startListen2);
   document.getElementById("btn-skip-listen").addEventListener("click", skipListen);
   document.getElementById("btn-answer-hide").addEventListener("click", startSpeakHidden);
+  document.getElementById("btn-toggle-q").addEventListener("click", function() {
+    document.getElementById("q-en").style.visibility = "";
+    document.getElementById("q-vi").style.visibility = "";
+    var rp = document.getElementById("rp-box");
+    if (rp) rp.style.visibility = "";
+    document.getElementById("btn-toggle-q").style.display = "none";
+  });
   document.getElementById("btn-quit").addEventListener("click", confirmQuit);
   document.getElementById("btn-hint").addEventListener("click", function() { togBody("hint-body"); });
   document.getElementById("btn-samp").addEventListener("click", function() { togBody("samp-body"); });
@@ -1891,6 +1899,7 @@ function renderQ() {
   document.getElementById("btn-relisten").style.display = "none";
   document.getElementById("btn-skip-listen").style.display = "none";
   document.getElementById("btn-answer-hide").style.display = "none";
+  document.getElementById("btn-toggle-q").style.display = "none";
   document.getElementById("btn-hint").style.display = "none";
   document.getElementById("btn-samp").style.display = "none";
   document.getElementById("listen-badge").className = "listen-badge";
@@ -2031,15 +2040,10 @@ function startListen2() {
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
-    ST.phase = "wait-answer";
     document.getElementById("listen-badge").className = "listen-badge";
-    var ph = document.getElementById("tm-phase");
-    ph.innerHTML = "&#128266; NGHE XONG LAN 2";
-    ph.className = "tm-phase listen";
-    document.getElementById("tm-hint").textContent = "Chon: hien cau hoi de doc lai, hoac tra loi ngay";
-    document.getElementById("btn-skip-listen").innerHTML = "&#128214; Hien cau hoi &amp; Tra loi";
-    document.getElementById("btn-skip-listen").style.display = "inline-flex";
-    document.getElementById("btn-answer-hide").style.display = "inline-flex";
+    ST.spkTime = q.spkTime;
+    startSpeak();
+    document.getElementById("btn-toggle-q").style.display = "inline-flex";
   });
 }
 
@@ -2198,6 +2202,7 @@ function nextQ() {
   stopRecognition();
   hideTxLive();
   document.getElementById("viz").classList.add("hidden");
+  document.getElementById("btn-toggle-q").style.display = "none";
   var q = ST.questions[ST.qi];
   if (q) {
     q.done = true;
@@ -2215,6 +2220,7 @@ function skipQ() {
   stopRecognition();
   hideTxLive();
   document.getElementById("viz").classList.add("hidden");
+  document.getElementById("btn-toggle-q").style.display = "none";
   var q = ST.questions[ST.qi];
   if (q) { q.skipped = true; q.transcript = ""; ST.res.skip++; }
   ST.qi++;
