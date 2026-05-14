@@ -718,7 +718,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-003";
+var APP_VERSION = "20260514-004";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2038,13 +2038,36 @@ function startListen2() {
   document.getElementById("listen-badge").className = "listen-badge active";
   setTimerUI("listen2", 0, 1);
 
+  ST.spkTime = q.spkTime;
   var text = q.en + (q.rp ? ". " + q.rp : "");
-  speakTTS(text, function() {
+
+  var triggered = false;
+  function beginSpeak() {
+    if (triggered) return;
+    triggered = true;
     document.getElementById("listen-badge").className = "listen-badge";
-    ST.spkTime = q.spkTime;
     startSpeak();
     document.getElementById("btn-toggle-q").style.display = "inline-flex";
-  });
+  }
+
+  if (!window.speechSynthesis) { setTimeout(beginSpeak, 0); return; }
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.lang = "en-US"; utt.rate = 0.85; utt.pitch = 1;
+  utt.onend = beginSpeak;
+  utt.onerror = beginSpeak;
+
+  // Start TTS after brief pause (avoids Chrome cancel-then-speak race)
+  setTimeout(function() {
+    window.speechSynthesis.speak(utt);
+    // After 800ms (TTS has started), poll every 150ms for completion
+    // This is more reliable than onend which Chrome sometimes drops
+    var poll = setInterval(function() {
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+      if (!window.speechSynthesis.speaking) { clearInterval(poll); beginSpeak(); }
+    }, 150);
+    ST._l2poll = poll;
+  }, 50);
 }
 
 function setTimerUI(phase, secs, total) {
@@ -2188,6 +2211,7 @@ function stopViz() {
 // ══════════════════════════════════════════
 function cancelTTS() {
   if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+  if (ST._l2poll) { clearInterval(ST._l2poll); ST._l2poll = null; }
 }
 
 function resetQVisibility() {
