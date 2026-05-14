@@ -718,6 +718,32 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 "use strict";
 
 // ══════════════════════════════════════════
+//  VERSION CHECK — auto-update banner
+// ══════════════════════════════════════════
+var APP_VERSION = "20260514-002";
+
+function checkForUpdate() {
+  if (typeof fetch === "undefined" || location.protocol === "file:") return;
+  fetch(location.pathname + "?_=" + Date.now(), { cache: "no-store" })
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      var m = html.match(/APP_VERSION\s*=\s*"([^"]+)"/);
+      if (m && m[1] && m[1] !== APP_VERSION) showUpdateBanner();
+    })
+    .catch(function() {});
+}
+
+function showUpdateBanner() {
+  if (document.getElementById("update-banner")) return;
+  var b = document.createElement("div");
+  b.id = "update-banner";
+  b.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#6c63ff,#00d4aa);color:#fff;text-align:center;padding:10px 16px;font-size:.84rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.35)";
+  b.innerHTML = '&#127381; Co phien ban moi! <button style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:5px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.82rem">Cap nhat ngay</button>';
+  b.onclick = function() { location.reload(true); };
+  document.body.prepend(b);
+}
+
+// ══════════════════════════════════════════
 //  DATA — defined as arrays/objects upfront
 // ══════════════════════════════════════════
 // ══════════════════════════════════════════
@@ -1337,6 +1363,7 @@ document.addEventListener("DOMContentLoaded", function() {
   buildCheckGrid("sports-grid",   SPORT_ITEMS,   ST.survey.sports,   "cnt-sports");
   buildCheckGrid("travel-grid",   TRAVEL_ITEMS,  ST.survey.travel,   "cnt-travel");
   bindButtons();
+  setTimeout(checkForUpdate, 2000);
 });
 
 // ══════════════════════════════════════════
