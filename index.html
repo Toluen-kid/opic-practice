@@ -574,11 +574,11 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <div class="rp-lbl">&#127917; Tình huống roleplay</div>
           <div id="rp-txt"></div>
         </div>
-        <button class="exp-btn" id="btn-hint">&#128161; Gợi ý y tuong</button>
+        <button class="exp-btn" id="btn-hint">&#128161; Gợi ý ý tưởng</button>
         <div class="exp-body hint-body" id="hint-body"></div>
-        <button class="exp-btn grn-btn" id="btn-samp" style="border-color:rgba(0,212,170,.3)">&#128221; Cau tra loi mau</button>
+        <button class="exp-btn grn-btn" id="btn-samp" style="border-color:rgba(0,212,170,.3)">&#127891; Gợi ý câu trả lời mẫu</button>
         <div class="exp-body samp-body" id="samp-body">
-          <div class="samp-lbl">Sample Answer</div>
+          <div class="samp-lbl">Câu trả lời mẫu</div>
           <div id="samp-txt"></div>
         </div>
       </div>
@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-008";
+var APP_VERSION = "20260514-009";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2177,6 +2177,8 @@ function startSpeak() {
 
   document.getElementById("btn-speak").style.display = "none";
   document.getElementById("btn-nextq").style.display = "inline-flex";
+  document.getElementById("btn-samp").style.display = "";
+  document.getElementById("btn-hint").style.display = "none";
 
   if (ST.micOk) {
     document.getElementById("viz").classList.remove("hidden");
