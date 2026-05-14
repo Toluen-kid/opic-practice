@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-012";
+var APP_VERSION = "20260514-013";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1396,7 +1396,8 @@ var ST = {
   finalTranscript: "",
   recognition: null,
   recRetries: 0,
-  recBlocked: false
+  recBlocked: false,
+  lastRecError: ""
 };
 
 // load history safely
@@ -2188,6 +2189,7 @@ function startSpeak() {
   }
 
   ST.recRetries = 0;
+  ST.lastRecError = "";
   startRecognition();
   var txEl = document.getElementById("tx-live");
   if (txEl) { txEl.textContent = "Đang nghe..."; txEl.className = "tx-live active"; }
@@ -2526,26 +2528,32 @@ function startRecognition() {
   };
 
   rec.onerror = function(event) {
+    ST.lastRecError = event.error;
     if (event.error === "not-allowed" || event.error === "service-not-allowed") {
       ST.recBlocked = true;
       var txEl = document.getElementById("tx-live");
-      if (txEl) txEl.textContent = "Chưa cấp quyền nhận dạng giọng nói — vui lòng kiểm tra cài đặt trình duyệt.";
+      if (txEl) txEl.textContent = "⚠️ Chưa cấp quyền micro cho nhận dạng giọng nói — kiểm tra cài đặt trình duyệt.";
+    } else if (event.error === "network") {
+      var txEl = document.getElementById("tx-live");
+      if (txEl && !ST.currentTranscript) txEl.textContent = "⚠️ Lỗi mạng khi kết nối dịch vụ nhận dạng — đang thử lại...";
     }
-    // no-speech / network / aborted → onend fires next and we retry
+    // onend fires next and retries for all other errors
   };
 
   rec.onend = function() {
-    // Clear this instance so the next restart check works
     if (ST.recognition === rec) ST.recognition = null;
     if (ST.recBlocked || ST.phase !== "speak") return;
     ST.recRetries++;
     if (ST.recRetries > 15) {
-      // Persistent failure — give up and tell user
+      var msg = ST.lastRecError === "network"
+        ? "⚠️ Không thể kết nối dịch vụ nhận dạng giọng nói (lỗi mạng). Vẫn luyện nói được theo đồng hồ."
+        : ST.lastRecError === "audio-capture"
+        ? "⚠️ Trình duyệt không thể truy cập micro. Thử dùng Chrome trên máy tính."
+        : "⚠️ Nhận dạng giọng nói không khả dụng [" + (ST.lastRecError||"?") + "]. Vẫn luyện nói được theo đồng hồ.";
       var txEl = document.getElementById("tx-live");
-      if (txEl) txEl.textContent = "Không thể nhận dạng giọng nói. Vẫn có thể luyện nói theo đồng hồ đếm ngược.";
+      if (txEl) txEl.textContent = msg;
       return;
     }
-    // Fresh instance — restarting the same rec after an error silently fails on mobile
     setTimeout(function() {
       if (ST.phase === "speak" && !ST.recognition) startRecognition();
     }, 150);
