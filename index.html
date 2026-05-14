@@ -625,29 +625,29 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="rs-card">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
           <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Muc do uoc tinh</div><div class="est-lv" id="r-lv">IM2</div></div>
-          <div style="text-align:right"><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Thoi gian</div><div style="font-size:1.35rem;font-weight:800" id="r-time">--:--</div></div>
+          <div style="text-align:right"><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Thời gian</div><div style="font-size:1.35rem;font-weight:800" id="r-time">--:--</div></div>
         </div>
         <div class="st-grid">
-          <div class="st-box"><div class="st-n" style="color:var(--grn)" id="r-comp">0</div><div class="st-l">Cau hoan thanh</div></div>
-          <div class="st-box"><div class="st-n" style="color:var(--yel)" id="r-full">0</div><div class="st-l">Noi du gio</div></div>
-          <div class="st-box"><div class="st-n" style="color:var(--red)" id="r-skip">0</div><div class="st-l">Bo qua</div></div>
+          <div class="st-box"><div class="st-n" style="color:var(--grn)" id="r-comp">0</div><div class="st-l">Câu hoàn thành</div></div>
+          <div class="st-box"><div class="st-n" style="color:var(--yel)" id="r-full">0</div><div class="st-l">Nói đủ giờ</div></div>
+          <div class="st-box"><div class="st-n" style="color:var(--red)" id="r-skip">0</div><div class="st-l">Bỏ qua</div></div>
         </div>
       </div>
       <div class="rs-card">
-        <div class="sc-ttl">Thang diem OPIC</div>
+        <div class="sc-ttl">Thang điểm OPIC</div>
         <div class="sc-track">
           <div class="sseg s-nl" data-lv="NL">NL</div><div class="sseg s-nm" data-lv="NM">NM</div>
           <div class="sseg s-nh" data-lv="NH">NH</div><div class="sseg s-il" data-lv="IL">IL</div>
           <div class="sseg s-im" data-lv="IM">IM</div><div class="sseg s-ih" data-lv="IH">IH</div>
           <div class="sseg s-al" data-lv="AL">AL</div>
         </div>
-        <p style="font-size:.76rem;color:var(--muted)">Muc thuong yeu cau khi xin viec: <strong style="color:var(--pri)">IM tro len</strong></p>
+        <p style="font-size:.76rem;color:var(--muted)">Mức thường yêu cầu khi xin việc: <strong style="color:var(--pri)">IM trở lên</strong></p>
       </div>
 
       <!-- FACT AI Scoring Card -->
       <div class="rs-card" id="fact-card">
-        <div class="sc-ttl" style="margin-bottom:13px">&#129302; Phan tich ACTFL FACT</div>
-        <div class="fact-loading" id="fact-loading">&#9203; AI dang phan tich bai noi...</div>
+        <div class="sc-ttl" style="margin-bottom:13px">&#129302; Phân tích ACTFL FACT</div>
+        <div class="fact-loading" id="fact-loading">&#9203; AI đang phân tích bài nói...</div>
         <div id="fact-content">
           <div class="fact-grid">
             <div class="fact-row">
@@ -674,10 +674,10 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <div class="fact-note" id="fact-note"></div>
         </div>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bdr)">
-          <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">&#128273; Claude API key de AI cham diem chinh xac (tuy chon):</div>
+          <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">&#128273; Claude API key để AI chấm điểm chính xác (tùy chọn):</div>
           <div class="api-row">
             <input class="api-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"/>
-            <button class="btn btn-pri btn-sm" id="btn-save-key">Luu</button>
+            <button class="btn btn-pri btn-sm" id="btn-save-key">Lưu</button>
           </div>
           <div id="api-key-status" style="font-size:.7rem;color:var(--muted);margin-top:6px"></div>
         </div>
@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-009";
+var APP_VERSION = "20260514-010";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2391,7 +2391,7 @@ function genFeedback(fact, cr, ft) {
   } else if (fact.T >= 6.5) {
     items.push(["&#128077;", "Tốt! Lượng nói ở mức IM-IH. Cố gắng nói 150+ từ/câu, thêm ví dụ cụ thể để đạt AL."]);
   } else {
-    items.push(["&#128161;", "Can cai thien: Co gang noi du 60-90 giay moi cau. OPIC danh gia cao nguoi noi duoc nhieu (150+ tu moi cau)."]);
+    items.push(["&#128161;", "Cần cải thiện: Cố gắng nói đủ 60–90 giây mỗi câu. OPIC đánh giá cao người nói được nhiều (150+ từ mỗi câu)."]);
   }
 
   if (fact.F >= 7) {
@@ -2407,7 +2407,7 @@ function genFeedback(fact, cr, ft) {
   }
 
   if (fact.C >= 7) {
-    items.push(["&#127881;", "Tu vung phong phu! Nhieu cach dien dat khac nhau — day la dieu quan trong trong OPIC."]);
+    items.push(["&#127881;", "Từ vựng phong phú! Nhiều cách diễn đạt khác nhau — đây là điều quan trọng trong OPIC."]);
   } else {
     items.push(["&#128218;", "Mở rộng từ vựng: Học từ vựng theo chủ đề (travel, work, food) và luyện dùng trong bài nói."]);
   }
@@ -2696,7 +2696,7 @@ function renderTranscriptReview() {
     var sc = tx ? scoreTranscript(tx) : null;
     var badge = q.skipped
       ? '<span class="tx-q-lv" style="background:rgba(255,107,107,.1);border-color:var(--red);color:var(--red)">Bỏ qua</span>'
-      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : '<span class="tx-q-lv" style="color:var(--muted);border-color:var(--bdr);background:none">mic off</span>');
+      : (sc ? '<span class="tx-q-lv">' + lvFromScore(sc.overall) + '</span>' : '<span class="tx-q-lv" style="color:var(--muted);border-color:var(--bdr);background:none">chưa nhận dạng</span>');
     var shortQ = q.en.length > 58 ? q.en.substring(0, 55) + "..." : q.en;
     var txContent = tx
       ? '<div class="tx-q-text">' + tx + '</div>'
