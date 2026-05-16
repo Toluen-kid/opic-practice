@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-017";
+var APP_VERSION = "20260514-018";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2637,38 +2637,49 @@ function scoreTranscript(transcript) {
   var wc = words.length;
   if (wc < 5) return { F:1, A:1, C:1, T:1, overall:1, wordCount:wc };
 
-  // T — Text Type (word count → proficiency level proxy)
+  // ── T: Text Type (word count proxy for proficiency) ──────────────────
+  // OPIC benchmarks per 90s: NM<15w, NH 15-30, IL 30-70, IM 70-140, IH 140-210, AL 210+
   var T;
-  if      (wc < 15)  T = 1.5;
-  else if (wc < 30)  T = 3;
-  else if (wc < 55)  T = 4.5;
-  else if (wc < 80)  T = 5.5;
-  else if (wc < 110) T = 6.5;
-  else if (wc < 145) T = 7.5;
-  else if (wc < 180) T = 8.5;
+  if      (wc < 10)  T = 1.5;
+  else if (wc < 25)  T = 2.5;
+  else if (wc < 50)  T = 3.5;
+  else if (wc < 80)  T = 4.5;
+  else if (wc < 120) T = 5.5;
+  else if (wc < 160) T = 6.5;
+  else if (wc < 210) T = 7.5;
+  else if (wc < 260) T = 8.5;
   else               T = 9.5;
 
-  // Vocabulary diversity
+  // Vocabulary diversity (unique content words / total)
   var seen = {};
   var uniq = 0;
   for (var i = 0; i < words.length; i++) {
     var w = words[i].replace(/[^a-z]/g, "");
     if (w.length > 2 && !seen[w]) { seen[w] = true; uniq++; }
   }
-  var diversity = uniq / wc;
+  var diversity = uniq / Math.max(wc, 1);
 
-  // F — Functions (discourse markers, tense range, task accomplishment)
-  var discourse = ["however","although","therefore","moreover","furthermore","because","meanwhile","in addition","on the other hand","in my opinion","i believe","i think","for example","for instance","in contrast","firstly","secondly","finally","as a result","even though","despite","nevertheless","personally","overall","in general","whereas","consequently","on the contrary","not only","both","such as"];
+  // ── F: Functions (discourse markers, tense range — NOT word-count driven) ──
+  var discourse = ["however","although","therefore","moreover","furthermore","because",
+    "meanwhile","in addition","on the other hand","in my opinion","i believe","i think",
+    "for example","for instance","in contrast","firstly","secondly","finally",
+    "as a result","even though","despite","nevertheless","personally",
+    "in general","whereas","consequently","not only","such as"];
   var dc = 0;
   for (var j = 0; j < discourse.length; j++) {
     if (text.indexOf(discourse[j]) >= 0) dc++;
   }
-  var hasPast = /\b(was|were|had|went|did|came|saw|felt|thought|made|took|got|became|started|ended|learned|worked|played|lived|tried|found|used to|could|would)\b/.test(text);
+  var hasPast   = /\b(was|were|had|went|did|came|saw|felt|thought|made|took|got|became|started|ended|learned|worked|played|lived|tried|found|used to|could|would)\b/.test(text);
   var hasFuture = /\b(will|would like|plan to|going to|hope to|want to|intend to|expect to|looking forward)\b/.test(text);
-  var F = Math.min(10, T * 0.45 + dc * 0.55 + (hasPast ? 1.2 : 0) + (hasFuture ? 0.8 : 0) + 1);
+  var F = Math.min(10,
+    2.5
+    + Math.min(dc, 6) * 0.65   // discourse markers: up to +3.9 (capped at 6)
+    + (hasPast   ? 1.0 : 0)
+    + (hasFuture ? 0.7 : 0)
+    + (T >= 5.5  ? 0.5 : 0)    // small bonus for sustained speech only at IM+ length
+  );
 
-  // A — Accuracy (complex grammatical structures)
-  var A = Math.min(10, T * 0.45 + 2);
+  // ── A: Accuracy (grammar structures — NOT dependent on word count) ────
   var structs = [
     /\b(if|unless)\b.{3,}\b(i|you|he|she|it|we|they)\b/,
     /\b(although|even though|whereas|while|despite)\b/,
@@ -2682,14 +2693,23 @@ function scoreTranscript(transcript) {
   for (var k = 0; k < structs.length; k++) {
     if (structs[k].test(text)) sc++;
   }
-  A = Math.min(10, A + sc * 0.65);
+  var A = Math.min(10,
+    3.0
+    + sc * 0.9                                    // complex grammatical structures
+    + (hasPast && hasFuture ? 0.5 : 0)            // tense range
+    + (wc > 80 && diversity > 0.65 ? 0.7 : 0)    // vocab control in longer text
+  );
 
-  // C — Context / Content (vocab richness + specificity)
-  var C = Math.min(10, diversity * 11 + 2.5);
-  if (/\b\d+\b/.test(transcript)) C += 0.4;
-  if (/\b(last year|last month|two years ago|years ago|recently|nowadays|these days|in the past|back then|growing up)\b/.test(text)) C += 0.5;
-  if (/\b[A-Z][a-z]{2,}\b/.test(transcript)) C += 0.3;
-  C = Math.min(10, C);
+  // ── C: Context/Content (vocab richness WITH length scaling) ──────────
+  // Short texts always have high diversity — scale down to prevent inflation
+  var lengthScale = Math.min(1, wc / 80);
+  var C = Math.min(10,
+    2.0
+    + diversity * 7 * lengthScale
+    + (/\b\d+\b/.test(transcript) ? 0.4 : 0)
+    + (/\b(last year|last month|two years ago|years ago|recently|nowadays|these days|in the past|back then|growing up)\b/.test(text) ? 0.5 : 0)
+    + (/\b[A-Z][a-z]{2,}\b/.test(transcript) ? 0.3 : 0)
+  );
 
   var overall = +((F + A + C + T) / 4).toFixed(1);
   return { F: +F.toFixed(1), A: +A.toFixed(1), C: +C.toFixed(1), T: +T.toFixed(1), overall: overall, wordCount: wc };
@@ -2698,6 +2718,7 @@ function scoreTranscript(transcript) {
 function runMockScoring(questions) {
   var totals = { F:0, A:0, C:0, T:0, count:0 };
   var hasTranscripts = false;
+  var totalQ = questions.length;
   for (var i = 0; i < questions.length; i++) {
     var q = questions[i];
     if (q.skipped || !q.transcript) continue;
@@ -2708,6 +2729,7 @@ function runMockScoring(questions) {
     if (q.transcript.trim().length > 5) hasTranscripts = true;
   }
   var avg;
+  var completionRate = totalQ > 0 ? totals.count / totalQ : 0;
   if (totals.count > 0) {
     avg = {
       F: +(totals.F / totals.count).toFixed(1),
@@ -2715,10 +2737,18 @@ function runMockScoring(questions) {
       C: +(totals.C / totals.count).toFixed(1),
       T: +(totals.T / totals.count).toFixed(1)
     };
-    avg.overall = +((avg.F + avg.A + avg.C + avg.T) / 4).toFixed(1);
+    // OPIC requires consistent performance across many questions.
+    // Penalize overall if completion rate is low — cannot reliably assess from few answers.
+    var penalty = completionRate >= 0.65 ? 1.0 :
+                  completionRate >= 0.35 ? 0.85 :
+                  completionRate >= 0.15 ? 0.70 : 0.52;
+    avg.overall = Math.max(1, +((avg.F + avg.A + avg.C + avg.T) / 4 * penalty).toFixed(1));
   } else {
     avg = { F:2, A:2, C:2, T:2, overall:2 };
   }
+  avg._completionRate = completionRate;
+  avg._answeredCount  = totals.count;
+  avg._totalCount     = totalQ;
   return { avg: avg, hasTranscripts: hasTranscripts };
 }
 
@@ -2744,11 +2774,22 @@ function renderFACT(scores, fromAI, hasTranscripts) {
   var note = document.getElementById("fact-note");
   if (note) {
     if (fromAI) {
-      note.innerHTML = '<span style="color:var(--grn)">&#10003; Cham diem bang Claude AI</span>';
+      var crNote = "";
+      if (scores._completionRate !== undefined && scores._completionRate < 0.65) {
+        crNote = ' · <span style="color:var(--yel)">⚠️ ' + scores._answeredCount + '/' + scores._totalCount + ' câu — cần trả lời nhiều hơn để chính xác</span>';
+      }
+      note.innerHTML = '<span style="color:var(--grn)">✓ Chấm điểm bằng Claude AI</span>' + crNote;
     } else if (!hasTranscripts) {
       note.textContent = "Chưa có transcript — cho phép mic và dùng Chrome/Edge để nhận diện giọng nói";
     } else {
-      note.textContent = "Ước tính từ phân tích transcript · Thêm Claude API key phía dưới để chấm chính xác hơn";
+      var cr = scores._completionRate;
+      var ans = scores._answeredCount;
+      var tot = scores._totalCount;
+      var crMsg = "";
+      if (cr !== undefined && cr < 0.65) {
+        crMsg = ' · <span style="color:var(--yel)">⚠️ Chỉ ' + ans + '/' + tot + ' câu — điểm bị giảm do thiếu dữ liệu</span>';
+      }
+      note.innerHTML = 'Ước tính từ phân tích transcript · Thêm Claude API key để chấm chính xác hơn' + crMsg;
     }
   }
 }
@@ -2840,6 +2881,11 @@ function runClaudeScoring(apiKey) {
     try {
       var text = (data.content && data.content[0]) ? data.content[0].text : "";
       var parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      // carry completion stats so note shows warning if needed
+      var fr = runMockScoring(ST.questions);
+      parsed._completionRate = fr.avg._completionRate;
+      parsed._answeredCount  = fr.avg._answeredCount;
+      parsed._totalCount     = fr.avg._totalCount;
       renderFACT(parsed, true, true);
       // Update estimated level
       if (parsed.level) {
