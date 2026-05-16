@@ -604,7 +604,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <div class="tx-live" id="tx-live"></div>
       <div class="ex-ctrl">
         <button class="btn btn-pri" id="btn-speak">&#127897; Bắt đầu nói</button>
-        <button class="btn btn-grn" id="btn-nextq" style="display:none">Cau tiep theo &#8250;</button>
+        <button class="btn btn-grn" id="btn-nextq" style="display:none">Câu tiếp theo &#8250;</button>
         <button class="btn btn-pri" id="btn-relisten" style="display:none">&#128266; Nghe lần 2</button>
         <button class="btn btn-out btn-sm" id="btn-skip-listen" style="display:none">&#127897; Trả lời ngay</button>
         <button class="btn btn-out btn-sm" id="btn-answer-hide" style="display:none">&#128683; Trả lời (ẩn câu hỏi)</button>
@@ -619,12 +619,12 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
     <div class="rs-wrap">
       <div class="rs-hd">
         <div id="r-emoji" style="font-size:2.8rem;margin-bottom:12px">&#127881;</div>
-        <div style="font-size:1.6rem;font-weight:900;margin-bottom:7px">Hoan thanh bai luyen!</div>
+        <div style="font-size:1.6rem;font-weight:900;margin-bottom:7px">Hoàn thành bài luyện!</div>
         <p style="color:var(--muted)">Đánh giá tổng quan buổi luyện tập</p>
       </div>
       <div class="rs-card">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
-          <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Muc do uoc tinh</div><div class="est-lv" id="r-lv">IM2</div></div>
+          <div><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Mức độ ước tính</div><div class="est-lv" id="r-lv">IM2</div></div>
           <div style="text-align:right"><div style="font-size:.72rem;color:var(--muted);margin-bottom:3px">Thời gian</div><div style="font-size:1.35rem;font-weight:800" id="r-time">--:--</div></div>
         </div>
         <div class="st-grid">
@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-015";
+var APP_VERSION = "20260514-016";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -874,18 +874,18 @@ var LEVELS = [
 ];
 
 var TOPICS = [
-  {id:"home",  ic:"home",   nm:"Home & Neighborhood", vi:"Nha & Khu dan cu"},
-  {id:"work",  ic:"work",   nm:"Work / School",        vi:"Cong viec / Truong hoc"},
-  {id:"hobby", ic:"hobby",  nm:"Hobbies",              vi:"So thich"},
-  {id:"music", ic:"music",  nm:"Music",                vi:"Am nhac"},
+  {id:"home",  ic:"home",   nm:"Home & Neighborhood", vi:"Nhà & Khu dân cư"},
+  {id:"work",  ic:"work",   nm:"Work / School",        vi:"Công việc / Trường học"},
+  {id:"hobby", ic:"hobby",  nm:"Hobbies",              vi:"Sở thích"},
+  {id:"music", ic:"music",  nm:"Music",                vi:"Âm nhạc"},
   {id:"movie", ic:"movie",  nm:"Movies & TV",          vi:"Phim & TV"},
-  {id:"sports",ic:"sports", nm:"Sports & Exercise",    vi:"The thao"},
-  {id:"travel",ic:"travel", nm:"Travel",               vi:"Du lich"},
-  {id:"read",  ic:"read",   nm:"Reading",              vi:"Doc sach"},
-  {id:"food",  ic:"food",   nm:"Food & Cooking",       vi:"Am thuc & Nau an"},
+  {id:"sports",ic:"sports", nm:"Sports & Exercise",    vi:"Thể thao"},
+  {id:"travel",ic:"travel", nm:"Travel",               vi:"Du lịch"},
+  {id:"read",  ic:"read",   nm:"Reading",              vi:"Đọc sách"},
+  {id:"food",  ic:"food",   nm:"Food & Cooking",       vi:"Ẩm thực & Nấu ăn"},
   {id:"tech",  ic:"tech",   nm:"Technology",           vi:"Công nghệ"},
-  {id:"shop",  ic:"shop",   nm:"Shopping",             vi:"Mua sam"},
-  {id:"health",ic:"health", nm:"Health",               vi:"Suc khoe"}
+  {id:"shop",  ic:"shop",   nm:"Shopping",             vi:"Mua sắm"},
+  {id:"health",ic:"health", nm:"Health",               vi:"Sức khỏe"}
 ];
 
 // icon map (emoji HTML entities)
@@ -904,14 +904,14 @@ QDB.warmup = [
     en:"Tell me a little about yourself. Where do you live and what do you do?",
     vi:"Giới thiệu đôi nét về bản thân. Bạn sống ở đâu và làm gì?",
     type:"warmup",
-    hints:["Ten, tuoi, nghe nghiep","Noi song hien tai","Vai cau ve cuoc song hang ngay"],
+    hints:["Tên, tuổi, nghề nghiệp","Nơi sống hiện tại","Vài câu về cuộc sống hằng ngày"],
     sample:"My name is Minh and I am 25 years old. I currently live in Hanoi in a small but cozy apartment near the city center. I work as a software developer at a tech company. In my free time I enjoy watching movies and going to the gym. Overall I am pretty happy with my lifestyle right now."
   },
   {
     en:"Let's talk about where you live. Can you describe your home?",
     vi:"Hãy nói về nơi bạn sống. Bạn có thể mô tả ngôi nhà của mình không?",
     type:"warmup",
-    hints:["Loai nha (apartment / house)","Vi tri, khu vuc","Phong yeu thich"],
+    hints:["Loại nhà (apartment / house)","Vị trí, khu vực","Phòng yêu thích"],
     sample:"I live in a two-bedroom apartment on the 5th floor in District 3. It is compact but has everything I need. My favorite spot is the living room because it gets great natural light and I love relaxing there after work. The neighborhood is convenient with restaurants and a supermarket nearby."
   }
 ];
@@ -921,7 +921,7 @@ QDB.warmup.push(
     en:"Please tell me about the city or town you live in.",
     vi:"Hay ke ve thanh pho hoac thi tran ban dang song.",
     type:"warmup",
-    hints:["Ten thanh pho","Dac diem noi bat","Dieu ban yeu thich nhat"],
+    hints:["Tên thành phố","Đặc điểm nổi bật","Điều bạn yêu thích nhất"],
     sample:"I live in Ho Chi Minh City, which is the largest city in Vietnam. It is a very fast-paced and modern city with countless restaurants, shopping centers, and entertainment options. What I love most is how vibrant the street life is — the food stalls are open late and there is always something happening. It can be quite noisy and crowded but I have grown to love the energy."
   }
 );
@@ -931,14 +931,14 @@ QDB.home = [
     en:"Describe your neighborhood. What do you like most about it?",
     vi:"Mo ta khu vuc ban song. Ban thich dieu gi nhat?",
     type:"describe",
-    hints:["Dac diem noi bat","Tien ich xung quanh","Cam nhan song o do"],
+    hints:["Đặc điểm nổi bật","Tiện ích xung quanh","Cảm nhận sống ở đó"],
     sample:"My neighborhood is a busy but lively suburban area. What I love most is how convenient everything is — grocery stores, coffee shops, and a park are all within walking distance. The streets are clean and safe so I feel comfortable coming home late. The only downside is traffic noise during rush hour."
   },
   {
     en:"How has your neighborhood changed over the past few years?",
     vi:"Khu vuc ban song da thay doi nhu the nao trong vai nam qua?",
     type:"compare",
-    hints:["Truoc day nhu the nao","Nhung thay doi cu the","Ban thich thay doi nay khong"],
+    hints:["Trước đây như thế nào","Những thay đổi cụ thể","Bạn thích thay đổi này không"],
     sample:"My neighborhood has changed quite a lot. When I first moved here it was very quiet with only a few small shops. Now new apartment buildings and shopping centers have appeared. The population has grown bringing more restaurants and entertainment but also more traffic. Personally I think the changes are mostly positive though I miss the quiet atmosphere sometimes."
   },
   {
@@ -946,7 +946,7 @@ QDB.home = [
     vi:"Ban cua ban den tham lan dau. Mo ta duong tu trung tam thanh pho den nha ban.",
     type:"roleplay",
     rp:"Your friend just arrived at the city center and calls you for directions to your house.",
-    hints:["Phuong tien di chuyen","Diem moc tren duong","Khoang cach / thoi gian"],
+    hints:["Phương tiện di chuyển","Điểm mốc trên đường","Khoảng cách / thời gian"],
     sample:"From downtown take Bus 36 heading north. Ride about 20 minutes to the Big C supermarket stop — you cannot miss the big yellow sign. Get off there and walk straight for 5 minutes. My building is the white apartment tower on the left number 12B. I will be at the entrance waiting!"
   }
 ];
@@ -956,14 +956,14 @@ QDB.home.push(
     en:"Tell me about the furniture and decorations in your living room.",
     vi:"Ke ve do noi that va trang tri trong phong khach cua ban.",
     type:"describe",
-    hints:["Loai sofa, ban ghe","Mau sac, phong cach","Goc ban thich nhat"],
+    hints:["Loại sofa, bàn ghế","Màu sắc, phong cách","Góc bạn thích nhất"],
     sample:"My living room is quite simple but comfortable. I have a dark gray L-shaped sofa that takes up most of the space, a wooden coffee table, and a flat-screen TV mounted on the wall. I added some indoor plants near the window which brighten up the room. The walls are painted white to make it feel larger. My favorite corner is by the window with a reading chair and a small bookshelf."
   },
   {
     en:"Would you like to move to a different neighborhood or city? Why or why not?",
     vi:"Ban co muon chuyen den khu pho hoac thanh pho khac khong? Tai sao?",
     type:"compare",
-    hints:["Ly do muon/khong muon chuyen","Noi ban muon den","So sanh voi noi dang song"],
+    hints:["Lý do muốn/không muốn chuyển","Nơi bạn muốn đến","So sánh với nơi đang sống"],
     sample:"Sometimes I think about moving to a quieter area like Da Lat or Hoi An. The pace of life here is very fast and the air quality is not great. A smaller city would offer fresher air, lower cost of living, and a more relaxed lifestyle. However my job and social network are here so practically it is difficult. For now I will stay but I would love to move in a few years when I have more flexibility."
   }
 );
@@ -973,14 +973,14 @@ QDB.work = [
     en:"Tell me about your job. What do you do on a typical workday?",
     vi:"Hay ke ve cong viec cua ban. Mot ngay lam viec binh thuong nhu the nao?",
     type:"habit",
-    hints:["Linh vuc cong viec","Cac hoat dong hang ngay","Dieu ban thich / khong thich"],
+    hints:["Lĩnh vực công việc","Các hoạt động hằng ngày","Điều bạn thích / không thích"],
     sample:"I work as a marketing specialist at a mid-sized company. My day starts at 8:30. In the morning I check emails and attend a team meeting. Then I spend most of the time creating social media content or analyzing campaign performance. In the afternoon I focus on writing reports or collaborating with the design team. I usually leave around 6 PM."
   },
   {
     en:"Tell me about a difficult problem you faced at work and how you solved it.",
     vi:"Ke ve mot van de kho khan tai noi lam viec va cach ban giai quyet.",
     type:"experience",
-    hints:["Boi canh xay ra","Van de cu the","Ban da lam gi","Ket qua"],
+    hints:["Bối cảnh xảy ra","Vấn đề cụ thể","Bạn đã làm gì","Kết quả"],
     sample:"Last year our main client website crashed two days before a major launch. The dev team had left for the day and I was the only one available. I contacted tech support and coordinated the fix keeping the client updated every 30 minutes. We restored everything by midnight and the launch went smoothly. It taught me to stay calm under pressure."
   },
   {
@@ -988,7 +988,7 @@ QDB.work = [
     vi:"Sep muon ban nhan them du an nhung ban dang qua tai. Ban se noi gi?",
     type:"roleplay",
     rp:"You are an employee. Your boss asks you to lead an additional project alongside your current workload.",
-    hints:["Lich su xac nhan ban dang ban","De xuat giai phap","Hoi ve muc do uu tien"],
+    hints:["Lịch sử xác nhận bạn đang bận","Đề xuất giải pháp","Hỏi về mức độ ưu tiên"],
     sample:"Thank you for thinking of me — I am honored. However I want to be transparent: I am currently handling three projects with tight deadlines this month. Taking on another might affect the quality of all of them. Could we discuss which project takes priority? Or perhaps find a colleague to co-lead the new one with me?"
   }
 ];
@@ -998,14 +998,14 @@ QDB.work.push(
     en:"What kind of work environment do you prefer — working alone or in a team? Why?",
     vi:"Ban thich moi truong lam viec nao — lam viec doc lap hay nhom? Tai sao?",
     type:"compare",
-    hints:["Uu diem lam viec doc lap","Uu diem lam nhom","Phong cach lam viec cua ban"],
+    hints:["Ưu điểm làm việc độc lập","Ưu điểm làm nhóm","Phong cách làm việc của bạn"],
     sample:"I actually enjoy both depending on the task. For creative work like writing reports or designing, I prefer working alone because I can focus deeply without distractions. But for brainstorming or complex problem-solving, a team is far more effective since different perspectives lead to better solutions. In my current job I have a good mix of both, which suits me perfectly."
   },
   {
     en:"Describe an achievement at work or school that you are particularly proud of.",
     vi:"Mo ta mot thanh tich tai cong viec hoac truong hoc ban dac biet tu hao.",
     type:"experience",
-    hints:["Su kien cu the","Kho khan gap phai","Ban vuot qua nhu the nao","Cam xuc va ket qua"],
+    hints:["Sự kiện cụ thể","Khó khăn gặp phải","Bạn vượt qua như thế nào","Cảm xúc và kết quả"],
     sample:"I am most proud of leading a product launch campaign last year. It was my first time managing a whole project independently. The team had tight deadlines and limited budget. I organized weekly check-ins, divided tasks clearly, and stayed calm when issues came up. The launch exceeded our targets by 30 percent. My manager praised the work in front of the whole department and it gave me real confidence in my leadership skills."
   }
 );
@@ -1015,14 +1015,14 @@ QDB.hobby = [
     en:"What do you usually do in your free time? Describe your hobbies in detail.",
     vi:"Ban thuong lam gi trong thoi gian ranh? Mo ta so thich chi tiet.",
     type:"describe",
-    hints:["Liet ke cac so thich","Chi tiet so thich yeu thich nhat","Tai sao ban thich","Ban thuong lam vao luc nao"],
+    hints:["Liệt kê các sở thích","Chi tiết sở thích yêu thích nhất","Tại sao bạn thích","Bạn thường làm vào lúc nào"],
     sample:"In my free time I really enjoy drawing and playing guitar though drawing is my main hobby. I have done it since childhood. I usually sketch on weekends for two or three hours with a cup of coffee and background music. I mainly draw portraits and cityscapes. It clears my mind completely — I forget all about work stress. Recently I started sharing artwork on Instagram which has been a fun way to connect with other artists."
   },
   {
     en:"Tell me about a hobby you had in the past but do not do anymore. Why did you stop?",
     vi:"Ke ve mot so thich ban da co nhung khong con lam nua. Tai sao dung lai?",
     type:"compare",
-    hints:["So thich cu la gi","Ban da lam bao lau","Ly do dung lai","Ban co muon quay lai khong"],
+    hints:["Sở thích cũ là gì","Bạn đã làm bao lâu","Lý do dừng lại","Bạn có muốn quay lại không"],
     sample:"In high school I was really into basketball and practiced almost every day. But when I entered university the workload became heavy and I moved to a new city where I did not know anyone to play with. I gradually just stopped. I do miss it sometimes — there is nothing like the energy of a good game. I keep telling myself I will pick it up again once work calms down."
   }
 ];
@@ -1032,14 +1032,14 @@ QDB.hobby.push(
     en:"Is there a hobby or activity you have always wanted to try but have not yet? Why?",
     vi:"Co so thich nao ban muon thu nhung chua lam duoc khong? Tai sao?",
     type:"describe",
-    hints:["Hoat dong ban muon thu","Ly do chua lam","Ke hoach trong tuong lai"],
+    hints:["Hoạt động bạn muốn thử","Lý do chưa làm","Kế hoạch trong tương lai"],
     sample:"I have always wanted to learn how to play the piano. There is something deeply calming about piano music and I admire people who can play well. I tried to start twice but stopped because of time. Now I am looking at online courses which seem more flexible. I plan to start seriously once my current project wraps up next quarter."
   },
   {
     en:"Tell me about a hobby that you and your friend or family member share.",
     vi:"Ke ve so thich ban chia se voi ban be hoac gia dinh.",
     type:"habit",
-    hints:["So thich la gi","Thuong lam cung nhau nhu the nao","Dieu do co y nghia gi"],
+    hints:["Sở thích là gì","Thường làm cùng nhau như thế nào","Điều đó có ý nghĩa gì"],
     sample:"My father and I both love photography. On weekends we sometimes go to interesting locations around the city to take pictures. He taught me the basics of composition and lighting when I was in high school. Now we have a kind of friendly competition where we share photos after each trip and vote on favorites. It keeps us connected even though we live separately and gives us something meaningful to talk about."
   }
 );
@@ -1049,14 +1049,14 @@ QDB.music = [
     en:"What kind of music do you like? Tell me about your favorite artist.",
     vi:"Ban thich the loai nhac gi? Ke ve nghe si yeu thich.",
     type:"describe",
-    hints:["The loai nhac","Nghe si cu the","Tai sao ban thich","Khi nao thuong nghe"],
+    hints:["Thể loại nhạc","Nghệ sĩ cụ thể","Tại sao bạn thích","Khi nào thường nghe"],
     sample:"I am a big fan of indie pop and alternative music. My favorite artist is Hozier. What draws me to his music is the soulful vocals and deeply poetic lyrics about love nature and social issues. I usually listen during my commute or when working late. Music really helps me focus and stay in a good mood."
   },
   {
     en:"Have you ever been to a live concert? Tell me about the experience.",
     vi:"Ban da tung di xem hoa nhac truc tiep chua? Ke ve trai nghiem do.",
     type:"experience",
-    hints:["Concert nao","Bau khong khi","Khoanh khac dang nho","Cam nhan sau khi xem"],
+    hints:["Concert nào","Bầu không khí","Khoảnh khắc đáng nhớ","Cảm nhận sau khi xem"],
     sample:"Last year I attended a concert by a Vietnamese indie band. The venue was an outdoor amphitheater holding about 5000 people. The crowd was incredibly energetic — everyone singing along and waving light sticks. The most memorable moment was the final encore when the whole crowd erupted. I left feeling so energized. It made me appreciate live music even more."
   }
 ];
@@ -1066,7 +1066,7 @@ QDB.music.push(
     en:"Compare the music that was popular when you were young to the music popular today.",
     vi:"So sanh nhac pho bien khi ban con tre voi nhac hien nay.",
     type:"compare",
-    hints:["Nhac hoi nho ban la gi","Nhac hien nay nhu the nao","Su khac biet chinh","Y kien ca nhan"],
+    hints:["Nhạc hồi nhỏ bạn là gì","Nhạc hiện nay như thế nào","Sự khác biệt chính","Ý kiến cá nhân"],
     sample:"When I was growing up in the 2000s, pop and R&B dominated. Artists had polished live performances and intricate arrangements. Today the music landscape is very different — electronic and hip-hop beats are everywhere, and songs are often shorter to fit streaming attention spans. Production quality has improved enormously but I sometimes feel the emotional depth is missing. That said, some modern artists are truly innovative. Both eras have their gems."
   }
 );
@@ -1076,14 +1076,14 @@ QDB.movie = [
     en:"What types of movies or TV shows do you enjoy? Describe your favorites.",
     vi:"Ban thich xem loai phim hoac chuong trinh TV nao?",
     type:"describe",
-    hints:["The loai","Phim / series cu the","Ly do ban thich","Xem khi nao"],
+    hints:["Thể loại","Phim / series cụ thể","Lý do bạn thích","Xem khi nào"],
     sample:"I mostly enjoy thriller series and documentaries. My all-time favorite is Breaking Bad — the storytelling and tension kept me completely hooked. I also love nature documentaries like those by David Attenborough. I usually watch on weekends in the evening alone when I want to focus or with roommates for a more social experience."
   },
   {
     en:"Compare how people watched movies 10 years ago versus today.",
     vi:"So sanh cach xem phim 10 nam truoc va hien nay.",
     type:"compare",
-    hints:["Cach cu (rap, DVD, TV)","Cach moi (streaming, phone)","Uu/nhuoc cua moi cach"],
+    hints:["Cách cũ (rạp, DVD, TV)","Cách mới (streaming, phone)","Ưu/nhược của mỗi cách"],
     sample:"Ten years ago people mostly went to the cinema or bought DVDs. Streaming was just starting out. Today most people use Netflix or YouTube on phones laptops or smart TVs — the variety is huge. However something is lost: watching on a big screen in a dark theater is still irreplaceable for blockbusters. Streaming is convenient but cinema still has its own magic."
   }
 ];
@@ -1093,7 +1093,7 @@ QDB.movie.push(
     en:"Tell me about a movie or TV show that had a lasting impact on you. What was it about?",
     vi:"Ke ve phim hoac chuong trinh TV co anh huong sau sac den ban.",
     type:"experience",
-    hints:["Ten phim / series","Noi dung chinh","Bai hoc hoac cam xuc","Anh huong den cuoc song"],
+    hints:["Tên phim / series","Nội dung chính","Bài học hoặc cảm xúc","Ảnh hưởng đến cuộc sống"],
     sample:"The documentary series Blue Planet II had a lasting impact on me. It explored the world's oceans in stunning detail and revealed how severely pollution is damaging marine life. I knew ocean pollution was a problem but seeing it so vividly made me feel personally responsible. After watching it I started reducing single-use plastic and became more vocal about environmental issues. A documentary has never changed my behavior so directly before."
   }
 );
@@ -1103,14 +1103,14 @@ QDB.sports = [
     en:"What sports or physical activities do you enjoy? How often do you do them?",
     vi:"Ban thich mon the thao nao? Ban tap bao thuong xuyen?",
     type:"habit",
-    hints:["Mon the thao","Tan suat","Dia diem","Loi ich"],
+    hints:["Môn thể thao","Tần suất","Địa điểm","Lợi ích"],
     sample:"I jog three or four times a week usually in the early morning at a park near my apartment — about 5 km each time. On weekends I play badminton with friends which is more competitive and social. Staying active has really improved my sleep quality and overall mood."
   },
   {
     en:"Tell me about a significant achievement in sports or physical activity.",
     vi:"Ke ve mot thanh tich dang ke trong the thao.",
     type:"experience",
-    hints:["Su kien cu the","Chuan bi nhu the nao","Ket qua","Cam xuc"],
+    hints:["Sự kiện cụ thể","Chuẩn bị như thế nào","Kết quả","Cảm xúc"],
     sample:"About two years ago I completed my first half marathon. I trained for six months gradually running longer distances. The race was incredibly tough especially the last few kilometers. But when I crossed the finish line in 2 hours 15 minutes with my friends cheering I felt overwhelming pride. It proved that with consistent effort you can push past your limits."
   },
   {
@@ -1118,7 +1118,7 @@ QDB.sports = [
     vi:"Goi dien den gym hoi ve goi thanh vien gia va co so vat chat.",
     type:"roleplay",
     rp:"You want to join a new gym. Call them to ask about packages prices opening hours and equipment.",
-    hints:["Hoi ve cac goi (monthly/yearly)","Gio hoat dong","Thiet bi / lop hoc","Uu dai gi khong"],
+    hints:["Hỏi về các gói (monthly/yearly)","Giờ hoạt động","Thiết bị / lớp học","Ưu đãi gì không"],
     sample:"Hi I am calling for information about memberships. What packages are available? I would like a monthly plan first before committing long-term. Also what are your opening hours? I work until 7 PM so I need evening access. Do you have cardio equipment and free weights? And are group fitness classes included in the fee?"
   }
 ];
@@ -1128,7 +1128,7 @@ QDB.sports.push(
     en:"Compare a sport you played in the past with how you stay active now.",
     vi:"So sanh mon the thao ban tung tap voi cach ban van dong hien nay.",
     type:"compare",
-    hints:["Mon the thao cu la gi","Ban dung lai tai sao","Hoat dong hien tai","Uu nhuoc moi cach"],
+    hints:["Môn thể thao cũ là gì","Bạn dừng lại tại sao","Hoạt động hiện tại","Ưu nhược mỗi cách"],
     sample:"In high school I played football seriously three times a week. It was intense and social but required coordinating with a team. These days I mostly run and do home workouts because my schedule is unpredictable. Solo exercise is more flexible but I do miss the camaraderie and competitive spirit of team sports. I keep thinking about joining a weekend football club to get that team experience back."
   }
 );
@@ -1138,7 +1138,7 @@ QDB.travel = [
     en:"Describe a place you traveled to that you really enjoyed. What made it special?",
     vi:"Mo ta mot noi ban da du lich va thuc su thich. Dieu gi lam no dac biet?",
     type:"describe",
-    hints:["Dia diem cu the","Diem tham quan / hoat dong","Am thuc","Dieu dac biet nhat"],
+    hints:["Địa điểm cụ thể","Điểm tham quan / hoạt động","Ẩm thực","Điều đặc biệt nhất"],
     sample:"I absolutely loved visiting Hoi An. It is a beautifully preserved ancient town with colorful lanterns everywhere. The blend of history and culture is magical — centuries-old merchant houses a Japanese bridge and amazing local food on every corner. I took a bicycle tour through rice paddies outside town. At night the lantern-lit streets feel truly special."
   },
   {
@@ -1146,14 +1146,14 @@ QDB.travel = [
     vi:"Ban den khach san nhung ho khong tim thay dat phong. Xu ly tinh huong.",
     type:"unexpected",
     rp:"Unexpected: You arrive after a long journey. The receptionist says there is no reservation under your name but you definitely booked online.",
-    hints:["Giu binh tinh va lich su","Cung cap confirmation email / so dat phong","Yeu cau kiem tra lai","De xuat giai phap"],
+    hints:["Giữ bình tĩnh và lịch sự","Cung cấp confirmation email / số đặt phòng","Yêu cầu kiểm tra lại","Đề xuất giải pháp"],
     sample:"I understand there might be some confusion but I am certain I have a reservation. I booked online about two weeks ago — let me show you the confirmation email on my phone. The reference number is under my name. Could you check that? If there has been a system error I would appreciate it if you could find me a room since I have traveled a long way."
   },
   {
     en:"Compare traveling alone versus traveling with a group of friends.",
     vi:"So sanh du lich mot minh voi di nhom ban be.",
     type:"compare",
-    hints:["Uu diem mot minh (tu do)","Nhuoc diem mot minh (co don, ton kem)","Uu diem nhom (vui, chia chi phi)","Nhuoc diem nhom (it linh hoat)"],
+    hints:["Ưu điểm một mình (tự do)","Nhược điểm một mình (cô đơn, tốn kém)","Ưu điểm nhóm (vui, chia chi phí)","Nhược điểm nhóm (ít linh hoạt)"],
     sample:"Both have their own appeal. Traveling alone gives complete freedom — you go wherever you want and interact more with locals. But it can get lonely and costs more. Group travel is more fun and social; you share costs and always have backup if something goes wrong. However it requires compromise on schedules. Personally I like a mix: solo trips for exploration and group trips for destinations I want to share with people I care about."
   }
 ];
@@ -1164,14 +1164,14 @@ QDB.travel.push(
     vi:"Ban dang di du lich va tui xach bi that lac tai san bay. Ban lam gi?",
     type:"unexpected",
     rp:"Unexpected situation: You land at your destination and discover your suitcase did not arrive. You need to report it and find a solution.",
-    hints:["Den quay bao cao hanh ly","Cung cap so hieu chuyen bay, mo ta tui","Hoi ve thoi gian giao lai","Hoi ve chi phi tam thoi"],
+    hints:["Đến quầy báo cáo hành lý","Cung cấp số hiệu chuyến bay, mô tả túi","Hỏi về thời gian giao lại","Hỏi về chi phí tạm thời"],
     sample:"First I would not panic. I would go directly to the airline's baggage service counter and explain the situation calmly. I would provide my flight number, baggage claim tag, and a description of my suitcase. I would ask them to file a missing baggage report and get a reference number. Then I would ask whether they can cover essential items like toiletries and a change of clothes while waiting. I have travel insurance so I would document everything carefully."
   },
   {
     en:"What is your most memorable travel experience? What made it unforgettable?",
     vi:"Trai nghiem du lich dang nho nhat cua ban la gi? Dieu gi lam no kho quen?",
     type:"experience",
-    hints:["Noi ban den","Dieu bat ngo xay ra","Cam xuc luc do","Anh huong ve sau"],
+    hints:["Nơi bạn đến","Điều bất ngờ xảy ra","Cảm xúc lúc đó","Ảnh hưởng về sau"],
     sample:"My most memorable trip was to Japan two years ago. What made it unforgettable was a spontaneous experience in Kyoto — I stumbled into a small neighborhood festival that I never planned. Locals in traditional costumes were dancing and carrying portable shrines. Nobody spoke English but people smiled and gestured for me to join in. I ate food I could not name and watched fireworks with strangers. It taught me that the best travel moments are unplanned."
   }
 );
@@ -1181,7 +1181,7 @@ QDB.read = [
     en:"Do you enjoy reading? What types of books? Tell me about a book that influenced you.",
     vi:"Ban co thich doc sach khong? Ke ve mot cuon sach anh huong den ban.",
     type:"describe",
-    hints:["The loai yeu thich","Cuon sach cu the","Noi dung chinh","Anh huong nhu the nao"],
+    hints:["Thể loại yêu thích","Cuốn sách cụ thể","Nội dung chính","Ảnh hưởng như thế nào"],
     sample:"I enjoy non-fiction and personal development books. The most influential one for me is Atomic Habits by James Clear. The core idea is that small consistent changes compound into remarkable results. Before reading it I struggled to build good habits. After applying strategies like habit stacking I have maintained routines like daily exercise for over a year. It completely changed how I approach self-improvement."
   }
 ];
@@ -1191,7 +1191,7 @@ QDB.read.push(
     en:"How have your reading habits changed compared to when you were a child?",
     vi:"Thoi quen doc sach cua ban da thay doi nhu the nao so voi hoi con nho?",
     type:"compare",
-    hints:["Hoi nho doc gi","Hien nay doc gi","Tai sao thay doi","Ban co doc nhieu hon truoc khong"],
+    hints:["Hồi nhỏ đọc gì","Hiện nay đọc gì","Tại sao thay đổi","Bạn có đọc nhiều hơn trước không"],
     sample:"As a child I read mostly adventure and fantasy novels for pure entertainment. I would read under my blanket with a flashlight. Now I mainly read non-fiction — business, psychology, and self-development. The shift happened when I started working and realized knowledge has direct practical value. I read less for pleasure now which I slightly regret. I recently started keeping a fiction book on my bedside table to rediscover reading for joy."
   }
 );
@@ -1201,7 +1201,7 @@ QDB.food = [
     en:"Describe a typical meal you enjoy making. How do you prepare it?",
     vi:"Mo ta mot mon an ban thich nau. Ban chuan bi nhu the nao?",
     type:"describe",
-    hints:["Ten mon","Nguyen lieu","Cac buoc chinh","Tai sao ban thich"],
+    hints:["Tên món","Nguyên liệu","Các bước chính","Tại sao bạn thích"],
     sample:"One of my favorites is stir-fried noodles with vegetables and tofu. I soak the noodles in hot water until soft then stir-fry garlic until fragrant. I add carrots bell peppers mushrooms and tofu then toss in the noodles with soy sauce oyster sauce and sesame oil. The whole dish takes about 15 minutes. I love it because it is quick healthy and customizable."
   },
   {
@@ -1209,7 +1209,7 @@ QDB.food = [
     vi:"Ban dang o nha hang va mon an bi nham. Noi chuyen voi nguoi phuc vu.",
     type:"roleplay",
     rp:"You ordered vegetarian pasta but received a meat dish. Politely address the issue and ask for the correct dish.",
-    hints:["Thu hut su chu y lich su","Giai thich van de","Dat lai dung mon","Hoi ve thoi gian cho"],
+    hints:["Thu hút sự chú ý lịch sự","Giải thích vấn đề","Đặt lại đúng món","Hỏi về thời gian chờ"],
     sample:"Excuse me I am sorry to bother you but I think there has been a small mix-up. I ordered the vegetarian pasta with no meat but this dish has chicken in it. I am vegetarian so I cannot eat this. Could you take it back and bring the correct one? Also could you let me know roughly how long it will take? Thank you so much."
   }
 ];
@@ -1219,14 +1219,14 @@ QDB.food.push(
     en:"Compare eating habits of the older generation with those of young people today.",
     vi:"So sanh thoi quen an uong cua the he cu voi gioi tre hien nay.",
     type:"compare",
-    hints:["The he cu an gi / nhu the nao","Gioi tre hien nay khac ra sao","Uu nhuoc moi kieu","Y kien ca nhan"],
+    hints:["Thế hệ cũ ăn gì / như thế nào","Giới trẻ hiện nay khác ra sao","Ưu nhược mỗi kiểu","Ý kiến cá nhân"],
     sample:"The older generation cooked almost every meal at home using fresh local ingredients and ate together as a family. Young people today, including myself, eat out far more often or order delivery. We are more exposed to international cuisines and food trends through social media. The older way was healthier and more connected but time-consuming. The modern way is convenient but can be expensive and nutritionally imbalanced. Ideally I think a mix of both is best."
   },
   {
     en:"Tell me about a food or dish from another culture that you have tried and enjoyed.",
     vi:"Ke ve mon an tu nen van hoa khac ma ban da thu va thich.",
     type:"experience",
-    hints:["Mon an tu dau","Ban thu lan dau khi nao","Huong vi nhu the nao","Ban co tu nau thu chua"],
+    hints:["Món ăn từ đâu","Bạn thử lần đầu khi nào","Hương vị như thế nào","Bạn có tự nấu thử chưa"],
     sample:"I first tried Japanese ramen at a small restaurant in the city about three years ago. I ordered a tonkotsu ramen with a rich pork bone broth, soft noodles, and a perfectly soft-boiled egg. It was unlike anything I had eaten before — deeply savory and comforting. I was so impressed that I started learning how to make broth from scratch at home. It takes six hours but the result is worth every minute."
   }
 );
@@ -1236,14 +1236,14 @@ QDB.tech = [
     en:"How has technology changed your daily life? Give specific examples.",
     vi:"Cong nghe da thay doi cuoc song hang ngay cua ban nhu the nao?",
     type:"compare",
-    hints:["Truoc khi co smartphone","Ung dung dung nhieu nhat","Thay doi tich cuc","Mat tieu cuc"],
+    hints:["Trước khi có smartphone","Ứng dụng dùng nhiều nhất","Thay đổi tích cực","Mặt tiêu cực"],
     sample:"Technology has changed my life dramatically especially through the smartphone. For communication I use messaging apps instead of calls — faster and cheaper. For work cloud tools allow real-time collaboration with remote teammates. Even basic tasks like navigation or ordering food are seamless. However I spend too much time on social media and feel anxious without my phone. Technology has made life efficient but also created some unhealthy dependencies."
   },
   {
     en:"Tell me about a time technology failed you at a critical moment.",
     vi:"Ke ve lan cong nghe lam ban that bai vao thoi diem quan trong.",
     type:"unexpected",
-    hints:["Boi canh","Su co cu the","Tac dong","Cach giai quyet"],
+    hints:["Bối cảnh","Sự cố cụ thể","Tác động","Cách giải quyết"],
     sample:"During an important client presentation last year my internet dropped right in the middle. I quickly switched to my phone hotspot and reconnected within 2 minutes. I apologized explained what happened and continued from where I left off. The client was understanding. After that I always test my connection before important calls and keep a backup hotspot ready."
   }
 ];
@@ -1253,7 +1253,7 @@ QDB.tech.push(
     en:"What are the pros and cons of social media? Do you think it does more good or harm?",
     vi:"Uu va nhuoc diem cua mang xa hoi? Ban nghi no co ich hay hai hon?",
     type:"compare",
-    hints:["Loi ich (ket noi, thong tin)","Tac hai (nghien, tin gia)","Y kien ca nhan va ly do"],
+    hints:["Lợi ích (kết nối, thông tin)","Tác hại (nghiện, tin giả)","Ý kiến cá nhân và lý do"],
     sample:"Social media has undeniable benefits — it connects people across distances, spreads important information quickly, and gives ordinary people a voice. However the downsides are serious: comparison culture damages self-esteem, misinformation spreads rapidly, and excessive use can harm mental health. Personally I think it does more harm than good in the current form because the platforms are designed to maximize engagement, not wellbeing. We need better regulation and digital literacy education."
   }
 );
@@ -1263,7 +1263,7 @@ QDB.shop = [
     en:"Describe your shopping habits. Do you prefer online or in-store shopping? Why?",
     vi:"Mo ta thoi quen mua sam. Ban thich online hay cua hang?",
     type:"habit",
-    hints:["Tan suat mua sam","Loai hang hoa","Online vs offline — uu nhuoc","Hang nao khong mua online"],
+    hints:["Tần suất mua sắm","Loại hàng hóa","Online vs offline — ưu nhược","Hàng nào không mua online"],
     sample:"I have become mostly an online shopper. I buy clothes electronics and household items through e-commerce platforms. The convenience is great — I compare prices across sellers and have everything delivered. However for shoes or expensive clothing I still prefer trying them on in-store to make sure they fit. I have been disappointed a few times buying clothes online only to find the sizing was completely wrong."
   }
 ];
@@ -1273,7 +1273,7 @@ QDB.shop.push(
     en:"Tell me about an experience when you returned or exchanged a product. What happened?",
     vi:"Ke ve lan ban tra lai hoac doi san pham. Chuyen gi da xay ra?",
     type:"experience",
-    hints:["San pham gi","Van de la gi","Qua trinh xu ly","Ket qua"],
+    hints:["Sản phẩm gì","Vấn đề là gì","Quá trình xử lý","Kết quả"],
     sample:"Last year I bought a jacket online that looked great in the photos but the stitching came apart after one week. I contacted customer service and explained the defect. They initially offered a discount voucher but I insisted on a full refund since the item was clearly defective. After sending photos as evidence they agreed and processed the refund within five days. It was a bit stressful but I learned to always read return policies carefully before purchasing."
   },
   {
@@ -1281,7 +1281,7 @@ QDB.shop.push(
     vi:"Goi dien den cua hang hoi xem mot mon hang co san khong, neu khong thi khi nao co.",
     type:"roleplay",
     rp:"You want to buy a specific model of running shoes. Call the store to check stock and delivery options.",
-    hints:["Neu ten san pham / model","Hoi co san khong","Hoi them ve size, mau","Dat hang truoc hoac doi khi nao"],
+    hints:["Nêu tên sản phẩm / model","Hỏi có sẵn không","Hỏi thêm về size, màu","Đặt hàng trước hoặc đợi khi nào"],
     sample:"Hi, I am calling to ask about a product. I am looking for the Nike Pegasus 40 in size 42, preferably in black or white. Do you have it in stock right now? If not, do you know when you expect to receive it? Also is it possible to place a pre-order or reserve a pair? I am quite flexible on color but the size is important. Could you also check your online store or another branch for availability?"
   }
 );
@@ -1301,14 +1301,14 @@ QDB.health.push(
     en:"Tell me about a time when you were sick and how you recovered.",
     vi:"Ke ve lan ban bi benh va ban da hoi phuc nhu the nao.",
     type:"experience",
-    hints:["Benh gi, bao gio","Trieu chung","Ban da lam gi de khoi","Bai hoc rut ra"],
+    hints:["Bệnh gì, bao giờ","Triệu chứng","Bạn đã làm gì để khỏi","Bài học rút ra"],
     sample:"About two years ago I had a serious flu that kept me bedridden for a full week. I had a high fever, body aches, and almost no appetite. I rested completely, drank plenty of fluids, and followed my doctor's prescription. The hardest part was staying away from work during a busy period. After recovering I realized I had been neglecting sleep and nutrition for months leading up to it. Since then I have been much more careful about maintaining a healthy routine."
   },
   {
     en:"Compare the healthcare system now versus when your parents were young. What has changed?",
     vi:"So sanh he thong y te hien nay voi hoi bo me ban con tre. Dieu gi da thay doi?",
     type:"compare",
-    hints:["He thong y te truoc day","Nhung tien bo lon","Van de chua giai quyet","Y kien ca nhan"],
+    hints:["Hệ thống y tế trước đây","Những tiến bộ lớn","Vấn đề chưa giải quyết","Ý kiến cá nhân"],
     sample:"The healthcare system has improved dramatically. When my parents were young, access to doctors in rural areas was very limited and treatments were basic. Today we have modern hospitals, advanced diagnostic equipment, and universal health insurance covers a large portion of costs. Telemedicine has also made consultations more accessible. However the system still struggles with overcrowding in public hospitals and rising medical costs. Overall it is much better but still has room to grow."
   }
 );
@@ -1318,21 +1318,21 @@ var EXTRAS = [
     en:"Tell me about the most interesting person you have ever met. What made them memorable?",
     vi:"Ke ve nguoi thu vi nhat ban tung gap.",
     type:"experience",
-    hints:["Gap ho o dau","Dieu dac biet o ho","Anh huong den ban"],
+    hints:["Gặp họ ở đâu","Điều đặc biệt ở họ","Ảnh hưởng đến bạn"],
     sample:"The most interesting person I ever met was a retired professor on a long train journey. He had worked in over 30 countries as an anthropologist. What made him memorable was his boundless curiosity — he saw everything without judgment. His stories about living with indigenous communities were fascinating. He inspired me to travel more and approach new experiences with an open mind."
   },
   {
     en:"If you could change one thing about your city what would it be and why?",
     vi:"Neu ban co the thay doi mot dieu ve thanh pho do la gi?",
     type:"describe",
-    hints:["Van de cu the","Tai sao quan trong","Giai phap","Tac dong tich cuc"],
+    hints:["Vấn đề cụ thể","Tại sao quan trọng","Giải pháp","Tác động tích cực"],
     sample:"I would improve public transportation. Most people use motorbikes because buses are slow and do not cover enough areas leading to massive traffic jams and pollution. I would love a comprehensive metro system connecting all districts efficiently like Singapore or Tokyo. This single change would make my city much more livable."
   },
   {
     en:"How has your life changed in the past 5 years? What will change in the next 5?",
     vi:"Cuoc song ban da thay doi nhu the nao trong 5 nam qua? Dieu gi se thay doi 5 nam toi?",
     type:"compare",
-    hints:["Thay doi ve cong viec/hoc tap","Thay doi ve suy nghi","Ke hoach tuong lai","Muc tieu cu the"],
+    hints:["Thay đổi về công việc/học tập","Thay đổi về suy nghĩ","Kế hoạch tương lai","Mục tiêu cụ thể"],
     sample:"Five years ago I was a student with few responsibilities. Today I work full-time manage my own finances and live independently. I have become more practical and disciplined. Looking ahead I hope to advance to a senior position and perhaps start a side project. I would also like to travel more intentionally and become more financially secure with better work-life balance."
   }
 ];
@@ -1342,14 +1342,14 @@ EXTRAS.push(
     en:"Describe a person who has had a major positive influence on your life.",
     vi:"Mo ta nguoi co anh huong tich cuc lon nhat den cuoc doi ban.",
     type:"describe",
-    hints:["Ho la ai","Dieu dac biet o ho","Ho da giup ban nhu the nao","Anh huong cu the den ban"],
+    hints:["Họ là ai","Điều đặc biệt ở họ","Họ đã giúp bạn như thế nào","Ảnh hưởng cụ thể đến bạn"],
     sample:"My high school English teacher had a major impact on me. She was strict but genuinely invested in each student. She pushed me to read widely and think critically rather than just memorize answers. She once told me that language is not just a skill but a window to the world, and that idea has stayed with me. Because of her encouragement I pursued English seriously, which opened countless opportunities including my current career."
   },
   {
     en:"What do you think is the biggest challenge facing your generation? How should it be addressed?",
     vi:"Ban nghi thach thuc lon nhat the he ban dang phai doi mat la gi?",
     type:"describe",
-    hints:["Neu ro van de","Ly do tai sao no la van de lon","Giai phap ban nghi ra","Ai phai hanh dong"],
+    hints:["Nêu rõ vấn đề","Lý do tại sao nó là vấn đề lớn","Giải pháp bạn nghĩ ra","Ai phải hành động"],
     sample:"I think the biggest challenge for my generation is mental health — particularly anxiety and burnout related to work pressure and social media comparison. We have more information and opportunity than any previous generation but also more uncertainty and social pressure. I think the solution requires action at multiple levels: employers offering better work-life balance, schools teaching emotional intelligence, and reducing the stigma around seeking help. Personally I have started setting phone-free hours which has helped enormously."
   },
   {
@@ -1357,14 +1357,14 @@ EXTRAS.push(
     vi:"Ban da hen gap ban nhung dot ngot khong the den. Goi dien giai thich va doi lich.",
     type:"roleplay",
     rp:"You and a friend planned to meet for lunch today but a work emergency has come up. Call your friend to apologize and suggest a new time.",
-    hints:["Xin loi truoc","Giai thich ngan gon","De xuat thoi gian moi","Giu cuoc hen"],
+    hints:["Xin lỗi trước","Giải thích ngắn gọn","Đề xuất thời gian mới","Giữ cuộc hẹn"],
     sample:"Hey, I am so sorry to do this at the last minute. Something urgent just came up at work — my manager called an emergency meeting that I really cannot skip. I feel terrible because I know you have been looking forward to this. Can we reschedule? I am completely free this Saturday and Sunday. Or if you prefer, we could meet for coffee on Thursday evening. Again I really apologize and I promise this will not happen again."
   },
   {
     en:"Do you think people today are more or less environmentally aware than in the past? Give examples.",
     vi:"Ban nghi nguoi hien nay co y thuc moi truong hon hay kem hon qua khu?",
     type:"compare",
-    hints:["Y thuc hien nay (recycling, EV)","So voi truoc (it biet hon)","Nguyen nhan thay doi","Van de con ton tai"],
+    hints:["Ý thức hiện nay (recycling, EV)","So với trước (ít biết hơn)","Nguyên nhân thay đổi","Vấn đề còn tồn tại"],
     sample:"I think people today are significantly more environmentally aware than in the past, largely driven by education, media coverage, and visible climate events. Terms like carbon footprint and sustainability are part of everyday conversation now. I see more recycling bins, electric vehicles, and eco-friendly products than ever before. However awareness does not always translate into action. Many people still choose convenience over sustainability. The gap between knowing and doing remains the core challenge."
   }
 );
@@ -1397,7 +1397,8 @@ var ST = {
   recognition: null,
   recRetries: 0,
   recBlocked: false,
-  lastRecError: ""
+  lastRecError: "",
+  _l2poll: null
 };
 
 // load history safely
@@ -1654,7 +1655,7 @@ function bindButtons() {
       status.style.color = "var(--grn)";
       runClaudeScoring(key);
     } else {
-      status.textContent = "Da xoa API key";
+      status.textContent = "Đã xóa API key";
       status.style.color = "var(--muted)";
     }
   });
@@ -1854,7 +1855,7 @@ function startExam() {
       vi:"Chuyen bay cua ban bi hoan 4 tieng. Den quay hang hang khong va yeu cau ho tro.",
       type:"unexpected",
       rp:"Your flight has been delayed significantly. Ask the airline staff about the reason, meal vouchers, and rebooking options.",
-      hints:["Hoi ly do bi hoan","Yeu cau voucher an/uong","Hoi co the doi chuyen khong"],
+      hints:["Hỏi lý do bị hoãn","Yêu cầu voucher ăn/uống","Hỏi có thể đổi chuyến không"],
       sample:"Excuse me, I just found out my flight has been delayed by 4 hours. Could you tell me the reason? Also, is the airline providing any meal vouchers or accommodation for the wait? I have an important meeting at my destination tomorrow morning — is there any earlier flight I could be transferred to? I would really appreciate any help you can offer."
     });
   }
@@ -2083,12 +2084,12 @@ function startListen1() {
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
     ST.phase = "wait-relisten";
-    document.getElementById("listen-badge-txt").textContent = "Da nghe xong — chon hanh dong";
+    document.getElementById("listen-badge-txt").textContent = "Đã nghe xong — chọn hành động";
     document.getElementById("btn-relisten").style.display = "inline-flex";
     document.getElementById("btn-skip-listen").innerHTML = "&#127897; Trả lời ngay";
     document.getElementById("btn-skip-listen").style.display = "inline-flex";
     var ph = document.getElementById("tm-phase");
-    ph.innerHTML = "&#128266; NGHE XONG LAN 1";
+    ph.innerHTML = "&#128266; NGHE XONG LẦN 1";
     ph.className = "tm-phase listen";
     document.getElementById("tm-hint").textContent = "Trả lời ngay hoặc nghe thêm lần 2";
   });
@@ -2476,9 +2477,9 @@ function renderHistory() {
   for (var i = 0; i < ST.hist.length; i++) {
     var r = ST.hist[i];
     html += '<div class="hs-item">' +
-      '<div style="flex:1"><div style="font-weight:700;margin-bottom:3px">Buoi luyen #' + (ST.hist.length - i) + '</div>' +
+      '<div style="flex:1"><div style="font-weight:700;margin-bottom:3px">Buổi luyện #' + (ST.hist.length - i) + '</div>' +
       '<div style="font-size:.73rem;color:var(--muted)">' + r.date + ' · ' + r.time + '</div>' +
-      '<div style="font-size:.73rem;color:var(--muted);margin-top:3px">&#9989; ' + r.comp + ' cau · &#9201; ' + r.full + ' du gio · &#9193; ' + r.skip + ' bo qua</div></div>' +
+      '<div style="font-size:.73rem;color:var(--muted);margin-top:3px">&#9989; ' + r.comp + ' câu · &#9201; ' + r.full + ' đủ giờ · &#9193; ' + r.skip + ' bỏ qua</div></div>' +
       '<div class="hs-lv">' + r.level + '</div>' +
       '</div>';
   }
@@ -2490,10 +2491,10 @@ function renderHistory() {
 // ══════════════════════════════════════════
 function confirmQuit() {
   document.getElementById("mtl").textContent = "Thoát bài thi?";
-  document.getElementById("mmg").textContent = "Tien trinh hien tai se bi mat. Ban co chac khong?";
+  document.getElementById("mmg").textContent = "Tiến trình hiện tại sẽ bị mất. Bạn có chắc không?";
   document.getElementById("mbt").innerHTML =
     '<button class="btn btn-out" onclick="closeModal()">Tiếp tục thi</button>' +
-    '<button class="btn btn-red" onclick="doQuit()">Thoat</button>';
+    '<button class="btn btn-red" onclick="doQuit()">Thoát</button>';
   document.getElementById("modal").classList.add("open");
 }
 function closeModal() { document.getElementById("modal").classList.remove("open"); }
