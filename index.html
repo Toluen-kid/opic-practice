@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-018";
+var APP_VERSION = "20260514-019";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2317,7 +2317,7 @@ function nextQ() {
   var q = ST.questions[ST.qi];
   if (q) {
     q.done = true;
-    q.transcript = (ST.finalTranscript + " " + ST.currentTranscript).trim();
+    q.transcript = ST.currentTranscript.trim();
     q.recError = ST.lastRecError || "";
     ST.res.comp++;
     if (q.full) ST.res.full++;
