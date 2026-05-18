@@ -729,7 +729,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260514-019";
+var APP_VERSION = "20260518-020";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1398,7 +1398,8 @@ var ST = {
   recRetries: 0,
   recBlocked: false,
   lastRecError: "",
-  _l2poll: null
+  _l2poll: null,
+  _l1countdown: null
 };
 
 // load history safely
@@ -1821,61 +1822,53 @@ function startExam() {
   }
   if (!lv) lv = LEVELS[4]; // default IM
 
-  // ── collect ALL topic questions ──────────────────
-  var pool = [];
+  // ── build survey and non-survey pools ───────────
+  var ALL_TOPICS = ["home","work","hobby","music","movie","sports","travel","read","food","tech","shop","health"];
+  var surveySet = {};
+  for (var t = 0; t < ST.topics.length; t++) surveySet[ST.topics[t]] = true;
+
+  // 65% pool: survey topics + EXTRAS (roleplay)
+  var surveyPool = [];
   for (var t = 0; t < ST.topics.length; t++) {
-    var tid = ST.topics[t];
-    var topicPool = QDB[tid];
-    if (!topicPool || topicPool.length === 0) continue;
-    for (var p = 0; p < topicPool.length; p++) pool.push(clone(topicPool[p]));
+    var topicPool = QDB[ST.topics[t]];
+    if (!topicPool) continue;
+    for (var p = 0; p < topicPool.length; p++) surveyPool.push(clone(topicPool[p]));
   }
-  // also add EXTRAS as fallback
-  var extraPool = [];
-  for (var e2 = 0; e2 < EXTRAS.length; e2++) extraPool.push(clone(EXTRAS[e2]));
+  for (var e2 = 0; e2 < EXTRAS.length; e2++) surveyPool.push(clone(EXTRAS[e2]));
 
-  pool = shuffle(pool);
-  extraPool = shuffle(extraPool);
-
-  // ── separate roleplay vs regular ─────────────────
-  var rpQuestions   = [];
-  var regQuestions  = [];
-  for (var j = 0; j < pool.length; j++) {
-    if (isRoleplay(pool[j])) rpQuestions.push(pool[j]);
-    else regQuestions.push(pool[j]);
-  }
-  // extras fill if needed
-  for (var k = 0; k < extraPool.length; k++) {
-    if (isRoleplay(extraPool[k])) rpQuestions.push(extraPool[k]);
-    else regQuestions.push(extraPool[k]);
+  // 35% pool: topics NOT selected in survey
+  var nonSurveyPool = [];
+  for (var a = 0; a < ALL_TOPICS.length; a++) {
+    var tid = ALL_TOPICS[a];
+    if (surveySet[tid]) continue;
+    var topicPool2 = QDB[tid];
+    if (!topicPool2) continue;
+    for (var p2 = 0; p2 < topicPool2.length; p2++) nonSurveyPool.push(clone(topicPool2[p2]));
   }
 
-  // ── pick exactly 3 roleplay questions ────────────
-  rpQuestions = shuffle(rpQuestions).slice(0, 3);
-  // pad with unexpected/extra if < 3
-  while (rpQuestions.length < 3) {
-    rpQuestions.push({
-      en:"Your flight is delayed by 4 hours. Go to the airline counter and ask for assistance.",
-      vi:"Chuyen bay cua ban bi hoan 4 tieng. Den quay hang hang khong va yeu cau ho tro.",
-      type:"unexpected",
-      rp:"Your flight has been delayed significantly. Ask the airline staff about the reason, meal vouchers, and rebooking options.",
-      hints:["Hỏi lý do bị hoãn","Yêu cầu voucher ăn/uống","Hỏi có thể đổi chuyến không"],
-      sample:"Excuse me, I just found out my flight has been delayed by 4 hours. Could you tell me the reason? Also, is the airline providing any meal vouchers or accommodation for the wait? I have an important meeting at my destination tomorrow morning — is there any earlier flight I could be transferred to? I would really appreciate any help you can offer."
-    });
-  }
+  surveyPool    = shuffle(surveyPool);
+  nonSurveyPool = shuffle(nonSurveyPool);
 
-  // ── pick 14 regular (non-roleplay) + 1 warmup ────
+  // 15 total = 1 warmup + 9 survey (65%) + 5 non-survey (35%)
+  var SURVEY_PICK = 9;
+  var NONSUR_PICK = 5;
+  var surveyPick    = surveyPool.slice(0, SURVEY_PICK);
+  var nonSurveyPick = nonSurveyPool.slice(0, NONSUR_PICK);
+
+  // Backfill if either pool is too small
+  var fallback = shuffle(surveyPool.slice(SURVEY_PICK).concat(nonSurveyPool.slice(NONSUR_PICK)));
+  var fi = 0;
+  while (surveyPick.length    < SURVEY_PICK && fi < fallback.length) surveyPick.push(fallback[fi++]);
+  while (nonSurveyPick.length < NONSUR_PICK && fi < fallback.length) nonSurveyPick.push(fallback[fi++]);
+
+  // ── warmup ────
   var wu = shuffle(QDB.warmup);
   var warmup = clone(wu[0]);
 
-  regQuestions = shuffle(regQuestions).slice(0, 14);
-  while (regQuestions.length < 14) {
-    regQuestions.push(clone(EXTRAS[regQuestions.length % EXTRAS.length]));
-  }
-
-  // ── assemble: warmup first, then shuffle rest ────
-  var middle = shuffle(rpQuestions.concat(regQuestions));
+  // ── assemble: warmup first, then shuffled mix ────
+  var middle = shuffle(surveyPick.concat(nonSurveyPick));
   var qs = [warmup].concat(middle);
-  qs = qs.slice(0, 18);
+  qs = qs.slice(0, 15);
 
   // ── attach timing ─────────────────────────────────
   for (var n = 0; n < qs.length; n++) {
@@ -2029,9 +2022,9 @@ function speakTTS(text, onEnd) {
 
 function skipListen() {
   cancelTTS();
-  document.getElementById("q-en").style.visibility = "";
-  document.getElementById("q-vi").style.visibility = "";
-  document.getElementById("rp-box").style.visibility = "";
+  if (ST._l1countdown) { clearInterval(ST._l1countdown); ST._l1countdown = null; }
+  // Question stays hidden; btn-toggle-q lets user reveal it
+  document.getElementById("btn-toggle-q").style.display = "inline-flex";
   document.getElementById("listen-badge").className = "listen-badge";
   document.getElementById("btn-skip-listen").style.display = "none";
   document.getElementById("btn-answer-hide").style.display = "none";
@@ -2087,19 +2080,35 @@ function startListen1() {
   var text = q.en + (q.rp ? ". " + q.rp : "");
   speakTTS(text, function() {
     ST.phase = "wait-relisten";
-    document.getElementById("listen-badge-txt").textContent = "Đã nghe xong — chọn hành động";
     document.getElementById("btn-relisten").style.display = "inline-flex";
     document.getElementById("btn-skip-listen").innerHTML = "&#127897; Trả lời ngay";
     document.getElementById("btn-skip-listen").style.display = "inline-flex";
     var ph = document.getElementById("tm-phase");
     ph.innerHTML = "&#128266; NGHE XONG LẦN 1";
     ph.className = "tm-phase listen";
-    document.getElementById("tm-hint").textContent = "Trả lời ngay hoặc nghe thêm lần 2";
+
+    // 5-second countdown → auto-proceed to speak if no button pressed
+    var secs = 5;
+    function updateCd() {
+      document.getElementById("listen-badge-txt").textContent = "Tự động trả lời sau " + secs + "s...";
+      document.getElementById("tm-hint").textContent = "Trả lời ngay, nghe lần 2, hoặc chờ " + secs + "s";
+    }
+    updateCd();
+    ST._l1countdown = setInterval(function() {
+      secs--;
+      if (secs <= 0) {
+        clearInterval(ST._l1countdown); ST._l1countdown = null;
+        if (ST.phase === "wait-relisten") skipListen();
+      } else {
+        updateCd();
+      }
+    }, 1000);
   });
 }
 
 function startListen2() {
   cancelTTS();
+  if (ST._l1countdown) { clearInterval(ST._l1countdown); ST._l1countdown = null; }
   clearTick();
   ST.phase = "listen2";
   var q = ST.questions[ST.qi];
