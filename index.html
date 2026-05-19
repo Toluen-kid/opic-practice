@@ -84,6 +84,22 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 .feat-i{font-size:1.35rem;margin-bottom:6px}
 .feat-t{font-size:.8rem;font-weight:700;margin-bottom:2px}
 .feat-d{font-size:.7rem;color:var(--muted)}
+/* ─── CHANGELOG ─── */
+.changelog-wrap{margin-top:18px;border:1px solid var(--bdr);border-radius:13px;overflow:hidden}
+.changelog-toggle{width:100%;background:var(--sur);border:none;color:var(--txt);padding:11px 15px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;font-weight:600;text-align:left}
+.changelog-toggle:hover{background:var(--card)}
+.chg-arrow{margin-left:auto;font-size:1rem;transition:transform .25s;display:inline-block}
+.changelog-toggle.open .chg-arrow{transform:rotate(180deg)}
+.ver-badge{background:var(--glow);border:1px solid var(--pri);color:var(--pri);border-radius:10px;padding:2px 8px;font-size:.7rem;font-weight:700;margin-left:auto}
+.changelog-toggle.open .ver-badge{margin-left:0}
+.changelog-body{display:none;padding:10px 14px;background:var(--bg);border-top:1px solid var(--bdr)}
+.changelog-body.open{display:block}
+.chg-item{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--bdr);font-size:.78rem;line-height:1.5}
+.chg-item:last-child{border-bottom:none}
+.chg-ver{font-weight:700;color:var(--pri);min-width:44px;white-space:nowrap}
+.chg-cur .chg-ver{color:var(--sec,#00d4aa)}
+.chg-dot{color:var(--muted)}
+.chg-desc{color:var(--muted)}
 
 /* ─── SURVEY ─── */
 .sv-wrap{max-width:700px;margin:0 auto}
@@ -367,12 +383,22 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       <p class="sub">Mô phỏng đúng format kỳ thi — Background Survey, câu hỏi có tính giờ, roleplay và tình huống bất ngờ.</p>
       <div class="feats">
         <div class="feat"><div class="feat-i">&#9201;</div><div class="feat-t">Tính giờ thực tế</div><div class="feat-d">30s chuẩn bị · 60s nói (RP: 90s)</div></div>
-        <div class="feat"><div class="feat-i">&#127917;</div><div class="feat-t">18 câu hỏi / buổi</div><div class="feat-d">3 câu roleplay · nghe 2 lần</div></div>
+        <div class="feat"><div class="feat-i">&#127917;</div><div class="feat-t">15 câu hỏi / buổi</div><div class="feat-d">65% survey · 35% ngẫu nhiên</div></div>
         <div class="feat"><div class="feat-i">&#127897;</div><div class="feat-t">Ghi âm thực tế</div><div class="feat-d">Mic + visualizer sóng âm</div></div>
       </div>
       <div class="row" style="justify-content:center">
         <button class="btn btn-pri btn-lg" id="btn-start-home">&#128640; Bắt đầu luyện tập</button>
         <button class="btn btn-out btn-lg" id="btn-quick">&#9889; Nhanh (IM)</button>
+      </div>
+      <div class="changelog-wrap">
+        <button class="changelog-toggle" id="btn-changelog" onclick="document.getElementById('changelog-body').classList.toggle('open');this.classList.toggle('open')">
+          <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.01</span></span><span class="chg-arrow">&#8964;</span>
+        </button>
+        <div class="changelog-body" id="changelog-body">
+          <div class="chg-item chg-cur"><span class="chg-ver">v26.01</span><span class="chg-dot">·</span><span class="chg-desc">Giảm xuống 15 câu (65% survey + 35% ngẫu nhiên), ẩn câu hỏi khi skip, đếm ngược 8s sau khi nghe, fix lỗi auto-skip sớm trên một số thiết bị</span></div>
+          <div class="chg-item"><span class="chg-ver">v20.19</span><span class="chg-dot">·</span><span class="chg-desc">Viết lại bộ chấm điểm ACTFL FACT, sửa lỗi transcript bị lặp, thêm penalty hoàn thành</span></div>
+          <div class="chg-item"><span class="chg-ver">v20.18</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi mic trên Android (SpeechRecognition xung đột AudioContext), sửa toàn bộ dấu tiếng Việt</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -729,7 +755,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "20260518-020";
+var APP_VERSION = "26.01";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -737,17 +763,17 @@ function checkForUpdate() {
     .then(function(r) { return r.text(); })
     .then(function(html) {
       var m = html.match(/APP_VERSION\s*=\s*"([^"]+)"/);
-      if (m && m[1] && m[1] !== APP_VERSION) showUpdateBanner();
+      if (m && m[1] && m[1] !== APP_VERSION) showUpdateBanner(m[1]);
     })
     .catch(function() {});
 }
 
-function showUpdateBanner() {
+function showUpdateBanner(newVer) {
   if (document.getElementById("update-banner")) return;
   var b = document.createElement("div");
   b.id = "update-banner";
   b.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(135deg,#6c63ff,#00d4aa);color:#fff;text-align:center;padding:10px 16px;font-size:.84rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,.35)";
-  b.innerHTML = '&#127381; Có phiên bản mới! <button style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:5px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.82rem">Cập nhật ngay</button>';
+  b.innerHTML = '&#127381; Có phiên bản mới <strong>v' + (newVer||'?') + '</strong>! <button style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:5px 14px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.82rem">Cập nhật ngay &#8635;</button>';
   b.onclick = function() { location.reload(true); };
   document.body.prepend(b);
 }
@@ -1399,6 +1425,7 @@ var ST = {
   recBlocked: false,
   lastRecError: "",
   _l2poll: null,
+  _l1poll: null,
   _l1countdown: null
 };
 
@@ -2078,7 +2105,10 @@ function startListen1() {
   setTimerUI("listen1", 0, 1);
 
   var text = q.en + (q.rp ? ". " + q.rp : "");
-  speakTTS(text, function() {
+
+  // Called only after TTS is truly done (polling-based, same as startListen2)
+  function afterL1TTS() {
+    if (ST.phase !== "listen1") return;
     ST.phase = "wait-relisten";
     document.getElementById("btn-relisten").style.display = "inline-flex";
     document.getElementById("btn-skip-listen").innerHTML = "&#127897; Trả lời ngay";
@@ -2087,11 +2117,11 @@ function startListen1() {
     ph.innerHTML = "&#128266; NGHE XONG LẦN 1";
     ph.className = "tm-phase listen";
 
-    // 5-second countdown → auto-proceed to speak if no button pressed
-    var secs = 5;
+    // 8-second countdown → auto-proceed to speak if no button pressed
+    var secs = 8;
     function updateCd() {
       document.getElementById("listen-badge-txt").textContent = "Tự động trả lời sau " + secs + "s...";
-      document.getElementById("tm-hint").textContent = "Trả lời ngay, nghe lần 2, hoặc chờ " + secs + "s";
+      document.getElementById("tm-hint").textContent = "Bấm Nghe lần 2 hoặc chờ " + secs + "s";
     }
     updateCd();
     ST._l1countdown = setInterval(function() {
@@ -2103,7 +2133,35 @@ function startListen1() {
         updateCd();
       }
     }, 1000);
-  });
+  }
+
+  if (!window.speechSynthesis) { setTimeout(afterL1TTS, 0); return; }
+  window.speechSynthesis.cancel();
+  var utt1 = new SpeechSynthesisUtterance(text);
+  utt1.lang = "en-US"; utt1.rate = 0.85; utt1.pitch = 1;
+
+  var l1done = false;
+  function l1Finish() {
+    if (l1done) return; l1done = true;
+    if (ST._l1poll) { clearInterval(ST._l1poll); ST._l1poll = null; }
+    afterL1TTS();
+  }
+  utt1.onend = l1Finish;
+  // On TTS error: wait 800ms so user sees badge before countdown starts
+  utt1.onerror = function() {
+    if (l1done) return; l1done = true;
+    if (ST._l1poll) { clearInterval(ST._l1poll); ST._l1poll = null; }
+    setTimeout(afterL1TTS, 800);
+  };
+
+  setTimeout(function() {
+    window.speechSynthesis.speak(utt1);
+    var poll = setInterval(function() {
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+      if (!window.speechSynthesis.speaking) { clearInterval(poll); ST._l1poll = null; l1Finish(); }
+    }, 150);
+    ST._l1poll = poll;
+  }, 50);
 }
 
 function startListen2() {
@@ -2307,6 +2365,7 @@ function stopViz() {
 // ══════════════════════════════════════════
 function cancelTTS() {
   if (window.speechSynthesis) { try { window.speechSynthesis.cancel(); } catch(e) {} }
+  if (ST._l1poll) { clearInterval(ST._l1poll); ST._l1poll = null; }
   if (ST._l2poll) { clearInterval(ST._l2poll); ST._l2poll = null; }
 }
 
