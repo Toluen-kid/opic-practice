@@ -392,10 +392,11 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
       </div>
       <div class="changelog-wrap">
         <button class="changelog-toggle" id="btn-changelog" onclick="document.getElementById('changelog-body').classList.toggle('open');this.classList.toggle('open')">
-          <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.01</span></span><span class="chg-arrow">&#8964;</span>
+          <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.02</span></span><span class="chg-arrow">&#8964;</span>
         </button>
         <div class="changelog-body" id="changelog-body">
-          <div class="chg-item chg-cur"><span class="chg-ver">v26.01</span><span class="chg-dot">·</span><span class="chg-desc">Giảm xuống 15 câu (65% survey + 35% ngẫu nhiên), ẩn câu hỏi khi skip, đếm ngược 8s sau khi nghe, fix lỗi auto-skip sớm trên một số thiết bị</span></div>
+          <div class="chg-item chg-cur"><span class="chg-ver">v26.02</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi nhảy thẳng sang ghi âm sau nghe lần 1/2: thêm 500ms grace trước khi bắt đầu poll, đổi đếm ngược về 5s</span></div>
+          <div class="chg-item"><span class="chg-ver">v26.01</span><span class="chg-dot">·</span><span class="chg-desc">Giảm xuống 15 câu (65% survey + 35% ngẫu nhiên), ẩn câu hỏi khi skip, đếm ngược sau khi nghe</span></div>
           <div class="chg-item"><span class="chg-ver">v20.19</span><span class="chg-dot">·</span><span class="chg-desc">Viết lại bộ chấm điểm ACTFL FACT, sửa lỗi transcript bị lặp, thêm penalty hoàn thành</span></div>
           <div class="chg-item"><span class="chg-ver">v20.18</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi mic trên Android (SpeechRecognition xung đột AudioContext), sửa toàn bộ dấu tiếng Việt</span></div>
         </div>
@@ -755,7 +756,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "26.01";
+var APP_VERSION = "26.02";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2117,8 +2118,8 @@ function startListen1() {
     ph.innerHTML = "&#128266; NGHE XONG LẦN 1";
     ph.className = "tm-phase listen";
 
-    // 8-second countdown → auto-proceed to speak if no button pressed
-    var secs = 8;
+    // 5-second countdown → auto-proceed to speak if no button pressed
+    var secs = 5;
     function updateCd() {
       document.getElementById("listen-badge-txt").textContent = "Tự động trả lời sau " + secs + "s...";
       document.getElementById("tm-hint").textContent = "Bấm Nghe lần 2 hoặc chờ " + secs + "s";
@@ -2156,11 +2157,15 @@ function startListen1() {
 
   setTimeout(function() {
     window.speechSynthesis.speak(utt1);
-    var poll = setInterval(function() {
-      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-      if (!window.speechSynthesis.speaking) { clearInterval(poll); ST._l1poll = null; l1Finish(); }
-    }, 150);
-    ST._l1poll = poll;
+    // Delay polling by 500ms so speaking becomes true before first check
+    // (avoids false-negative on devices where speaking is briefly false after speak())
+    setTimeout(function() {
+      var poll = setInterval(function() {
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        if (!window.speechSynthesis.speaking) { clearInterval(poll); ST._l1poll = null; l1Finish(); }
+      }, 150);
+      ST._l1poll = poll;
+    }, 500);
   }, 50);
 }
 
@@ -2197,16 +2202,15 @@ function startListen2() {
   utt.onend = beginSpeak;
   utt.onerror = beginSpeak;
 
-  // Start TTS after brief pause (avoids Chrome cancel-then-speak race)
   setTimeout(function() {
     window.speechSynthesis.speak(utt);
-    // After 800ms (TTS has started), poll every 150ms for completion
-    // This is more reliable than onend which Chrome sometimes drops
-    var poll = setInterval(function() {
-      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-      if (!window.speechSynthesis.speaking) { clearInterval(poll); beginSpeak(); }
-    }, 150);
-    ST._l2poll = poll;
+    setTimeout(function() {
+      var poll = setInterval(function() {
+        if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        if (!window.speechSynthesis.speaking) { clearInterval(poll); ST._l2poll = null; beginSpeak(); }
+      }, 150);
+      ST._l2poll = poll;
+    }, 500);
   }, 50);
 }
 
