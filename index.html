@@ -395,7 +395,8 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.02</span></span><span class="chg-arrow">&#8964;</span>
         </button>
         <div class="changelog-body" id="changelog-body">
-          <div class="chg-item chg-cur"><span class="chg-ver">v26.02</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi nhảy thẳng sang ghi âm sau nghe lần 1/2: thêm 500ms grace trước khi bắt đầu poll, đổi đếm ngược về 5s</span></div>
+          <div class="chg-item chg-cur"><span class="chg-ver">v26.03</span><span class="chg-dot">·</span><span class="chg-desc">Số phiên bản trên trang chủ tự đồng bộ từ APP_VERSION, không cần cập nhật thủ công; thêm CLAUDE.md quy tắc tự động bump version + changelog</span></div>
+          <div class="chg-item"><span class="chg-ver">v26.02</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi nhảy thẳng sang ghi âm sau nghe lần 1/2: thêm 500ms grace trước khi bắt đầu poll, đổi đếm ngược về 5s</span></div>
           <div class="chg-item"><span class="chg-ver">v26.01</span><span class="chg-dot">·</span><span class="chg-desc">Giảm xuống 15 câu (65% survey + 35% ngẫu nhiên), ẩn câu hỏi khi skip, đếm ngược sau khi nghe</span></div>
           <div class="chg-item"><span class="chg-ver">v20.19</span><span class="chg-dot">·</span><span class="chg-desc">Viết lại bộ chấm điểm ACTFL FACT, sửa lỗi transcript bị lặp, thêm penalty hoàn thành</span></div>
           <div class="chg-item"><span class="chg-ver">v20.18</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi mic trên Android (SpeechRecognition xung đột AudioContext), sửa toàn bộ dấu tiếng Việt</span></div>
@@ -756,7 +757,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "26.02";
+var APP_VERSION = "26.03";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -1439,6 +1440,9 @@ try { ST.hist = JSON.parse(localStorage.getItem("opic_hist") || "[]"); } catch(e
 document.addEventListener("DOMContentLoaded", function() {
   buildSurveyLists();
   bindButtons();
+  // Sync version badge from JS constant so HTML doesn't need manual update
+  var vn = document.getElementById("ver-num");
+  if (vn) vn.textContent = APP_VERSION;
   setTimeout(checkForUpdate, 2000);
 });
 
