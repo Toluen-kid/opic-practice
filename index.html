@@ -395,7 +395,8 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.02</span></span><span class="chg-arrow">&#8964;</span>
         </button>
         <div class="changelog-body" id="changelog-body">
-          <div class="chg-item chg-cur"><span class="chg-ver">v26.03</span><span class="chg-dot">·</span><span class="chg-desc">Số phiên bản trên trang chủ tự đồng bộ từ APP_VERSION, không cần cập nhật thủ công; thêm CLAUDE.md quy tắc tự động bump version + changelog</span></div>
+          <div class="chg-item chg-cur"><span class="chg-ver">v26.04</span><span class="chg-dot">·</span><span class="chg-desc">Tăng tốc độ đọc câu hỏi từ 0.85 lên 1.0 (tự nhiên) cho khớp với bài thi OPIc thực tế (~150 WPM)</span></div>
+          <div class="chg-item"><span class="chg-ver">v26.03</span><span class="chg-dot">·</span><span class="chg-desc">Số phiên bản trên trang chủ tự đồng bộ từ APP_VERSION, không cần cập nhật thủ công; thêm CLAUDE.md quy tắc tự động bump version + changelog</span></div>
           <div class="chg-item"><span class="chg-ver">v26.02</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi nhảy thẳng sang ghi âm sau nghe lần 1/2: thêm 500ms grace trước khi bắt đầu poll, đổi đếm ngược về 5s</span></div>
           <div class="chg-item"><span class="chg-ver">v26.01</span><span class="chg-dot">·</span><span class="chg-desc">Giảm xuống 15 câu (65% survey + 35% ngẫu nhiên), ẩn câu hỏi khi skip, đếm ngược sau khi nghe</span></div>
           <div class="chg-item"><span class="chg-ver">v20.19</span><span class="chg-dot">·</span><span class="chg-desc">Viết lại bộ chấm điểm ACTFL FACT, sửa lỗi transcript bị lặp, thêm penalty hoàn thành</span></div>
@@ -757,7 +758,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "26.03";
+var APP_VERSION = "26.04";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2039,7 +2040,7 @@ function speakTTS(text, onEnd) {
   window.speechSynthesis.cancel();
   var utt = new SpeechSynthesisUtterance(text);
   utt.lang = "en-US";
-  utt.rate = 0.85;
+  utt.rate = 1.0;
   utt.pitch = 1;
   var fired = false;
   function done() { if (!fired) { fired = true; if (onEnd) onEnd(); } }
@@ -2047,7 +2048,7 @@ function speakTTS(text, onEnd) {
   utt.onerror = done;
   // Fallback timeout: estimate ~60ms per word + 2s buffer
   var words = text.split(" ").length;
-  var ms = Math.max(4000, words * 400 + 2000);
+  var ms = Math.max(3000, words * 340 + 1500); // ~340ms/word at rate 1.0
   setTimeout(done, ms);
   window.speechSynthesis.speak(utt);
 }
@@ -2143,7 +2144,7 @@ function startListen1() {
   if (!window.speechSynthesis) { setTimeout(afterL1TTS, 0); return; }
   window.speechSynthesis.cancel();
   var utt1 = new SpeechSynthesisUtterance(text);
-  utt1.lang = "en-US"; utt1.rate = 0.85; utt1.pitch = 1;
+  utt1.lang = "en-US"; utt1.rate = 1.0; utt1.pitch = 1;
 
   var l1done = false;
   function l1Finish() {
@@ -2202,7 +2203,7 @@ function startListen2() {
   if (!window.speechSynthesis) { setTimeout(beginSpeak, 0); return; }
   window.speechSynthesis.cancel();
   var utt = new SpeechSynthesisUtterance(text);
-  utt.lang = "en-US"; utt.rate = 0.85; utt.pitch = 1;
+  utt.lang = "en-US"; utt.rate = 1.0; utt.pitch = 1;
   utt.onend = beginSpeak;
   utt.onerror = beginSpeak;
 
