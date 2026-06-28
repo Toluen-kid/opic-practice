@@ -395,7 +395,8 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
           <span>&#128221; Lịch sử cập nhật</span><span class="ver-badge" id="ver-display">v<span id="ver-num">26.02</span></span><span class="chg-arrow">&#8964;</span>
         </button>
         <div class="changelog-body" id="changelog-body">
-          <div class="chg-item chg-cur"><span class="chg-ver">v26.05</span><span class="chg-dot">·</span><span class="chg-desc">Giảm tốc độ đọc từ 1.0 xuống 0.80 (~120 WPM) dựa trên phân tích chi tiết audio video OPIc thực tế</span></div>
+          <div class="chg-item chg-cur"><span class="chg-ver">v26.06</span><span class="chg-dot">·</span><span class="chg-desc">Điều chỉnh giọng đọc theo video OPIc Demo Test Furniture: rate 0.85 (~145 WPM), pitch 0.9, tự động chọn giọng Google US English / Samantha nếu có</span></div>
+          <div class="chg-item"><span class="chg-ver">v26.05</span><span class="chg-dot">·</span><span class="chg-desc">Giảm tốc độ đọc từ 1.0 xuống 0.80 (~120 WPM) dựa trên phân tích chi tiết audio video OPIc thực tế</span></div>
           <div class="chg-item"><span class="chg-ver">v26.04</span><span class="chg-dot">·</span><span class="chg-desc">Tăng tốc độ đọc câu hỏi từ 0.85 lên 1.0 (tự nhiên) cho khớp với bài thi OPIc thực tế (~150 WPM)</span></div>
           <div class="chg-item"><span class="chg-ver">v26.03</span><span class="chg-dot">·</span><span class="chg-desc">Số phiên bản trên trang chủ tự đồng bộ từ APP_VERSION, không cần cập nhật thủ công; thêm CLAUDE.md quy tắc tự động bump version + changelog</span></div>
           <div class="chg-item"><span class="chg-ver">v26.02</span><span class="chg-dot">·</span><span class="chg-desc">Fix lỗi nhảy thẳng sang ghi âm sau nghe lần 1/2: thêm 500ms grace trước khi bắt đầu poll, đổi đếm ngược về 5s</span></div>
@@ -759,7 +760,7 @@ h1.title{font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;line-height:1.15;mar
 // ══════════════════════════════════════════
 //  VERSION CHECK — auto-update banner
 // ══════════════════════════════════════════
-var APP_VERSION = "26.05";
+var APP_VERSION = "26.06";
 
 function checkForUpdate() {
   if (typeof fetch === "undefined" || location.protocol === "file:") return;
@@ -2036,20 +2037,43 @@ function setRing(ratio, color) {
 // ══════════════════════════════════════════
 //  TTS — Text-To-Speech helpers
 // ══════════════════════════════════════════
+
+// Pick the closest-to-OPIc voice: prefer Google US English (Chrome),
+// then any en-US voice, then any en voice.
+function getOPIcVoice() {
+  if (!window.speechSynthesis) return null;
+  var voices = window.speechSynthesis.getVoices();
+  if (!voices || !voices.length) return null;
+  var PREF = ["Google US English", "Samantha", "Microsoft Zira Desktop", "Microsoft Zira"];
+  for (var i = 0; i < PREF.length; i++) {
+    var v = voices.find(function(v){ return v.name === PREF[i]; });
+    if (v) return v;
+  }
+  return voices.find(function(v){ return v.lang === 'en-US'; }) ||
+         voices.find(function(v){ return v.lang && v.lang.startsWith('en'); }) ||
+         null;
+}
+
+function applyOPIcVoice(utt) {
+  var v = getOPIcVoice();
+  if (v) utt.voice = v;
+}
+
 function speakTTS(text, onEnd) {
   if (!window.speechSynthesis) { if (onEnd) setTimeout(onEnd, 0); return; }
   window.speechSynthesis.cancel();
   var utt = new SpeechSynthesisUtterance(text);
   utt.lang = "en-US";
-  utt.rate = 0.80;
-  utt.pitch = 1;
+  utt.rate = 0.85;
+  utt.pitch = 0.9;
+  applyOPIcVoice(utt);
   var fired = false;
   function done() { if (!fired) { fired = true; if (onEnd) onEnd(); } }
   utt.onend = done;
   utt.onerror = done;
-  // Fallback timeout: estimate ~60ms per word + 2s buffer
+  // Fallback timeout: ~375ms/word at rate 0.85
   var words = text.split(" ").length;
-  var ms = Math.max(3000, words * 425 + 1500); // ~425ms/word at rate 0.80
+  var ms = Math.max(3000, words * 375 + 1500);
   setTimeout(done, ms);
   window.speechSynthesis.speak(utt);
 }
@@ -2145,7 +2169,7 @@ function startListen1() {
   if (!window.speechSynthesis) { setTimeout(afterL1TTS, 0); return; }
   window.speechSynthesis.cancel();
   var utt1 = new SpeechSynthesisUtterance(text);
-  utt1.lang = "en-US"; utt1.rate = 0.80; utt1.pitch = 1;
+  utt1.lang = "en-US"; utt1.rate = 0.85; utt1.pitch = 0.9; applyOPIcVoice(utt1);
 
   var l1done = false;
   function l1Finish() {
@@ -2204,7 +2228,7 @@ function startListen2() {
   if (!window.speechSynthesis) { setTimeout(beginSpeak, 0); return; }
   window.speechSynthesis.cancel();
   var utt = new SpeechSynthesisUtterance(text);
-  utt.lang = "en-US"; utt.rate = 0.80; utt.pitch = 1;
+  utt.lang = "en-US"; utt.rate = 0.85; utt.pitch = 0.9; applyOPIcVoice(utt);
   utt.onend = beginSpeak;
   utt.onerror = beginSpeak;
 
